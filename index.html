@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Timer</title>
+<title>KSFA'S 2025 Timer</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Pacifico&display=swap');
 
@@ -15,7 +15,7 @@
     font-family: sans-serif;
     background-color: black;
     color: white;
-    overflow: hidden; /* Prevent confetti overflow */
+    overflow: hidden; /* Prevent confetti from causing scrollbars */
   }
 
   #timer {
@@ -40,18 +40,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    animation: confettiFall 3s linear infinite;
-  }
-
-  @keyframes confettiFall {
-    0% {
-      transform: translateY(-100px) rotate(0deg);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(100vh) rotate(360deg);
-      opacity: 0;
-    }
+    animation: confettiFall 1s linear forwards;
   }
 
   .flash {
@@ -61,6 +50,13 @@
   @keyframes flash {
     from { color: white; }
     to { color: red; }
+  }
+
+  @keyframes confettiFall {
+    to {
+      transform: translateY(200px);
+      opacity: 0;
+    }
   }
 </style>
 </head>
@@ -95,14 +91,16 @@
     }
 
     function createConfetti() {
-      const confettiCount = 100; // Adjust for more or less confetti
-      for (let i = 0; i < confettiCount; i++) {
+      const messageRect = messageDisplay.getBoundingClientRect();
+      const numConfetti = 50; // Number of confetti pieces
+
+      for (let i = 0; i < numConfetti; i++) {
         const confetti = document.createElement('div');
         confetti.classList.add('confetti');
-        confetti.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+        confetti.style.left = `${Math.random() * messageRect.width}px`;
+        confetti.style.top = `${Math.random() * messageRect.height}px`;
         confetti.style.backgroundColor = getRandomColor();
-        confetti.style.animationDelay = `${Math.random() * 3}s`; // Random delay
-        messageDisplay.appendChild(confetti); // Append to message div
+        messageDisplay.appendChild(confetti);
       }
     }
 
@@ -115,7 +113,7 @@
           clearInterval(timerInterval);
           timerDisplay.classList.add('flash');
           messageDisplay.style.opacity = 1;
-          createConfetti(); // Add confetti when message fades in.
+          createConfetti();
           setInterval(changeMessageColor, 500);
         }
       }, 1000);
