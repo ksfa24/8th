@@ -16,7 +16,7 @@
   }
 
   #timer {
-    font-size: 100px;
+    font-size: 150px;
     text-align: center;
     margin-bottom: 20px; /* Add margin to separate timer and message */
   }
@@ -39,18 +39,18 @@
 </style>
 </head>
 <body>
-  <div id="timer">1:00</div>
+  <div id="timer">0:10</div>
   <div id="message">Good Luck Kippsters!</div>
 
   <script>
-    let timeLeft = 60;
+    let timeLeft = 10;
     const timerDisplay = document.getElementById('timer');
     const messageDisplay = document.getElementById('message');
     let timerInterval;
 
     function updateTimerDisplay() {
-      const minutes = Math.floor(timeLeft / 60);
-      let seconds = timeLeft % 60;
+      const minutes = Math.floor(timeLeft / 10);
+      let seconds = timeLeft % 10;
       seconds = seconds < 10 ? '0' + seconds : seconds;
       timerDisplay.textContent = `${minutes}:${seconds}`;
     }
