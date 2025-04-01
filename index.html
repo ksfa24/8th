@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Timer</title>
+<title>KSFA's 2025 Timer</title>
 <style>
   body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
     font-family: sans-serif;
-    background-color: black; /* Optional: Set background to black */
-    color: white; /* Optional: Set text color to white */
+    background-color: black;
+    color: white;
   }
 
   #timer {
     font-size: 100px;
     text-align: center;
+    margin-bottom: 20px; /* Add margin to separate timer and message */
   }
 
   #message {
@@ -38,10 +40,10 @@
 </head>
 <body>
   <div id="timer">1:00</div>
-  <div id="message">It's time Kippsters!</div>
+  <div id="message">...</div>
 
   <script>
-    let timeLeft = 60; // 1 minute in seconds
+    let timeLeft = 60;
     const timerDisplay = document.getElementById('timer');
     const messageDisplay = document.getElementById('message');
     let timerInterval;
@@ -60,8 +62,8 @@
           updateTimerDisplay();
         } else {
           clearInterval(timerInterval);
-          timerDisplay.classList.add('flash'); // Add flash class
-          messageDisplay.style.opacity = 1; // Fade in message
+          timerDisplay.classList.add('flash');
+          messageDisplay.style.opacity = 1;
         }
       }, 1000);
     }
