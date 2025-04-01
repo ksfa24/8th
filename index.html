@@ -1,71 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>5 Minute Timer</title>
+<title>1 Minute Timer</title>
 <style>
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: sans-serif;
-  }
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: black; /* Set background to black for better contrast */
+}
 
-  #timer {
-    font-size: 4em;
-    padding: 20px;
-    border: 2px solid #333;
-    border-radius: 10px;
-  }
+#timer {
+  font-size: 10em; /* Make the timer big */
+  color: white; /* Initial color */
+  transition: color 0.5s ease; /* Smooth color transition */
+}
 
-  .flash {
-    animation: flash 1s infinite alternate;
-  }
+.flashing {
+  animation: flash 1s infinite alternate; /* Flashing animation */
+}
 
-  @keyframes flash {
-    from {
-      background-color: white;
-    }
-    to {
-      background-color: red;
-      color: white;
-    }
-  }
+@keyframes flash {
+  from { color: white; }
+  to { color: red; }
+}
 </style>
 </head>
 <body>
-
-<div id="timer">05:00</div>
+<div id="timer">1:00</div>
 
 <script>
-  let minutes = 5;
-  let seconds = 0;
-  const timerDisplay = document.getElementById('timer');
-  let interval;
+let minutes = 1;
+let seconds = 0;
+let timerDisplay = document.getElementById('timer');
+let timerInterval;
 
-  function updateTimer() {
-    const minutesStr = String(minutes).padStart(2, '0');
-    const secondsStr = String(seconds).padStart(2, '0');
-    timerDisplay.textContent = `${minutesStr}:${secondsStr}`;
-
-    if (minutes === 0 && seconds === 0) {
-      clearInterval(interval);
-      timerDisplay.classList.add('flash');
-      return;
-    }
-
-    if (seconds === 0) {
-      minutes--;
-      seconds = 59;
-    } else {
-      seconds--;
-    }
+function updateTimer() {
+  seconds--;
+  if (seconds < 0) {
+    minutes--;
+    seconds = 59;
   }
 
-  interval = setInterval(updateTimer, 1000); // Update every second
+  if (minutes < 0) {
+    clearInterval(timerInterval);
+    timerDisplay.classList.add('flashing'); // Add the flashing class
+    return;
+  }
 
+  let displayMinutes = minutes < 10 ? '0' + minutes : minutes;
+  let displaySeconds = seconds < 10 ? '0' + seconds : seconds;
+  timerDisplay.textContent = displayMinutes + ':' + displaySeconds;
+}
+
+timerInterval = setInterval(updateTimer, 1000);
 </script>
-
 </body>
 </html>
