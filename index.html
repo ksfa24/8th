@@ -1,61 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>1 Minute Timer</title>
+<title>Timer</title>
 <style>
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  background-color: black; /* Set background to black for better contrast */
-}
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: sans-serif;
+    background-color: black; /* Optional: Set background to black */
+    color: white; /* Optional: Set text color to white */
+  }
 
-#timer {
-  font-size: 10em; /* Make the timer big */
-  color: white; /* Initial color */
-  transition: color 0.5s ease; /* Smooth color transition */
-}
+  #timer {
+    font-size: 100px;
+    text-align: center;
+  }
 
-.flashing {
-  animation: flash 1s infinite alternate; /* Flashing animation */
-}
+  #message {
+    font-size: 50px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
 
-@keyframes flash {
-  from { color: white; }
-  to { color: red; }
-}
+  .flash {
+    animation: flash 1s infinite alternate;
+  }
+
+  @keyframes flash {
+    from { color: white; }
+    to { color: red; }
+  }
 </style>
 </head>
 <body>
-<div id="timer">1:00</div>
+  <div id="timer">1:00</div>
+  <div id="message">It's time Kippsters!</div>
 
-<script>
-let minutes = 1;
-let seconds = 0;
-let timerDisplay = document.getElementById('timer');
-let timerInterval;
+  <script>
+    let timeLeft = 60; // 1 minute in seconds
+    const timerDisplay = document.getElementById('timer');
+    const messageDisplay = document.getElementById('message');
+    let timerInterval;
 
-function updateTimer() {
-  seconds--;
-  if (seconds < 0) {
-    minutes--;
-    seconds = 59;
-  }
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+      timerDisplay.textContent = `${minutes}:${seconds}`;
+    }
 
-  if (minutes < 0) {
-    clearInterval(timerInterval);
-    timerDisplay.classList.add('flashing'); // Add the flashing class
-    return;
-  }
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          timerDisplay.classList.add('flash'); // Add flash class
+          messageDisplay.style.opacity = 1; // Fade in message
+        }
+      }, 1000);
+    }
 
-  let displayMinutes = minutes < 10 ? '0' + minutes : minutes;
-  let displaySeconds = seconds < 10 ? '0' + seconds : seconds;
-  timerDisplay.textContent = displayMinutes + ':' + displaySeconds;
-}
-
-timerInterval = setInterval(updateTimer, 1000);
-</script>
+    startTimer();
+  </script>
 </body>
 </html>
