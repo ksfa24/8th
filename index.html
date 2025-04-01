@@ -15,7 +15,7 @@
     font-family: sans-serif;
     background-color: black;
     color: white;
-    overflow: hidden; /* Prevent confetti from causing scrollbars */
+    overflow: hidden;
   }
 
   #timer {
@@ -32,7 +32,7 @@
     opacity: 0;
     transition: opacity 1s ease-in-out, color 0.5s linear;
     font-family: 'Pacifico', cursive;
-    position: relative; /* Needed for confetti positioning */
+    position: relative;
   }
 
   .confetti {
@@ -40,7 +40,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    animation: confettiFall 1s linear forwards;
+    pointer-events: none;
   }
 
   .flash {
@@ -50,13 +50,6 @@
   @keyframes flash {
     from { color: white; }
     to { color: red; }
-  }
-
-  @keyframes confettiFall {
-    to {
-      transform: translateY(200px);
-      opacity: 0;
-    }
   }
 </style>
 </head>
@@ -71,8 +64,8 @@
     let timerInterval;
 
     function updateTimerDisplay() {
-      const minutes = Math.floor(timeLeft / 5);
-      let seconds = timeLeft % 5;
+      const minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
       seconds = seconds < 10 ? '0' + seconds : seconds;
       timerDisplay.textContent = `${minutes}:${seconds}`;
     }
@@ -92,15 +85,34 @@
 
     function createConfetti() {
       const messageRect = messageDisplay.getBoundingClientRect();
-      const numConfetti = 50; // Number of confetti pieces
+      const messageCenterX = messageRect.left + messageRect.width / 2;
+      const messageCenterY = messageRect.top + messageRect.height / 2;
 
-      for (let i = 0; i < numConfetti; i++) {
+      for (let i = 0; i < 50; i++) {
         const confetti = document.createElement('div');
-        confetti.classList.add('confetti');
-        confetti.style.left = `${Math.random() * messageRect.width}px`;
-        confetti.style.top = `${Math.random() * messageRect.height}px`;
+        confetti.className = 'confetti';
+        confetti.style.left = messageCenterX + 'px';
+        confetti.style.top = messageCenterY + 'px';
         confetti.style.backgroundColor = getRandomColor();
-        messageDisplay.appendChild(confetti);
+
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5 + 3;
+        const xSpeed = Math.cos(angle) * speed;
+        const ySpeed = Math.sin(angle) * speed;
+
+        document.body.appendChild(confetti);
+
+        const lifetime = Math.random() * 2000 + 1000;
+
+        setTimeout(() => {
+          confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
+          confetti.style.transform = `translate(${xSpeed * 100}px, ${ySpeed * 100}px) rotate(${Math.random() * 360}deg)`;
+          confetti.style.opacity = 0;
+
+          setTimeout(() => {
+            confetti.remove();
+          }, lifetime);
+        }, 10);
       }
     }
 
