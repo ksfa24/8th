@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>KSFA'S 2025 Timer</title>
+<title>Timer</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Pacifico&display=swap');
 
@@ -15,6 +15,7 @@
     font-family: sans-serif;
     background-color: black;
     color: white;
+    overflow: hidden; /* Prevent confetti overflow */
   }
 
   #timer {
@@ -26,11 +27,31 @@
   }
 
   #message {
-    font-size: 80px; /* Increased message font size */
+    font-size: 80px;
     text-align: center;
     opacity: 0;
-    transition: opacity 1s ease-in-out, color 2s linear; /* added color transition */
-    font-family: 'Pacifico', cursive; /* Pacifico Font */
+    transition: opacity 1s ease-in-out, color 0.5s linear;
+    font-family: 'Pacifico', cursive;
+    position: relative; /* Needed for confetti positioning */
+  }
+
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: confettiFall 3s linear infinite;
+  }
+
+  @keyframes confettiFall {
+    0% {
+      transform: translateY(-100px) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(360deg);
+      opacity: 0;
+    }
   }
 
   .flash {
@@ -73,6 +94,18 @@
       messageDisplay.style.color = getRandomColor();
     }
 
+    function createConfetti() {
+      const confettiCount = 100; // Adjust for more or less confetti
+      for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+        confetti.style.backgroundColor = getRandomColor();
+        confetti.style.animationDelay = `${Math.random() * 3}s`; // Random delay
+        messageDisplay.appendChild(confetti); // Append to message div
+      }
+    }
+
     function startTimer() {
       timerInterval = setInterval(() => {
         if (timeLeft > 0) {
@@ -82,7 +115,8 @@
           clearInterval(timerInterval);
           timerDisplay.classList.add('flash');
           messageDisplay.style.opacity = 1;
-          setInterval(changeMessageColor, 500); // Change color every 0.5 seconds
+          createConfetti(); // Add confetti when message fades in.
+          setInterval(changeMessageColor, 500);
         }
       }, 1000);
     }
