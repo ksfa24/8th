@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>5 Minute Timer</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: sans-serif;
+  }
+
+  #timer {
+    font-size: 4em;
+    padding: 20px;
+    border: 2px solid #333;
+    border-radius: 10px;
+  }
+
+  .flash {
+    animation: flash 1s infinite alternate;
+  }
+
+  @keyframes flash {
+    from {
+      background-color: white;
+    }
+    to {
+      background-color: red;
+      color: white;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="timer">05:00</div>
+
+<script>
+  let minutes = 5;
+  let seconds = 0;
+  const timerDisplay = document.getElementById('timer');
+  let interval;
+
+  function updateTimer() {
+    const minutesStr = String(minutes).padStart(2, '0');
+    const secondsStr = String(seconds).padStart(2, '0');
+    timerDisplay.textContent = `${minutesStr}:${secondsStr}`;
+
+    if (minutes === 0 && seconds === 0) {
+      clearInterval(interval);
+      timerDisplay.classList.add('flash');
+      return;
+    }
+
+    if (seconds === 0) {
+      minutes--;
+      seconds = 59;
+    } else {
+      seconds--;
+    }
+  }
+
+  interval = setInterval(updateTimer, 1000); // Update every second
+
+</script>
+
+</body>
+</html>
