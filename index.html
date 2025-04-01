@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Timer</title>
+<title>KSFA'S 2025 Timer</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap'); /* Import Kanit font */
+  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Pacifico&display=swap');
 
   body {
     display: flex;
@@ -21,20 +21,16 @@
     font-size: 200px;
     text-align: center;
     margin-bottom: 20px;
-    font-family: 'Kanit', sans-serif; /* Apply Kanit font */
-    font-weight: 700; /* make the font bold. */
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
   }
 
   #message {
-    font-size: 50px;
+    font-size: 80px; /* Increased message font size */
     text-align: center;
     opacity: 0;
-    transition: opacity 1s ease-in-out;
-    background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: rainbow 5s linear infinite;
-    font-family: 'Kanit', sans-serif; /* Apply Kanit font */
+    transition: opacity 1s ease-in-out, color 2s linear; /* added color transition */
+    font-family: 'Pacifico', cursive; /* Pacifico Font */
   }
 
   .flash {
@@ -45,28 +41,36 @@
     from { color: white; }
     to { color: red; }
   }
-
-  @keyframes rainbow {
-    0% { background-position: 0%; }
-    100% { background-position: 100%; }
-  }
 </style>
 </head>
 <body>
-  <div id="timer">0:10</div>
+  <div id="timer">0:05</div>
   <div id="message">Good Luck Kippsters!</div>
 
   <script>
-    let timeLeft = 10;
+    let timeLeft = 5;
     const timerDisplay = document.getElementById('timer');
     const messageDisplay = document.getElementById('message');
     let timerInterval;
 
     function updateTimerDisplay() {
-      const minutes = Math.floor(timeLeft / 10);
-      let seconds = timeLeft % 10;
+      const minutes = Math.floor(timeLeft / 5);
+      let seconds = timeLeft % 5;
       seconds = seconds < 10 ? '0' + seconds : seconds;
       timerDisplay.textContent = `${minutes}:${seconds}`;
+    }
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function changeMessageColor() {
+      messageDisplay.style.color = getRandomColor();
     }
 
     function startTimer() {
@@ -78,6 +82,7 @@
           clearInterval(timerInterval);
           timerDisplay.classList.add('flash');
           messageDisplay.style.opacity = 1;
+          setInterval(changeMessageColor, 2000); // Change color every 2 seconds
         }
       }, 1000);
     }
