@@ -4,8 +4,6 @@
 <title>Countdown</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@700&display=swap');
-
   body {
     display: flex;
     flex-direction: column;
@@ -20,20 +18,19 @@
   }
 
   #timer {
-    font-size: 80px;
+    font-size: 150px;
     text-align: center;
-    font-family: 'Kanit', sans-serif;
-    font-weight: 700;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    letter-spacing: 0.1em;
   }
-    #timer-labels{
-        font-size: 20px;
-        text-align: center;
-        margin-top: 5px; /* Added margin to separate labels */
-    }
+
+  #timer-labels {
+    font-size: 50px; /* Increased font size */
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin-top: 5px;
+  }
 
   #message {
     font-size: 80px;
@@ -54,17 +51,18 @@
 
   @media (max-width: 600px) {
     #timer {
-      font-size: 50px;
+      font-size: 80px;
     }
+
     #timer-labels {
-        font-size: 12px;
+      font-size: 30px; /* Adjusted mobile font size */
     }
   }
 </style>
 </head>
 <body>
   <div id="timer"></div>
-  <div id="timer-labels">day hour minutes seconds</div>
+  <div id="timer-labels">Days Hours Minutes Seconds</div>
   <div id="message">...</div>
 
   <script>
