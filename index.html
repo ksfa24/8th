@@ -18,19 +18,25 @@
   }
 
   #timer {
-    font-size: 150px;
+    font-size: 100px; /* Reduced font size */
     text-align: center;
     font-family: Arial, sans-serif;
     font-weight: bold;
-    letter-spacing: 0.2em; /* Increased spacing */
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
   }
 
   #timer-labels {
-    font-size: 50px;
+    font-size: 30px; /* Reduced font size to match timer */
     text-align: center;
     font-family: Arial, sans-serif;
     margin-top: 5px;
-    letter-spacing: 0.2em; /* Increased spacing */
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
   }
 
   #message {
@@ -52,20 +58,20 @@
 
   @media (max-width: 600px) {
     #timer {
-      font-size: 80px; /* Smaller font size on mobile */
-      letter-spacing: 0.1em; /* Adjusted spacing for mobile */
+      font-size: 60px; /* Further reduced font size for mobile */
+      letter-spacing: 0.1em;
     }
 
     #timer-labels {
-      font-size: 30px;
-      letter-spacing: 0.1em; /* Adjusted spacing for mobile */
+      font-size: 20px; /* Further reduced font size for mobile */
+      letter-spacing: 0.1em;
     }
   }
 </style>
 </head>
 <body>
   <div id="timer"></div>
-  <div id="timer-labels">Days Hours Minutes Seconds</div>
+  <div id="timer-labels">Days:Hours:Minutes:Seconds</div>
   <div id="message">...</div>
 
   <script>
