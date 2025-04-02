@@ -18,21 +18,10 @@
   }
 
   #timer {
-    font-size: 100px; /* Reduced font size */
+    font-size: 100px;
     text-align: center;
     font-family: Arial, sans-serif;
     font-weight: bold;
-    letter-spacing: 0.2em;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
-  }
-
-  #timer-labels {
-    font-size: 30px; /* Reduced font size to match timer */
-    text-align: center;
-    font-family: Arial, sans-serif;
-    margin-top: 5px;
     letter-spacing: 0.2em;
     white-space: nowrap;
     overflow: hidden;
@@ -58,12 +47,7 @@
 
   @media (max-width: 600px) {
     #timer {
-      font-size: 60px; /* Further reduced font size for mobile */
-      letter-spacing: 0.1em;
-    }
-
-    #timer-labels {
-      font-size: 20px; /* Further reduced font size for mobile */
+      font-size: 60px;
       letter-spacing: 0.1em;
     }
   }
@@ -71,11 +55,96 @@
 </head>
 <body>
   <div id="timer"></div>
-  <div id="timer-labels">Days:Hours:Minutes:Seconds</div>
   <div id="message">...</div>
 
   <script>
-    // ... (Your JavaScript code remains the same)
+    const targetDate = new Date('April 21, 2025 08:30:00 EST');
+    const timerDisplay = document.getElementById('timer');
+    const messageDisplay = document.getElementById('message');
+
+    function updateTimer() {
+      const now = new Date();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        clearInterval(timerInterval);
+        timerDisplay.textContent = '00:00:00:00';
+        messageDisplay.style.opacity = 1;
+        createConfetti();
+        setInterval(changeMessageColor, 500);
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      timerDisplay.textContent = `${formatTime(days)}:${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    }
+
+    function formatTime(time) {
+      return time < 10 ? '0' + time : time;
+    }
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function changeMessageColor() {
+      messageDisplay.style.color = getRandomColor();
+    }
+
+    function createConfetti() {
+      const messageRect = messageDisplay.getBoundingClientRect();
+      const messageLeft = messageRect.left;
+      const messageRight = messageRect.right;
+      const messageCenterY = messageRect.top + messageRect.height / 2;
+
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.backgroundColor = getRandomColor();
+
+        let side = messageLeft;
+        let xDirection = 1;
+
+        if (i % 2 === 0) {
+          side = messageRight;
+          xDirection = -1;
+        }
+
+        confetti.style.left = side + 'px';
+        confetti.style.top = messageCenterY + 'px';
+
+        const angle = (Math.random() - 0.5) * Math.PI / 2;
+        const speed = Math.random() * 5 + 3;
+        const xSpeed = Math.cos(angle) * speed * xDirection;
+        const ySpeed = Math.sin(angle) * speed;
+
+        document.body.appendChild(confetti);
+
+        const lifetime = Math.random() * 2000 + 1000;
+
+        setTimeout(() => {
+          confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
+          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
+          confetti.style.opacity = 0;
+
+          setTimeout(() => {
+            confetti.remove();
+          }, lifetime);
+        }, 10);
+      }
+    }
+
+    updateTimer();
+    const timerInterval = setInterval(updateTimer, 1000);
   </script>
 </body>
 </html>
