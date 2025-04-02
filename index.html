@@ -85,7 +85,11 @@
         confetti.className = 'confetti';
         confetti.style.backgroundColor = getRandomColor();
 
-        const side = Math.random() < 0.5 ? messageLeft : messageRight;
+        let side = messageLeft;
+        if (i%2 === 0){
+          side = messageRight;
+        }
+
         confetti.style.left = side + 'px';
         confetti.style.top = messageCenterY + 'px';
 
