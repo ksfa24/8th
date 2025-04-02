@@ -28,6 +28,17 @@
     max-width: 100%;
   }
 
+  #timer-labels {
+    font-size: 20px; /* Smaller font size for labels */
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin-top: 5px;
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
   #message {
     font-size: 80px;
     text-align: center;
@@ -50,16 +61,23 @@
       font-size: 60px;
       letter-spacing: 0.1em;
     }
+
+    #timer-labels {
+      font-size: 15px; /* Smaller font size for labels on mobile */
+      letter-spacing: 0.1em;
+    }
   }
 </style>
 </head>
 <body>
   <div id="timer"></div>
+  <div id="timer-labels">Days Hours Minutes Seconds</div>
   <div id="message">...</div>
 
   <script>
     const targetDate = new Date('April 21, 2025 08:30:00 EST');
     const timerDisplay = document.getElementById('timer');
+    const timerLabelsDisplay = document.getElementById('timer-labels');
     const messageDisplay = document.getElementById('message');
 
     function updateTimer() {
