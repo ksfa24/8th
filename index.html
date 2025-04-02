@@ -24,10 +24,15 @@
     text-align: center;
     font-family: 'Kanit', sans-serif;
     font-weight: 700;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
   }
     #timer-labels{
         font-size: 20px;
         text-align: center;
+        margin-top: 5px; /* Added margin to separate labels */
     }
 
   #message {
@@ -63,7 +68,7 @@
   <div id="message">...</div>
 
   <script>
-    const targetDate = new Date('April 21, 2025 08:30:00 EST'); // Changed to 2025
+    const targetDate = new Date('April 21, 2025 08:30:00 EST');
     const timerDisplay = document.getElementById('timer');
     const messageDisplay = document.getElementById('message');
 
