@@ -20,16 +20,16 @@
   }
 
   #timer {
-    font-size: 60px; /* Adjusted font size for the labels */
+    font-size: 80px;
     text-align: center;
     font-family: 'Kanit', sans-serif;
     font-weight: 700;
   }
 
-  #labels {
-    font-size: 20px;
+  #timer-labels {
+    font-size: 20px; /* Small font size for labels */
     text-align: center;
-    font-family: 'Kanit', sans-serif;
+    margin-top: 5px; /* Add some space between timer and labels */
   }
 
   #message {
@@ -51,24 +51,22 @@
 
   @media (max-width: 600px) {
     #timer {
-      font-size: 40px;
+      font-size: 60px; /* Smaller font size on mobile */
     }
-    #labels{
-      font-size: 15px;
+    #timer-labels{
+        font-size: 15px;
     }
   }
-
 </style>
 </head>
 <body>
   <div id="timer"></div>
-  <div id="labels"></div>
+  <div id="timer-labels">day hour minutes seconds</div>
   <div id="message">...</div>
 
   <script>
     const targetDate = new Date('April 21, 2024 08:30:00 EST');
     const timerDisplay = document.getElementById('timer');
-    const labelsDisplay = document.getElementById('labels');
     const messageDisplay = document.getElementById('message');
 
     function updateTimer() {
@@ -78,7 +76,6 @@
       if (difference <= 0) {
         clearInterval(timerInterval);
         timerDisplay.textContent = '00:00:00:00';
-        labelsDisplay.textContent = 'Days Hours Minutes Seconds';
         messageDisplay.style.opacity = 1;
         createConfetti();
         setInterval(changeMessageColor, 500);
@@ -91,7 +88,6 @@
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
       timerDisplay.textContent = `${formatTime(days)}:${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
-      labelsDisplay.textContent = 'Days Hours Minutes Seconds';
     }
 
     function formatTime(time) {
