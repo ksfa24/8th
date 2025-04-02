@@ -1,0 +1,11 @@
+@media (max-width: 600px) {
+  #timer {
+    font-size: 60px; /* Smaller timer font size for mobile */
+    letter-spacing: 0.1em;
+  }
+
+  #timer-labels {
+    font-size: 15px;
+    letter-spacing: 0.1em;
+  }
+}
