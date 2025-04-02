@@ -42,6 +42,12 @@
     pointer-events: none;
     transform-origin: center;
   }
+
+  @media (max-width: 600px) { /* Media query for mobile */
+    #timer {
+      font-size: 100px; /* Smaller font size on mobile */
+    }
+  }
 </style>
 </head>
 <body>
@@ -80,7 +86,7 @@
       const messageRight = messageRect.right;
       const messageCenterY = messageRect.top + messageRect.height / 2;
 
-      for (let i = 0; i < 50; i++) { // Reduced confetti count
+      for (let i = 0; i < 50; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.backgroundColor = getRandomColor();
