@@ -86,8 +86,11 @@
         confetti.style.backgroundColor = getRandomColor();
 
         let side = messageLeft;
-        if (i%2 === 0){
+        let xDirection = 1;
+
+        if (i % 2 === 0) {
           side = messageRight;
+          xDirection = -1;
         }
 
         confetti.style.left = side + 'px';
@@ -95,7 +98,7 @@
 
         const angle = (Math.random() - 0.5) * Math.PI / 2;
         const speed = Math.random() * 5 + 3;
-        const xSpeed = Math.cos(angle) * speed;
+        const xSpeed = Math.cos(angle) * speed * xDirection; // Flip direction
         const ySpeed = -Math.sin(angle) * speed;
 
         document.body.appendChild(confetti);
