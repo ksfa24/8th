@@ -16,7 +16,7 @@
     font-family: sans-serif;
     background-color: black;
     color: white;
-    overflow: hidden;
+    overflow: hidden; /* Important for mobile */
   }
 
   #timer {
@@ -81,33 +81,29 @@
       const messageCenterX = messageRect.left + messageRect.width / 2;
       const messageCenterY = messageRect.top + messageRect.height / 2;
 
-      for (let i = 0; i < 100; i++) { // Increase confetti count
+      for (let i = 0; i < 100; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.backgroundColor = getRandomColor();
 
         let side = messageLeft;
         let xDirection = 1;
-        let xOffset = 0;
 
-        if (i % 2 === 0) {
+        if (i % 3 === 0) {
+          side = messageCenterX;
+          xDirection = 0;
+        } else if (i % 2 === 0) {
           side = messageRight;
           xDirection = -1;
         }
 
-        if (i > 70) { // Add some middle confetti
-          side = messageCenterX;
-          xDirection = 0;
-          xOffset = Math.random() * messageRect.width / 2 - messageRect.width / 4; // Add random offset
-        }
-
-        confetti.style.left = side + xOffset + 'px';
+        confetti.style.left = side + 'px';
         confetti.style.top = messageCenterY + 'px';
 
-        const angle = (Math.random() - 0.5) * Math.PI / 2;
+        const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 5 + 3;
         const xSpeed = Math.cos(angle) * speed * xDirection;
-        const ySpeed = -Math.sin(angle) * speed;
+        const ySpeed = Math.sin(angle) * speed;
 
         document.body.appendChild(confetti);
 
@@ -115,7 +111,7 @@
 
         setTimeout(() => {
           confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
-          confetti.style.transform = `translate(${xSpeed * 100}px, ${ySpeed * 100}px) rotate(${Math.random() * 360}deg)`;
+          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`; // Increased translate values
           confetti.style.opacity = 0;
 
           setTimeout(() => {
