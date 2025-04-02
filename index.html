@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Timer</title>
+<title>Countdown</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@700&family=Pacifico&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@700&display=swap');
 
   body {
     display: flex;
@@ -22,7 +22,6 @@
   #timer {
     font-size: 200px;
     text-align: center;
-    margin-bottom: 20px;
     font-family: 'Kanit', sans-serif;
     font-weight: 700;
   }
@@ -41,15 +40,7 @@
     width: 15px;
     height: 8px;
     pointer-events: none;
-  }
-
-  .flash {
-    animation: flash 1s infinite alternate;
-  }
-
-  @keyframes flash {
-    from { color: white; }
-    to { color: red; }
+    transform-origin: center;
   }
 </style>
 </head>
@@ -84,25 +75,24 @@
     }
 
     function createConfetti() {
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
+      const messageRect = messageDisplay.getBoundingClientRect();
+      const messageLeft = messageRect.left;
+      const messageRight = messageRect.right;
+      const messageCenterY = messageRect.top + messageRect.height / 2;
 
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 50; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.backgroundColor = getRandomColor();
 
-        const side = Math.random() < 0.5 ? 0 : screenWidth; // Left or right side
-        const x = side;
-        const y = screenHeight; // Start from bottom
+        const side = Math.random() < 0.5 ? messageLeft : messageRight;
+        confetti.style.left = side + 'px';
+        confetti.style.top = messageCenterY + 'px';
 
-        confetti.style.left = x + 'px';
-        confetti.style.top = y + 'px';
-
-        const angle = Math.random() * Math.PI - Math.PI / 2; // Upwards
-        const speed = Math.random() * 5 + 5;
-        const xSpeed = Math.cos(angle) * speed * (side === 0 ? 1 : -1); // Direction based on side
-        const ySpeed = Math.sin(angle) * speed * -1; // Upward
+        const angle = (Math.random() - 0.5) * Math.PI / 2;
+        const speed = Math.random() * 5 + 3;
+        const xSpeed = Math.cos(angle) * speed;
+        const ySpeed = -Math.sin(angle) * speed;
 
         document.body.appendChild(confetti);
 
