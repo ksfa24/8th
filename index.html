@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Countdown</title>
+<title>KSFA Timer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,13 +107,32 @@
 <body>
   <button id="credits-button">Credits</button>
   <div id="credits-box">
-    <p>Created by [Your Name]</p>
-    <p>Font: Changa One</p>
-    <p>Confetti and Color Effects</p>
+    <p>Created by Samad Slaten</p>
+    <p>Picture Senders: Aden Smith, Eryn Alfred<p/>
+    <p>People Who Also Helped: Roberto Ochoa, Kortni Smith<p/>
+    <p><span id="flash-rainbow-text">Did Absolutely Nothing: Anthony Royal</span></p/>  
   </div>
+  <style>
+  #flash-rainbow-text {
+    animation: flashRainbow 5s linear infinite;
+  }
+
+  @keyframes flashRainbow {
+    0%, 100% {
+      background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    50% {
+      background: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+</style>
   <div id="timer"></div>
   <div id="timer-labels">Days Hours Minutes Seconds</div>
-  <div id="message">...</div>
+  <div id="message">Good Luck Kippsters!</div>
 
   <script>
     const creditsButton = document.getElementById('credits-button');
