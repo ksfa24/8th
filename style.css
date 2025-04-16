@@ -1,6 +1,6 @@
 @media (max-width: 600px) {
   #timer {
-    font-size: 60px; /* Smaller timer font size for mobile */
+    font-size: 50px; /* Smaller timer font size for mobile */
     letter-spacing: 0.1em;
   }
 
