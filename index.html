@@ -110,24 +110,20 @@
     <p>Created by Samad Slaten</p>
     <p>Picture Senders: Aden Smith, Eryn Alfred<p/>
     <p>People Who Also Helped: Roberto Ochoa, Kortni Smith<p/>
-    <p><span id="flash-rainbow-text">Did Absolutely Nothing: Anthony Royal</span></p/>  
+    <p>Did Absolutely Nothing:<span id="flash-rainbow-text">Anthony Royal</span></p/>  
   </div>
-  <style>
-  #flash-rainbow-text {
-    animation: flashRainbow 5s linear infinite;
+<style>
+  #flash-colors-text {
+    animation: flashColors 5s linear infinite;
   }
 
-  @keyframes flashRainbow {
-    0%, 100% {
-      background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    50% {
-      background: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+  @keyframes flashColors {
+    0% { color: red; }
+    20% { color: orange; }
+    40% { color: yellow; }
+    60% { color: green; }
+    80% { color: blue; }
+    100% { color: violet; }
   }
 </style>
   <div id="timer"></div>
