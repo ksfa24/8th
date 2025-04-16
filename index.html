@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <style>
   body {
     display: flex;
@@ -43,8 +43,8 @@
     border-radius: 10px;
     transition: bottom 0.5s ease-in-out;
     text-align: center;
-    max-width: 80%; /* Mobile responsiveness */
-    box-sizing: border-box; /* Include padding in width */
+    max-width: 80%;
+    box-sizing: border-box;
   }
 
   #credits-box.show {
@@ -102,14 +102,19 @@
       letter-spacing: 0.1em;
     }
   }
+
+  .green-text { color: green; }
+  .orange-text { color: orange; }
+  .red-text { color: red; }
+  .hot-pink-text { color: hotpink; } /* Added hot pink class */
 </style>
 </head>
 <body>
   <button id="credits-button">Credits</button>
   <div id="credits-box">
     <p>Created by Samad Slaten</p>
-    <p>Picture Senders: Aden Smith, Eryn Alfred<p/>
-    <p>People Who Also Helped: Roberto Ochoa, Kortni Smith, Anthony Royal<p/>
+    <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text">Erin Grogan</span>, Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
+    <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni Smith</span>, Anthony Royal</p>
   </div>
   <div id="timer"></div>
   <div id="timer-labels">Days Hours Minutes Seconds</div>
