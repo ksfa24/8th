@@ -201,7 +201,7 @@
     }
 
     .bubble {
-      position: absolute;
+      position: fixed; /* Changed to fixed */
       width: 80px;
       height: 80px;
       border-radius: 50%;
@@ -217,8 +217,8 @@
 
     @media (max-width: 600px) {
       .bubble {
-        width: 40px; /* Smaller bubbles on mobile */
-        height: 40px; /* Smaller bubbles on mobile */
+        width: 40px;
+        height: 40px;
       }
     }
   </style>
@@ -442,126 +442,4 @@
         formattedTime += String(minutes).padStart(2, '0') + ':';
         formattedTime += String(seconds).padStart(2, '0');
       } else if (hours > 0) {
-        formattedTime += hours + ':';
-        formattedTime += String(minutes).padStart(2, '0') + ':';
-        formattedTime += String(seconds).padStart(2, '0');
-      } else {
-        formattedTime += String(minutes).padStart(2, '0') + ':';
-        formattedTime += String(seconds).padStart(2, '0');
-      }
-
-      timerDisplay.textContent = formattedTime;
-    }
-
-    function getRandomColor() {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
-
-    function changeMessageColor() {
-      messageDisplay.style.color = getRandomColor();
-    }
-
-    function createConfetti() {
-      const messageRect = messageDisplay.getBoundingClientRect();
-      const messageLeft = messageRect.left;
-      const messageRight = messageRect.right;
-      const messageCenterY = messageRect.top + messageRect.height / 2;
-
-      for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.backgroundColor = getRandomColor();
-
-        let side = messageLeft;
-        let xDirection = 1;
-
-        if (i % 2 === 0) {
-          side = messageRight;
-          xDirection = -1;
-        }
-
-        confetti.style.left = side + 'px';
-        confetti.style.top = messageCenterY + 'px';
-
-        const angle = (Math.random() - 0.5) * Math.PI / 2;
-        const speed = Math.random() * 5 + 3;
-        const xSpeed = Math.cos(angle) * speed * xDirection;
-        const ySpeed = Math.sin(angle) * speed;
-
-        document.body.appendChild(confetti);
-
-        const lifetime = Math.random() * 2000 + 1000;
-
-        setTimeout(() => {
-          confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
-          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
-          confetti.style.opacity = 0;
-
-          setTimeout(() => {
-            confetti.remove();
-          }, lifetime);
-        }, 10);
-      }
-    }
-
-    bubbleButton.addEventListener('click', () => {
-      createBubbles();
-    });
-
-    function createBubbles() {
-      const numBubbles = 10;
-      for (let i = 0; i < numBubbles; i++) {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        const startX = Math.random() * window.innerWidth;
-        const startY = window.innerHeight;
-        bubble.style.left = startX + 'px';
-        bubble.style.top = startY + 'px';
-
-        const endY = Math.random() * -window.innerHeight;
-        const endX = Math.random() * window.innerWidth;
-
-        const duration = Math.random() * 7000 + 4000;
-
-        document.body.appendChild(bubble);
-
-        setTimeout(() => {
-          bubble.style.transition = `transform ${duration / 1000}s linear, opacity ${duration / 1000}s linear`;
-          bubble.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`;
-          bubble.style.opacity = 0;
-          setTimeout(() => {
-            bubble.remove();
-          }, duration);
-        }, 10);
-
-        bubble.addEventListener('click', () => {
-          bubble.remove();
-        });
-      }
-    }
-
-    function updateBubbleButtonVisibility() {
-      if (currentTrack < 2) {
-        bubbleButton.style.display = 'block';
-      } else {
-        bubbleButton.style.display = 'none';
-      }
-    }
-
-    updateTimer();
-    const timerInterval = setInterval(updateTimer, 1000);
-
-    window.addEventListener('load', () => {
-      audio.play().catch(error => {
-        console.error('Autoplay prevented:', error);
-      });
-    });
-  </script>
-</body>
-
-</html>
+        formatted
