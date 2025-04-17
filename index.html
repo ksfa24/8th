@@ -161,12 +161,24 @@
     font-size: 16px;
     margin-bottom: 5px;
   }
+
+  #credits-close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
   <button id="credits-button">Credits</button>
   <button id="music-toggle-button">♫</button>
   <div id="credits-box">
+    <button id="credits-close-button">×</button>
     <p>Created by Samad Slaten</p>
     <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text">Erin Grogan</span>, Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
     <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni Smith</span>, Anthony Royal</p>
@@ -187,6 +199,7 @@
   <script>
     const creditsButton = document.getElementById('credits-button');
     const creditsBox = document.getElementById('credits-box');
+    const creditsCloseButton = document.getElementById('credits-close-button');
     const loopButton = document.getElementById('loop-button');
     const volumeSlider = document.getElementById('volume-slider');
     const muteButton = document.getElementById('mute-button');
@@ -203,6 +216,16 @@
       creditsBox.classList.toggle('show');
     });
 
+    creditsCloseButton.addEventListener('click', () => {
+      creditsBox.classList.remove('show');
+    });
+
+    creditsBox.addEventListener('click', (event) => {
+      if (event.target === creditsBox) {
+        creditsBox.classList.remove('show');
+      }
+    });
+
     musicToggleButton.addEventListener('click', () => {
       musicControls.classList.toggle('show');
       musicControlsVisible = !musicControlsVisible;
@@ -214,7 +237,7 @@
     const messageDisplay = document.getElementById('message');
 
     const musicFiles = [
-      { url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%0up_%20techno%20condominium%20flying%20event.mp3', name: 'Lotus Waters' },
+      { url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3', name: 'Lotus Waters' },
       { url: 'https://yourusername.github.io/yourrepository/music/music2.mp3', name: 'Song 2' },
       { url: 'https://yourusername.github.io/yourrepository/music/music3.mp3', name: 'Song 3' },
       { url: '', name: 'Silence' }
