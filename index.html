@@ -117,7 +117,6 @@
     flex-direction: column;
     align-items: flex-start;
     transition: right 0.5s ease-in-out;
-    cursor: pointer;
   }
 
   #music-controls.show {
@@ -130,6 +129,7 @@
     border: none;
     padding: 8px 12px;
     color: white;
+    cursor: pointer;
     border-radius: 5px;
     width: 150px;
     text-align: left;
@@ -144,6 +144,19 @@
     padding: 8px 15px;
   }
 
+  #music-toggle-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
   #current-song {
     font-size: 16px;
     margin-bottom: 5px;
@@ -152,6 +165,7 @@
 </head>
 <body>
   <button id="credits-button">Credits</button>
+  <button id="music-toggle-button">♫</button>
   <div id="credits-box">
     <p>Created by Samad Slaten</p>
     <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text">Erin Grogan</span>, Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
@@ -177,6 +191,7 @@
     const volumeSlider = document.getElementById('volume-slider');
     const muteButton = document.getElementById('mute-button');
     const playPauseButton = document.getElementById('play-pause-button');
+    const musicToggleButton = document.getElementById('music-toggle-button');
     const musicControls = document.getElementById('music-controls');
     const prevButton = document.getElementById('prev-button');
     const nextButton = document.getElementById('next-button');
@@ -188,7 +203,7 @@
       creditsBox.classList.toggle('show');
     });
 
-    musicControls.addEventListener('click', () => {
+    musicToggleButton.addEventListener('click', () => {
       musicControls.classList.toggle('show');
       musicControlsVisible = !musicControlsVisible;
     });
@@ -232,10 +247,10 @@
     playPauseButton.addEventListener('click', () => {
       if (isPlaying) {
         audio.pause();
-        playPauseButton.textContent = '▷';
+        playPauseButton.textContent = '&#9658;';
       } else {
         audio.play();
-        playPauseButton.textContent = '❚❚';
+        playPauseButton.textContent = '&#10074;&#10074;';
       }
       isPlaying = !isPlaying;
     });
@@ -265,16 +280,16 @@
       currentSongDisplay.textContent = musicFiles[currentTrack].name;
       audio.play();
       if (musicFiles[currentTrack].url === '') {
-        playPauseButton.textContent = '▷';
+        playPauseButton.textContent = '&#9658;';
         isPlaying = false;
       } else {
-        playPauseButton.textContent = '❚❚';
+        playPauseButton.textContent = '&#10074;&#10074;';
         isPlaying = true;
       }
     }
 
     audio.play();
-    playPauseButton.textContent = '❚❚';
+    playPauseButton.textContent = '&#10074;&#10074;';
 
     function updateTimer() {
       const now = new Date();
