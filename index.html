@@ -201,13 +201,11 @@
 
     .bubble {
       position: absolute;
-      width: 30px;
-      height: 30px;
+      width: 50px; /* Increased size */
+      height: 50px; /* Increased size */
       border-radius: 50%;
       background-color: rgba(173, 216, 230, 0.7);
-      /* Light blue with some transparency */
       pointer-events: auto;
-      /* Make bubbles clickable */
       cursor: pointer;
       transition: transform 0.3s ease-out, opacity 0.3s ease-out;
     }
@@ -514,7 +512,7 @@
         const endY = Math.random() * -window.innerHeight;
         const endX = Math.random() * window.innerWidth;
 
-        const duration = Math.random() * 3000 + 2000;
+        const duration = Math.random() * 5000 + 3000; // Increased duration
 
         document.body.appendChild(bubble);
 
