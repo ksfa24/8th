@@ -220,10 +220,10 @@
       creditsBox.classList.remove('show');
     });
 
-    creditsBox.addEventListener('click', (event) => {
-      if (event.target === creditsBox) {
-        creditsBox.classList.remove('show');
-      }
+    document.addEventListener('click', (event) => {
+        if(creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton){
+            creditsBox.classList.remove('show');
+        }
     });
 
     musicToggleButton.addEventListener('click', () => {
