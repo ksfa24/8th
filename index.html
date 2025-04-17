@@ -360,24 +360,23 @@
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-      timerDisplay.textContent = `${formatTime(days)}:${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
-    }
+      let formattedTime = '';
 
-    function formatTime(time) {
-        if (typeof time === 'number'){
-            const days = Math.floor(time / (60 * 60 * 24));
-            const hours = Math.floor((time % (60 * 60 * 24)) / (60 * 60));
-            const minutes = Math.floor((time % (60 * 60)) / 60);
-            const seconds = Math.floor(time % 60);
-            if (days > 0) {
-                return `${days}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            } else {
-                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            }
-        }
-        else {
-            return '00:00:00:00'
-        }
+      if (days > 0) {
+        formattedTime += days + ':';
+        formattedTime += String(hours).padStart(2, '0') + ':';
+        formattedTime += String(minutes).padStart(2, '0') + ':';
+        formattedTime += String(seconds).padStart(2, '0');
+      } else if (hours > 0) {
+        formattedTime += hours + ':';
+        formattedTime += String(minutes).padStart(2, '0') + ':';
+        formattedTime += String(seconds).padStart(2, '0');
+      } else {
+        formattedTime += String(minutes).padStart(2, '0') + ':';
+        formattedTime += String(seconds).padStart(2, '0');
+      }
+
+      timerDisplay.textContent = formattedTime;
     }
 
     function getRandomColor() {
