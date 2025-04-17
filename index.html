@@ -20,7 +20,7 @@
       font-family: sans-serif;
       background-color: black;
       color: white;
-      overflow: hidden; /* Prevent scrolling */
+      overflow: hidden;
     }
 
     #credits-button,
@@ -126,6 +126,7 @@
 
     .green-text {
       color: green;
+      cursor: pointer;
     }
 
     .orange-text {
@@ -230,7 +231,7 @@
   <button id="music-toggle-button">♫</button>
   <div id="credits-box">
     <p>Created by Samad Slaten</p>
-    <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text">Erin Grogan</span>,
+    <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text" id="erin-grogan-link">Erin Grogan</span>,
       Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
     <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni Smith</span>,
       Anthony Royal</p>
@@ -269,6 +270,7 @@
     const musicTimeDisplay = document.getElementById('music-time');
     const timerLabelsDisplay = document.getElementById('timer-labels');
     const bubbleButton = document.getElementById('bubble-button');
+    const erinGroganLink = document.getElementById('erin-grogan-link');
 
     let musicControlsVisible = false;
 
@@ -317,10 +319,6 @@
       {
         url: 'https://file.garden/aABDpAgY3QmuIiLd/DEATHCAMP.mp3',
         name: 'DEATHCAMP'
-      },
-      {
-        url: '',
-        name: 'Silence'
       }
     ];
     let currentTrack = 0;
@@ -560,6 +558,17 @@
       audio.play().catch(error => {
         console.error('Autoplay prevented:', error);
       });
+    });
+
+    erinGroganLink.addEventListener('click', () => {
+      currentTrack = 4; // DEATHCAMP index
+      audio.src = musicFiles[currentTrack].url;
+      currentSongDisplay.textContent = musicFiles[currentTrack].name;
+      audio.volume = 0.77;
+      audio.play();
+      playPauseButton.textContent = '❚❚';
+      isPlaying = true;
+      updateBubbleButtonVisibility();
     });
   </script>
 </body>
