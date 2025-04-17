@@ -425,7 +425,7 @@
 
         setTimeout(() => {
           confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
-          confetti.style.transform = `translate(${xSpeed * 200}px, <span class="math-inline">\{ySpeed \* 200\}px\) rotate\(</span>{Math.random() * 360}deg)`;
+          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
           confetti.style.opacity = 0;
 
           setTimeout(() => {
@@ -437,6 +437,13 @@
 
     updateTimer();
     const timerInterval = setInterval(updateTimer, 1000);
+
+    // Start music on page load
+    window.addEventListener('load', () => {
+        audio.play().catch(error => {
+            console.error('Autoplay prevented:', error);
+        });
+    });
   </script>
 </body>
 </html>
