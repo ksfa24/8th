@@ -117,6 +117,7 @@
     flex-direction: column;
     align-items: flex-start;
     transition: right 0.5s ease-in-out;
+    cursor: pointer;
   }
 
   #music-controls.show {
@@ -129,7 +130,6 @@
     border: none;
     padding: 8px 12px;
     color: white;
-    cursor: pointer;
     border-radius: 5px;
     width: 150px;
     text-align: left;
@@ -144,19 +144,6 @@
     padding: 8px 15px;
   }
 
-  #music-toggle-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none;
-    padding: 10px 15px;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-
   #current-song {
     font-size: 16px;
     margin-bottom: 5px;
@@ -165,7 +152,6 @@
 </head>
 <body>
   <button id="credits-button">Credits</button>
-  <button id="music-toggle-button">♫</button>
   <div id="credits-box">
     <p>Created by Samad Slaten</p>
     <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text">Erin Grogan</span>, Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
@@ -191,7 +177,6 @@
     const volumeSlider = document.getElementById('volume-slider');
     const muteButton = document.getElementById('mute-button');
     const playPauseButton = document.getElementById('play-pause-button');
-    const musicToggleButton = document.getElementById('music-toggle-button');
     const musicControls = document.getElementById('music-controls');
     const prevButton = document.getElementById('prev-button');
     const nextButton = document.getElementById('next-button');
@@ -203,9 +188,11 @@
       creditsBox.classList.toggle('show');
     });
 
-    musicToggleButton.addEventListener('click', () => {
-      musicControls.classList.toggle('show');
-      musicControlsVisible = !musicControlsVisible;
+    musicControls.addEventListener('click', (event) => {
+      if (event.target === musicControls || event.target.id === 'current-song') {
+        musicControls.classList.toggle('show');
+        musicControlsVisible = !musicControlsVisible;
+      }
     });
 
     const targetDate = new Date('April 21, 2025 08:30:00 EST');
@@ -214,10 +201,10 @@
     const messageDisplay = document.getElementById('message');
 
     const musicFiles = [
-        { url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3', name: 'Lotus Waters' },
-        { url: 'https://yourusername.github.io/yourrepository/music/music2.mp3', name: 'Song 2' },
-        { url: 'https://yourusername.github.io/yourrepository/music/music3.mp3', name: 'Song 3' },
-        { url: '', name: 'Silence' }
+      { url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3', name: 'Lotus Waters' },
+      { url: 'https://yourusername.github.io/yourrepository/music/music2.mp3', name: 'Song 2' },
+      { url: 'https://yourusername.github.io/yourrepository/music/music3.mp3', name: 'Song 3' },
+      { url: '', name: 'Silence' }
     ];
     let currentTrack = 0;
     let audio = new Audio(musicFiles[currentTrack].url);
@@ -247,10 +234,10 @@
     playPauseButton.addEventListener('click', () => {
       if (isPlaying) {
         audio.pause();
-        playPauseButton.textContent = '▷';
+        playPauseButton.textContent = '❚❚';
       } else {
         audio.play();
-        playPauseButton.textContent = '❚❚';
+        playPauseButton.textContent = '▷';
       }
       isPlaying = !isPlaying;
     });
@@ -280,96 +267,96 @@
       currentSongDisplay.textContent = musicFiles[currentTrack].name;
       audio.play();
       if (musicFiles[currentTrack].url === '') {
-        playPauseButton.textContent = '▷';
+        playPauseButton.textContent = '❚❚';
         isPlaying = false;
       } else {
-        playPauseButton.textContent = '❚❚';
+        playPauseButton.textContent = '▷';
         isPlaying = true;
       }
     }
 
     audio.play();
-    playPauseButton.textContent = '❚❚';
+    playPauseButton.textContent = '▷';
 
     function updateTimer() {
-        const now = new Date();
-        const difference = targetDate - now;
+      const now = new Date();
+      const difference = targetDate - now;
 
-        if (difference <= 0) {
-            clearInterval(timerInterval);
-            timerDisplay.textContent = '00:00:00:00';
-            messageDisplay.style.opacity = 1;
-            createConfetti();
-            setInterval(changeMessageColor, 500);
-            return;
-        }
+      if (difference <= 0) {
+        clearInterval(timerInterval);
+        timerDisplay.textContent = '00:00:00:00';
+        messageDisplay.style.opacity = 1;
+        createConfetti();
+        setInterval(changeMessageColor, 500);
+        return;
+      }
 
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        timerDisplay.textContent = `${formatTime(days)}:${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+      timerDisplay.textContent = `${formatTime(days)}:${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
     }
 
     function formatTime(time) {
-        return time < 10 ? '0' + time : time;
+      return time < 10 ? '0' + time : time;
     }
 
     function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
     }
 
     function changeMessageColor() {
-        messageDisplay.style.color = getRandomColor();
+      messageDisplay.style.color = getRandomColor();
     }
 
     function createConfetti() {
-        const messageRect = messageDisplay.getBoundingClientRect();
-        const messageLeft = messageRect.left;
-        const messageRight = messageRect.right;
-        const messageCenterY = messageRect.top + messageRect.height / 2;
+      const messageRect = messageDisplay.getBoundingClientRect();
+      const messageLeft = messageRect.left;
+      const messageRight = messageRect.right;
+      const messageCenterY = messageRect.top + messageRect.height / 2;
 
-        for (let i = 0; i < 50; i++) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.backgroundColor = getRandomColor();
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.backgroundColor = getRandomColor();
 
-            let side = messageLeft;
-            let xDirection = 1;
+        let side = messageLeft;
+        let xDirection = 1;
 
-            if (i % 2 === 0) {
-                side = messageRight;
-                xDirection = -1;
-            }
-
-            confetti.style.left = side + 'px';
-            confetti.style.top = messageCenterY + 'px';
-
-            const angle = (Math.random() - 0.5) * Math.PI / 2;
-            const speed = Math.random() * 5 + 3;
-            const xSpeed = Math.cos(angle) * speed * xDirection;
-            const ySpeed = Math.sin(angle) * speed;
-
-            document.body.appendChild(confetti);
-
-            const lifetime = Math.random() * 2000 + 1000;
-
-            setTimeout(() => {
-                confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
-                confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
-                confetti.style.opacity = 0;
-
-                setTimeout(() => {
-                    confetti.remove();
-                }, lifetime);
-            }, 10);
+        if (i % 2 === 0) {
+          side = messageRight;
+          xDirection = -1;
         }
+
+        confetti.style.left = side + 'px';
+        confetti.style.top = messageCenterY + 'px';
+
+        const angle = (Math.random() - 0.5) * Math.PI / 2;
+        const speed = Math.random() * 5 + 3;
+        const xSpeed = Math.cos(angle) * speed * xDirection;
+        const ySpeed = Math.sin(angle) * speed;
+
+        document.body.appendChild(confetti);
+
+        const lifetime = Math.random() * 2000 + 1000;
+
+        setTimeout(() => {
+          confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
+          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
+          confetti.style.opacity = 0;
+
+          setTimeout(() => {
+            confetti.remove();
+          }, lifetime);
+        }, 10);
+      }
     }
 
     updateTimer();
