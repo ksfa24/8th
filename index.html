@@ -203,7 +203,7 @@
       position: absolute;
       width: 50px;
       height: 50px;
-      border-radius: 50%;
+      border-radius: 5px; /* changed to 5px to make it a square with rounded edges */
       background-color: rgba(173, 216, 230, 0.7);
       pointer-events: auto;
       cursor: pointer;
@@ -211,7 +211,7 @@
     }
 
     #bubble-button {
-      display: none; /* Initially hidden */
+      display: none;
     }
   </style>
 </head>
@@ -382,12 +382,12 @@
         playPauseButton.textContent = '❚❚';
         isPlaying = true;
       }
-      updateBubbleButtonVisibility(); // Update button visibility
+      updateBubbleButtonVisibility();
     }
 
     audio.play();
     playPauseButton.textContent = '❚❚';
-    updateBubbleButtonVisibility(); // Initial button visibility
+    updateBubbleButtonVisibility();
 
     musicSlider.addEventListener('input', () => {
       if (audio.duration) {
@@ -539,9 +539,9 @@
 
     function updateBubbleButtonVisibility() {
       if (currentTrack < 2) {
-        bubbleButton.style.display = 'block'; // Show for the first two songs
+        bubbleButton.style.display = 'block';
       } else {
-        bubbleButton.style.display = 'none'; // Hide for other songs
+        bubbleButton.style.display = 'none';
       }
     }
 
