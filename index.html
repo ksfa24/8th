@@ -280,16 +280,16 @@
       currentSongDisplay.textContent = musicFiles[currentTrack].name;
       audio.play();
       if (musicFiles[currentTrack].url === '') {
-        playPauseButton.textContent = '&#9658;';
+        playPauseButton.textContent = '▷;';
         isPlaying = false;
       } else {
-        playPauseButton.textContent = '&#10074;&#10074;';
+        playPauseButton.textContent = '❚;❚;';
         isPlaying = true;
       }
     }
 
     audio.play();
-    playPauseButton.textContent = '&#10074;&#10074;';
+    playPauseButton.textContent = '❚;❚;';
 
     function updateTimer() {
         const now = new Date();
