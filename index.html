@@ -176,207 +176,130 @@
   <div id="message">Good Luck Kippsters!</div>
 
   <script>
-    const creditsButton = document.getElementById('credits-button');
-    const creditsBox = document.getElementById('credits-box');
-    const loopButton = document.getElementById('loop-button');
-    const volumeSlider = document.getElementById('volume-slider');
-    const muteButton = document.getElementById('mute-button');
-    const playPauseButton = document.getElementById('play-pause-button');
-    const musicControls = document.getElementById('music-controls');
-    const prevButton = document.getElementById('prev-button');
-    const nextButton = document.getElementById('next-button');
-    const currentSongDisplay = document.getElementById('current-song');
-    const seekBar = document.getElementById('seek-bar');
+    document.addEventListener('DOMContentLoaded', function() {
+      const creditsButton = document.getElementById('credits-button');
+      const creditsBox = document.getElementById('credits-box');
+      const musicControls = document.getElementById('music-controls');
+      const audio = new Audio('https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3');
+      const playPauseButton = document.getElementById('play-pause-button');
+      const seekBar = document.getElementById('seek-bar');
+      const timerDisplay = document.getElementById('timer');
+      const messageDisplay = document.getElementById('message');
+      const targetDate = new Date('April 21, 2025 08:30:00 EST');
 
-    let musicControlsVisible = false;
+      creditsButton.addEventListener('click', () => {
+        creditsBox.classList.toggle('show');
+      });
 
-    creditsButton.addEventListener('click', () => {
-      creditsBox.classList.toggle('show');
-    });
+      musicControls.addEventListener('click', (event) => {
+        if (event.target === musicControls || event.target.id === 'current-song') {
+          musicControls.classList.toggle('show');
+        }
+      });
 
-    musicControls.addEventListener('click', (event) => {
-      if (event.target === musicControls || event.target.id === 'current-song') {
-        musicControls.classList.toggle('show');
-        musicControlsVisible = !musicControlsVisible;
-      }
-    });
+      playPauseButton.addEventListener('click', () => {
+        if (audio.paused) {
+          audio.play();
+          playPauseButton.textContent = '❚❚';
+        } else {
+          audio.pause();
+          playPauseButton.textContent = '▷';
+        }
+      });
 
-    const targetDate = new Date('April 21, 2025 08:30:00 EST');
-    const timerDisplay = document.getElementById('timer');
-    const timerLabelsDisplay = document.getElementById('timer-labels');
-    const messageDisplay = document.getElementById('message');
+      audio.addEventListener('timeupdate', () => {
+        seekBar.max = audio.duration;
+        seekBar.value = audio.currentTime;
+      });
 
-    const musicFiles = [
-      { url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3', name: 'Lotus Waters' },
-      { url: 'https://yourusername.github.io/yourrepository/music/music2.mp3', name: 'Song 2' },
-      { url: 'https://yourusername.github.io/yourrepository/music/music3.mp3', name: 'Song 3' },
-      { url: '', name: 'Silence' }
-    ];
-    let currentTrack = 0;
-    let audio = new Audio(musicFiles[currentTrack].url);
-    let isLooping = false;
-    let isMuted = false;
-    let isPlaying = true;
+      seekBar.addEventListener('input', () => {
+        audio.currentTime = seekBar.value;
+      });
 
-    audio.loop = false;
-    currentSongDisplay.textContent = musicFiles[currentTrack].name;
+      function updateTimer() {
+        const now = new Date();
+        const difference = targetDate - now;
 
-    loopButton.addEventListener('click', () => {
-      isLooping = !isLooping;
-      audio.loop = isLooping;
-      loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off';
-    });
-
-    volumeSlider.addEventListener('input', () => {
-      audio.volume = volumeSlider.value;
-    });
-
-    muteButton.addEventListener('click', () => {
-      isMuted = !isMuted;
-      audio.muted = isMuted;
-      muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
-    });
-
-    playPauseButton.addEventListener('click', () => {
-      if (isPlaying) {
-        audio.pause();
-        playPauseButton.textContent = '❚❚';
-      } else {
-        audio.play();
-        playPauseButton.textContent = '▷';
-      }
-      isPlaying = !isPlaying;
-    });
-
-    audio.addEventListener('ended', () => {
-      if (!isLooping) {
-        nextSong();
-      }
-    });
-
-    prevButton.addEventListener('click', () => {
-      currentTrack = (currentTrack - 1 + musicFiles.length) % musicFiles.length;
-      updateSong();
-    });
-
-    nextButton.addEventListener('click', () => {
-      nextSong();
-    });
-
-    function nextSong() {
-      currentTrack = (currentTrack + 1) % musicFiles.length;
-      updateSong();
-    }
-
-    function updateSong() {
-      audio.src = musicFiles[currentTrack].url;
-      currentSongDisplay.textContent = musicFiles[currentTrack].name;
-      audio.play();
-      if (musicFiles[currentTrack].url === '') {
-        playPauseButton.textContent = '❚❚';
-        isPlaying = false;
-      } else {
-        playPauseButton.textContent = '▷';
-        isPlaying = true;
-      }
-      seekBar.value = 0;
-    }
-
-    audio.play();
-    playPauseButton.textContent = '▷';
-
-    audio.addEventListener('timeupdate', () => {
-      seekBar.max = audio.duration;
-      seekBar.value = audio.currentTime;
-    });
-
-    seekBar.addEventListener('input', () => {
-      audio.currentTime = seekBar.value;
-    });
-
-    function updateTimer() {
-      const now = new Date();
-      const difference = targetDate - now;
-
-      if (difference <= 0) {
-        clearInterval(timerInterval);
-        timerDisplay.textContent = '00:00:00:00';
-        messageDisplay.style.opacity = 1;
-        createConfetti();
-        setInterval(changeMessageColor, 500);
-        return;
-      }
-
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-      timerDisplay.textContent = `${formatTime(days)}:${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
-    }
-
-    function formatTime(time) {
-      return time < 10 ? '0' + time : time;
-    }
-
-    function getRandomColor() {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
-
-    function changeMessageColor() {
-      messageDisplay.style.color = getRandomColor();
-    }
-
-    function createConfetti() {
-      const messageRect = messageDisplay.getBoundingClientRect();
-      const messageLeft = messageRect.left;
-      const messageRight = messageRect.right;
-      const messageCenterY = messageRect.top + messageRect.height / 2;
-
-      for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.backgroundColor = getRandomColor();
-
-        let side = messageLeft;
-        let xDirection = 1;
-
-        if (i % 2 === 0) {
-          side = messageRight;
-          xDirection = -1;
+        if (difference <= 0) {
+          clearInterval(timerInterval);
+          timerDisplay.textContent = '00:00:00:00';
+          messageDisplay.style.opacity = 1;
+          createConfetti();
+          setInterval(changeMessageColor, 500);
+          return;
         }
 
-        confetti.style.left = side + 'px';
-        confetti.style.top = messageCenterY + 'px';
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        const angle = (Math.random() - 0.5) * Math.PI / 2;
-        const speed = Math.random() * 5 + 3;
-        const xSpeed = Math.cos(angle) * speed * xDirection;
-        const ySpeed = Math.sin(angle) * speed;
+        timerDisplay.textContent = `${formatTime(days)}:${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+      }
 
-        document.body.appendChild(confetti);
+      function formatTime(time) {
+        return time < 10 ? '0' + time : time;
+      }
 
-        const lifetime = Math.random() * 2000 + 1000;
+      function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
 
-        setTimeout(() => {
-          confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
-          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
-          confetti.style.opacity = 0;
+      function changeMessageColor() {
+        messageDisplay.style.color = getRandomColor();
+      }
+
+      function createConfetti() {
+        const messageRect = messageDisplay.getBoundingClientRect();
+        const messageLeft = messageRect.left;
+        const messageRight = messageRect.right;
+        const messageCenterY = messageRect.top + messageRect.height / 2;
+
+        for (let i = 0; i < 50; i++) {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.backgroundColor = getRandomColor();
+
+          let side = messageLeft;
+          let xDirection = 1;
+
+          if (i % 2 === 0) {
+            side = messageRight;
+            xDirection = -1;
+          }
+
+          confetti.style.left = side + 'px';
+          confetti.style.top = messageCenterY + 'px';
+
+          const angle = (Math.random() - 0.5) * Math.PI / 2;
+          const speed = Math.random() * 5 + 3;
+          const xSpeed = Math.cos(angle) * speed * xDirection;
+          const ySpeed = Math.sin(angle) * speed;
+
+          document.body.appendChild(confetti);
+
+          const lifetime = Math.random() * 2000 + 1000;
 
           setTimeout(() => {
-            confetti.remove();
-          }, lifetime);
-        }, 10);
-      }
-    }
+            confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
+            confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
+            confetti.style.opacity = 0;
 
-    updateTimer();
-    const timerInterval = setInterval(updateTimer, 1000);
+            setTimeout(() => {
+              confetti.remove();
+            }, lifetime);
+          }, 10);
+        }
+      }
+
+      updateTimer();
+      const timerInterval = setInterval(updateTimer, 1000);
+    });
   </script>
 </body>
 </html>
