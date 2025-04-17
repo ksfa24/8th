@@ -117,6 +117,9 @@
     flex-direction: column;
     align-items: flex-start;
     transition: right 0.5s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 10px;
   }
 
   #music-controls.show {
@@ -162,7 +165,7 @@
     margin-bottom: 5px;
   }
 
-  #credits-close-button {
+  #credits-close-button, #music-close-button {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -184,6 +187,7 @@
     <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni Smith</span>, Anthony Royal</p>
   </div>
   <div id="music-controls">
+    <button id="music-close-button">×</button>
     <div id="current-song"></div>
     <button id="play-pause-button">❚❚</button>
     <button id="loop-button">Loop</button>
@@ -200,6 +204,7 @@
     const creditsButton = document.getElementById('credits-button');
     const creditsBox = document.getElementById('credits-box');
     const creditsCloseButton = document.getElementById('credits-close-button');
+    const musicCloseButton = document.getElementById('music-close-button');
     const loopButton = document.getElementById('loop-button');
     const volumeSlider = document.getElementById('volume-slider');
     const muteButton = document.getElementById('mute-button');
@@ -220,9 +225,16 @@
       creditsBox.classList.remove('show');
     });
 
+    musicCloseButton.addEventListener('click', () => {
+      musicControls.classList.remove('show');
+    });
+
     document.addEventListener('click', (event) => {
         if(creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton){
             creditsBox.classList.remove('show');
+        }
+        if(musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton){
+            musicControls.classList.remove('show');
         }
     });
 
