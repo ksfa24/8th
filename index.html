@@ -1,195 +1,223 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>KSFA Timer</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-<style>
-  body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: sans-serif;
-    background-color: black;
-    color: white;
-    overflow: hidden;
-  }
+  <title>KSFA Timer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      background-color: black;
+      color: white;
+      overflow: hidden;
+    }
 
-  #credits-button, #submit-button, #music-toggle-button {
-    position: absolute;
-    top: 20px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none;
-    padding: 10px 15px;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-  }
+    #credits-button,
+    #submit-button,
+    #music-toggle-button {
+      position: absolute;
+      top: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
 
-  #credits-button {
-    left: 20px;
-  }
+    #credits-button {
+      left: 20px;
+    }
 
-  #submit-button {
-    left: 50%;
-    transform: translateX(-50%);
-  }
+    #submit-button {
+      left: 50%;
+      transform: translateX(-50%);
+    }
 
-  #music-toggle-button {
-    right: 20px; /* Moved to top right */
-  }
+    #music-toggle-button {
+      right: 20px;
+      /* Moved to top right */
+    }
 
-  #credits-box {
-    position: fixed;
-    bottom: -100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    transition: bottom 0.5s ease-in-out;
-    text-align: center;
-    max-width: 80%;
-    box-sizing: border-box;
-  }
+    #credits-box {
+      position: fixed;
+      bottom: -100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      transition: bottom 0.5s ease-in-out;
+      text-align: center;
+      max-width: 80%;
+      box-sizing: border-box;
+    }
 
-  #credits-box.show {
-    bottom: 50%;
-    transform: translate(-50%, 50%);
-  }
+    #credits-box.show {
+      bottom: 50%;
+      transform: translate(-50%, 50%);
+    }
 
-  #timer {
-    font-size: 100px;
-    text-align: center;
-    font-family: 'Winky Rough', sans-serif;
-    font-weight: bold;
-    letter-spacing: 0.2em;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
-  }
-
-  #timer-labels {
-    font-size: 20px;
-    text-align: center;
-    font-family: sans-serif;
-    margin-top: 5px;
-    letter-spacing: 0.2em;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  #message {
-    font-size: 80px;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 1s ease-in-out, color 0.5s linear;
-    font-family: 'Pacifico', cursive;
-    position: relative;
-  }
-
-  .confetti {
-    position: absolute;
-    width: 15px;
-    height: 8px;
-    pointer-events: none;
-    transform-origin: center;
-  }
-
-  @media (max-width: 600px) {
     #timer {
-      font-size: 60px;
-      letter-spacing: 0.1em;
+      font-size: 100px;
+      text-align: center;
+      font-family: 'Winky Rough', sans-serif;
+      font-weight: bold;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
     }
 
     #timer-labels {
-      font-size: 15px;
-      letter-spacing: 0.1em;
+      font-size: 20px;
+      text-align: center;
+      font-family: sans-serif;
+      margin-top: 5px;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
+      cursor: pointer;
+      user-select: none;
     }
-  }
 
-  .green-text { color: green; }
-  .orange-text { color: orange; }
-  .red-text { color: red; }
-  .hot-pink-text { color: hotpink; }
+    #message {
+      font-size: 80px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out,
+      color 0.5s linear;
+      font-family: 'Pacifico',
+      cursive;
+      position: relative;
+    }
 
-  #music-controls {
-    position: absolute;
-    top: 60px; /* Adjusted to be below the buttons */
-    right: -200px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    transition: right 0.5s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 10px;
-    border-radius: 10px;
-  }
+    .confetti {
+      position: absolute;
+      width: 15px;
+      height: 8px;
+      pointer-events: none;
+      transform-origin: center;
+    }
 
-  #music-controls.show {
-    right: 20px;
-  }
+    @media (max-width: 600px) {
+      #timer {
+        font-size: 60px;
+        letter-spacing: 0.1em;
+      }
 
-  #music-controls button, #music-controls input {
-    margin-top: 5px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none;
-    padding: 8px 12px;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    width: 150px;
-    text-align: left;
-  }
+      #timer-labels {
+        font-size: 15px;
+        letter-spacing: 0.1em;
+      }
+    }
 
-  #music-controls input[type="range"] {
-    width: 140px;
-  }
+    .green-text {
+      color: green;
+    }
 
-  #play-pause-button {
-    font-size: 1.2em;
-    padding: 8px 15px;
-  }
+    .orange-text {
+      color: orange;
+    }
 
-  #current-song {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
+    .red-text {
+      color: red;
+    }
 
-  #music-slider {
-    width: 150px;
-    margin-top: 5px;
-  }
+    .hot-pink-text {
+      color: hotpink;
+    }
 
-  #music-time {
-    font-size: 12px;
-    margin-bottom: 2px;
-  }
+    #music-controls {
+      position: absolute;
+      top: 60px;
+      /* Adjusted to be below the buttons */
+      right: -200px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: right 0.5s ease-in-out;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 10px;
+    }
 
-  #volume-label {
+    #music-controls.show {
+      right: 20px;
+    }
+
+    #music-controls button,
+    #music-controls input {
+      margin-top: 5px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 8px 12px;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 150px;
+      text-align: left;
+    }
+
+    #music-controls input[type="range"] {
+      width: 140px;
+    }
+
+    #play-pause-button {
+      font-size: 1.2em;
+      padding: 12px; /* Adjusted padding to make it more square */
+      width: 40px; /* Set a fixed width */
+      height: 40px; /* Set a fixed height */
+      display: flex; /* Using flexbox for centering */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+    }
+
+    #current-song {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    #music-slider {
+      width: 150px;
+      margin-top: 5px;
+    }
+
+    #music-time {
       font-size: 12px;
       margin-bottom: 2px;
-  }
-</style>
+    }
+
+    #volume-label {
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+  </style>
 </head>
+
 <body>
   <button id="credits-button">Credits</button>
   <button id="submit-button">Submit</button>
   <button id="music-toggle-button">♫</button>
   <div id="credits-box">
     <p>Created by Samad Slaten</p>
-    <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text">Erin Grogan</span>, Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
-    <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni Smith</span>, Anthony Royal</p>
+    <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text">Erin Grogan</span>,
+      Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
+    <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni Smith</span>,
+      Anthony Royal</p>
   </div>
   <div id="music-controls">
     <div id="current-song"></div>
@@ -235,10 +263,10 @@
     });
 
     document.addEventListener('click', (event) => {
-      if(creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton){
+      if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
         creditsBox.classList.remove('show');
       }
-      if(musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton){
+      if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) {
         musicControls.classList.remove('show');
       }
     });
@@ -252,13 +280,30 @@
     const timerDisplay = document.getElementById('timer');
     const messageDisplay = document.getElementById('message');
 
-    const musicFiles = [
-      { url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3', name: 'Lotus Waters' },
-      { url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3', name: 'LEASE' },
-      { url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20KYO.mp3', name: 'KYO' },
-      { url: 'https://file.garden/aABDpAgY3QmuIiLd/1-21%20Yuu.mp3', name: 'Yuu' },
-      { url: 'https://file.garden/aABDpAgY3QmuIiLd/DEATHCAMP.mp3', name: 'DEATHCAMP' },
-      { url: '', name: 'Silence' }
+    const musicFiles = [{
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3',
+        name: 'Lotus Waters'
+      },
+      {
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3',
+        name: 'LEASE'
+      },
+      {
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20KYO.mp3',
+        name: 'KYO'
+      },
+      {
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-21%20Yuu.mp3',
+        name: 'Yuu'
+      },
+      {
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/DEATHCAMP.mp3',
+        name: 'DEATHCAMP'
+      },
+      {
+        url: '',
+        name: 'Silence'
+      }
     ];
     let currentTrack = 0;
     let audio = new Audio(musicFiles[currentTrack].url);
@@ -333,13 +378,13 @@
     playPauseButton.textContent = '❚❚';
 
     musicSlider.addEventListener('input', () => {
-      if(audio.duration){
+      if (audio.duration) {
         audio.currentTime = (audio.duration * musicSlider.value) / 100;
       }
     });
 
     audio.addEventListener('timeupdate', () => {
-      if(audio.duration){
+      if (audio.duration) {
         musicSlider.value = (audio.currentTime * 100) / audio.duration;
         musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
       }
@@ -408,51 +453,4 @@
       const messageCenterY = messageRect.top + messageRect.height / 2;
 
       for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.backgroundColor = getRandomColor();
-
-        let side = messageLeft;
-        let xDirection = 1;
-
-        if (i % 2 === 0) {
-          side = messageRight;
-          xDirection = -1;
-        }
-
-        confetti.style.left = side + 'px';
-        confetti.style.top = messageCenterY + 'px';
-
-        const angle = (Math.random() - 0.5) * Math.PI / 2;
-        const speed = Math.random() * 5 + 3;
-        const xSpeed = Math.cos(angle) * speed * xDirection;
-        const ySpeed = Math.sin(angle) * speed;
-
-        document.body.appendChild(confetti);
-
-        const lifetime = Math.random() * 2000 + 1000;
-
-        setTimeout(() => {
-          confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
-          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
-          confetti.style.opacity = 0;
-
-          setTimeout(() => {
-            confetti.remove();
-          }, lifetime);
-        }, 10);
-      }
-    }
-
-    updateTimer();
-    const timerInterval = setInterval(updateTimer, 1000);
-
-    // Start music on page load
-    window.addEventListener('load', () => {
-        audio.play().catch(error => {
-            console.error('Autoplay prevented:', error);
-        });
-    });
-  </script>
-</body>
-</html>
+        const confetti
