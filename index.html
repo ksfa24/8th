@@ -21,10 +21,9 @@
     overflow: hidden;
   }
 
-  #credits-button {
+  #credits-button, #submit-button {
     position: absolute;
     top: 20px;
-    left: 20px;
     background-color: rgba(255, 255, 255, 0.2);
     border: none;
     padding: 10px 15px;
@@ -32,6 +31,14 @@
     cursor: pointer;
     border-radius: 5px;
     font-size: 16px;
+  }
+
+  #credits-button {
+    left: 20px;
+  }
+
+  #submit-button {
+    right: 20px;
   }
 
   #credits-box {
@@ -150,7 +157,7 @@
   #music-toggle-button {
     position: absolute;
     top: 20px;
-    right: 20px;
+    right: 80px;
     background-color: rgba(255, 255, 255, 0.2);
     border: none;
     padding: 10px 15px;
@@ -183,6 +190,7 @@
 </head>
 <body>
   <button id="credits-button">Credits</button>
+  <button id="submit-button">Submit</button>
   <button id="music-toggle-button">♫♫</button>
   <div id="credits-box">
     <p>Created by Samad Slaten</p>
@@ -207,6 +215,7 @@
 
   <script>
     const creditsButton = document.getElementById('credits-button');
+    const submitButton = document.getElementById('submit-button');
     const creditsBox = document.getElementById('credits-box');
     const loopButton = document.getElementById('loop-button');
     const volumeSlider = document.getElementById('volume-slider');
@@ -224,6 +233,10 @@
 
     creditsButton.addEventListener('click', () => {
       creditsBox.classList.toggle('show');
+    });
+
+    submitButton.addEventListener('click', () => {
+        window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
     });
 
     document.addEventListener('click', (event) => {
