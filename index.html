@@ -38,7 +38,8 @@
   }
 
   #submit-button {
-    right: 20px;
+    left: 50%;
+    transform: translateX(-50%); /* Center the button */
   }
 
   #credits-box {
@@ -80,6 +81,8 @@
     white-space: nowrap;
     overflow: hidden;
     max-width: 100%;
+    cursor: pointer;
+    user-select: none; /* Prevent text selection */
   }
 
   #message {
@@ -228,6 +231,7 @@
     const currentSongDisplay = document.getElementById('current-song');
     const musicSlider = document.getElementById('music-slider');
     const musicTimeDisplay = document.getElementById('music-time');
+    const timerLabelsDisplay = document.getElementById('timer-labels');
 
     let musicControlsVisible = false;
 
@@ -236,16 +240,16 @@
     });
 
     submitButton.addEventListener('click', () => {
-        window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
+      window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
     });
 
     document.addEventListener('click', (event) => {
-        if(creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton){
-            creditsBox.classList.remove('show');
-        }
-        if(musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton){
-            musicControls.classList.remove('show');
-        }
+      if(creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton){
+        creditsBox.classList.remove('show');
+      }
+      if(musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton){
+        musicControls.classList.remove('show');
+      }
     });
 
     musicToggleButton.addEventListener('click', () => {
@@ -255,7 +259,6 @@
 
     const targetDate = new Date('April 21, 2025 08:30:00 EST');
     const timerDisplay = document.getElementById('timer');
-    const timerLabelsDisplay = document.getElementById('timer-labels');
     const messageDisplay = document.getElementById('message');
 
     const musicFiles = [
@@ -337,22 +340,22 @@
     playPauseButton.textContent = '❚❚';
 
     musicSlider.addEventListener('input', () => {
-        if(audio.duration){
-            audio.currentTime = (audio.duration * musicSlider.value) / 100;
-        }
+      if(audio.duration){
+        audio.currentTime = (audio.duration * musicSlider.value) / 100;
+      }
     });
 
     audio.addEventListener('timeupdate', () => {
-        if(audio.duration){
-            musicSlider.value = (audio.currentTime * 100) / audio.duration;
-            musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
-        }
+      if(audio.duration){
+        musicSlider.value = (audio.currentTime * 100) / audio.duration;
+        musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
+      }
     });
 
     function formatTime(time) {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60);
+      return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
     }
 
     function updateTimer() {
