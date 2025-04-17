@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>KSFA Timer</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -111,9 +112,14 @@
   #music-controls {
     position: absolute;
     top: 20px;
-    right: 20px;
+    right: -200px;
     display: flex;
     align-items: center;
+    transition: right 0.5s ease-in-out;
+  }
+
+  #music-controls.show {
+    right: 20px;
   }
 
   #music-controls button, #music-controls input {
@@ -134,10 +140,24 @@
     font-size: 1.2em;
     padding: 8px 15px;
   }
+
+  #music-toggle-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+  }
 </style>
 </head>
 <body>
   <button id="credits-button">Credits</button>
+  <button id="music-toggle-button">Music</button>
   <div id="credits-box">
     <p>Created by Samad Slaten</p>
     <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text">Erin Grogan</span>, Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
@@ -160,9 +180,18 @@
     const volumeSlider = document.getElementById('volume-slider');
     const muteButton = document.getElementById('mute-button');
     const playPauseButton = document.getElementById('play-pause-button');
+    const musicToggleButton = document.getElementById('music-toggle-button');
+    const musicControls = document.getElementById('music-controls');
+
+    let musicControlsVisible = false;
 
     creditsButton.addEventListener('click', () => {
       creditsBox.classList.toggle('show');
+    });
+
+    musicToggleButton.addEventListener('click', () => {
+      musicControls.classList.toggle('show');
+      musicControlsVisible = !musicControlsVisible;
     });
 
     const targetDate = new Date('April 21, 2025 08:30:00 EST');
@@ -170,11 +199,10 @@
     const timerLabelsDisplay = document.getElementById('timer-labels');
     const messageDisplay = document.getElementById('message');
 
-    // Music cycler setup
     const musicFiles = [
-        'https://https://github.com/ksfa24/8th/blob/main/lotuswaters.mp3',
-        '',
-        '',
+        'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3',
+        'https://yourusername.github.io/yourrepository/music/music2.mp3',
+        'https://yourusername.github.io/yourrepository/music/music3.mp3',
         ''
     ];
     let currentTrack = 0;
