@@ -172,10 +172,10 @@
 
     // Music cycler setup
     const musicFiles = [
-      'lotuswaters.mp3', // Replace with your music files
-      'music2.mp3',
-      'music3.mp3',
-      '' // Blank MP3 file link
+        'https://https://github.com/ksfa24/8th/blob/main/lotuswaters.mp3',
+        '',
+        '',
+        ''
     ];
     let currentTrack = 0;
     let audio = new Audio(musicFiles[currentTrack]);
@@ -183,7 +183,7 @@
     let isMuted = false;
     let isPlaying = true;
 
-    audio.loop = false; // Initial loop setting
+    audio.loop = false;
 
     loopButton.addEventListener('click', () => {
       isLooping = !isLooping;
@@ -204,10 +204,10 @@
     playPauseButton.addEventListener('click', () => {
       if (isPlaying) {
         audio.pause();
-        playPauseButton.textContent = '&#9658;'; // Play icon
+        playPauseButton.textContent = '&#9658;';
       } else {
         audio.play();
-        playPauseButton.textContent = '&#10074;&#10074;'; // Pause icon
+        playPauseButton.textContent = '&#10074;&#10074;';
       }
       isPlaying = !isPlaying;
     });
@@ -227,8 +227,8 @@
       }
     });
 
-    audio.play(); // Start playing the first track
-    playPauseButton.textContent = '&#10074;&#10074;'; // Set pause icon initially
+    audio.play();
+    playPauseButton.textContent = '&#10074;&#10074;';
 
     function updateTimer() {
         const now = new Date();
