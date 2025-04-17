@@ -109,24 +109,21 @@
   .red-text { color: red; }
   .hot-pink-text { color: hotpink; }
 
-  #music-controls-container {
-      position: absolute;
-      top: 20px;
-      right: -200px;
-      transition: right 0.5s ease-in-out;
-  }
-
-  #music-controls-container.show {
-      right: 20px;
-  }
-
   #music-controls {
+    position: absolute;
+    top: 20px;
+    right: -200px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    transition: right 0.5s ease-in-out;
     background-color: rgba(0, 0, 0, 0.8);
     padding: 10px;
     border-radius: 10px;
+  }
+
+  #music-controls.show {
+    right: 20px;
   }
 
   #music-controls button, #music-controls input {
@@ -177,16 +174,14 @@
     <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text">Erin Grogan</span>, Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
     <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni Smith</span>, Anthony Royal</p>
   </div>
-  <div id="music-controls-container">
-    <div id="music-controls">
-      <div id="current-song"></div>
-      <button id="play-pause-button">❚❚</button>
-      <button id="loop-button">Loop</button>
-      <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
-      <button id="mute-button">Mute</button>
-      <button id="prev-button">Previous</button>
-      <button id="next-button">Next</button>
-    </div>
+  <div id="music-controls">
+    <div id="current-song"></div>
+    <button id="play-pause-button">❚❚</button>
+    <button id="loop-button">Loop</button>
+    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+    <button id="mute-button">Mute</button>
+    <button id="prev-button">Previous</button>
+    <button id="next-button">Next</button>
   </div>
   <div id="timer"></div>
   <div id="timer-labels">Days Hours Minutes Seconds</div>
@@ -200,7 +195,6 @@
     const muteButton = document.getElementById('mute-button');
     const playPauseButton = document.getElementById('play-pause-button');
     const musicToggleButton = document.getElementById('music-toggle-button');
-    const musicControlsContainer = document.getElementById('music-controls-container');
     const musicControls = document.getElementById('music-controls');
     const prevButton = document.getElementById('prev-button');
     const nextButton = document.getElementById('next-button');
@@ -216,13 +210,13 @@
         if(creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton){
             creditsBox.classList.remove('show');
         }
-        if(musicControlsContainer.classList.contains('show') && !musicControlsContainer.contains(event.target) && event.target !== musicToggleButton){
-            musicControlsContainer.classList.remove('show');
+        if(musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton){
+            musicControls.classList.remove('show');
         }
     });
 
     musicToggleButton.addEventListener('click', () => {
-      musicControlsContainer.classList.toggle('show');
+      musicControls.classList.toggle('show');
       musicControlsVisible = !musicControlsVisible;
     });
 
@@ -247,4 +241,151 @@
     currentSongDisplay.textContent = musicFiles[currentTrack].name;
 
     loopButton.addEventListener('click', () => {
-      isLooping = !isLoop-
+      isLooping = !isLooping;
+      audio.loop = isLooping;
+      loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off';
+    });
+
+    volumeSlider.addEventListener('input', () => {
+      audio.volume = volumeSlider.value;
+    });
+
+    muteButton.addEventListener('click', () => {
+      isMuted = !isMuted;
+      audio.muted = isMuted;
+      muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+    });
+
+    playPauseButton.addEventListener('click', () => {
+      if (isPlaying) {
+        audio.pause();
+        playPauseButton.textContent = '▷';
+      } else {
+        audio.play();
+        playPauseButton.textContent = '❚❚';
+      }
+      isPlaying = !isPlaying;
+    });
+
+    audio.addEventListener('ended', () => {
+      if (!isLooping) {
+        nextSong();
+      }
+    });
+
+    prevButton.addEventListener('click', () => {
+      currentTrack = (currentTrack - 1 + musicFiles.length) % musicFiles.length;
+      updateSong();
+    });
+
+    nextButton.addEventListener('click', () => {
+      nextSong();
+    });
+
+    function nextSong() {
+      currentTrack = (currentTrack + 1) % musicFiles.length;
+      updateSong();
+    }
+
+    function updateSong() {
+      audio.src = musicFiles[currentTrack].url;
+      currentSongDisplay.textContent = musicFiles[currentTrack].name;
+      audio.play();
+      if (musicFiles[currentTrack].url === '') {
+        playPauseButton.textContent = '▷';
+        isPlaying = false;
+      } else {
+        playPauseButton.textContent = '❚❚';
+        isPlaying = true;
+      }
+    }
+
+    audio.play();
+    playPauseButton.textContent = '❚❚';
+
+    function updateTimer() {
+      const now = new Date();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        clearInterval(timerInterval);
+        timerDisplay.textContent = '00:00:00:00';
+        messageDisplay.style.opacity = 1;
+        createConfetti();
+        setInterval(changeMessageColor, 500);
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      timerDisplay.textContent = `${formatTime(days)}:${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    }
+
+    function formatTime(time) {
+      return time < 10 ? '0' + time : time;
+    }
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function changeMessageColor() {
+      messageDisplay.style.color = getRandomColor();
+    }
+
+    function createConfetti() {
+      const messageRect = messageDisplay.getBoundingClientRect();
+      const messageLeft = messageRect.left;
+      const messageRight = messageRect.right;
+      const messageCenterY = messageRect.top + messageRect.height / 2;
+
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.backgroundColor = getRandomColor();
+
+        let side = messageLeft;
+        let xDirection = 1;
+
+        if (i % 2 === 0) {
+          side = messageRight;
+          xDirection = -1;
+        }
+
+        confetti.style.left = side + 'px';
+        confetti.style.top = messageCenterY + 'px';
+
+        const angle = (Math.random() - 0.5) * Math.PI / 2;
+        const speed = Math.random() * 5 + 3;
+        const xSpeed = Math.cos(angle) * speed * xDirection;
+        const ySpeed = Math.sin(angle) * speed;
+
+        document.body.appendChild(confetti);
+
+        const lifetime = Math.random() * 2000 + 1000;
+
+        setTimeout(() => {
+          confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
+          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
+          confetti.style.opacity = 0;
+
+          setTimeout(() => {
+            confetti.remove();
+          }, lifetime);
+        }, 10);
+      }
+    }
+
+    updateTimer();
+    const timerInterval = setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>
