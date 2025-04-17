@@ -48,7 +48,6 @@
 
     #music-toggle-button {
       right: 20px;
-      /* Moved to top right */
     }
 
     #credits-box {
@@ -144,7 +143,6 @@
     #music-controls {
       position: absolute;
       top: 60px;
-      /* Adjusted to be below the buttons */
       right: -200px;
       display: flex;
       flex-direction: column;
@@ -178,12 +176,7 @@
 
     #play-pause-button {
       font-size: 1.2em;
-      padding: 12px; /* Adjusted padding to make it more square */
-      width: 40px; /* Set a fixed width */
-      height: 40px; /* Set a fixed height */
-      display: flex; /* Using flexbox for centering */
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
+      padding: 8px 15px;
     }
 
     #current-song {
@@ -204,6 +197,19 @@
     #volume-label {
       font-size: 12px;
       margin-bottom: 2px;
+    }
+
+    .bubble {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: rgba(173, 216, 230, 0.7);
+      /* Light blue with some transparency */
+      pointer-events: auto;
+      /* Make bubbles clickable */
+      cursor: pointer;
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
     }
   </style>
 </head>
@@ -228,6 +234,7 @@
     <button id="mute-button">Mute</button>
     <button id="prev-button">Previous</button>
     <button id="next-button">Next</button>
+    <button id="bubble-button">🫧</button>
     <div id="music-time">00:00 / 00:00</div>
     <input type="range" id="music-slider" min="0" max="100" value="0">
   </div>
@@ -251,6 +258,7 @@
     const musicSlider = document.getElementById('music-slider');
     const musicTimeDisplay = document.getElementById('music-time');
     const timerLabelsDisplay = document.getElementById('timer-labels');
+    const bubbleButton = document.getElementById('bubble-button');
 
     let musicControlsVisible = false;
 
@@ -453,4 +461,87 @@
       const messageCenterY = messageRect.top + messageRect.height / 2;
 
       for (let i = 0; i < 50; i++) {
-        const confetti
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.backgroundColor = getRandomColor();
+
+        let side = messageLeft;
+        let xDirection = 1;
+
+        if (i % 2 === 0) {
+          side = messageRight;
+          xDirection = -1;
+        }
+
+        confetti.style.left = side + 'px';
+        confetti.style.top = messageCenterY + 'px';
+
+        const angle = (Math.random() - 0.5) * Math.PI / 2;
+        const speed = Math.random() * 5 + 3;
+        const xSpeed = Math.cos(angle) * speed * xDirection;
+        const ySpeed = Math.sin(angle) * speed;
+
+        document.body.appendChild(confetti);
+
+        const lifetime = Math.random() * 2000 + 1000;
+
+        setTimeout(() => {
+          confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
+          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
+          confetti.style.opacity = 0;
+
+          setTimeout(() => {
+            confetti.remove();
+          }, lifetime);
+        }, 10);
+      }
+    }
+
+    bubbleButton.addEventListener('click', () => {
+      createBubbles();
+    });
+
+    function createBubbles() {
+      const numBubbles = 10;
+      for (let i = 0; i < numBubbles; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const startX = Math.random() * window.innerWidth;
+        const startY = window.innerHeight;
+        bubble.style.left = startX + 'px';
+        bubble.style.top = startY + 'px';
+
+        const endY = Math.random() * -window.innerHeight;
+        const endX = Math.random() * window.innerWidth;
+
+        const duration = Math.random() * 3000 + 2000;
+
+        document.body.appendChild(bubble);
+
+        setTimeout(() => {
+          bubble.style.transition = `transform ${duration / 1000}s linear, opacity ${duration / 1000}s linear`;
+          bubble.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`;
+          bubble.style.opacity = 0;
+          setTimeout(() => {
+            bubble.remove();
+          }, duration);
+        }, 10);
+
+        bubble.addEventListener('click', () => {
+          bubble.remove();
+        });
+      }
+    }
+
+    updateTimer();
+    const timerInterval = setInterval(updateTimer, 1000);
+
+    window.addEventListener('load', () => {
+      audio.play().catch(error => {
+        console.error('Autoplay prevented:', error);
+      });
+    });
+  </script>
+</body>
+
+</html>
