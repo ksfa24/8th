@@ -151,7 +151,7 @@
       background-color: rgba(0, 0, 0, 0.8);
       padding: 10px;
       border-radius: 10px;
-      z-index: 1000; /* Ensure it's on top */
+      z-index: 1000;
     }
 
     #music-controls.show {
@@ -213,6 +213,13 @@
 
     #bubble-button {
       display: none;
+    }
+
+    @media (max-width: 600px) {
+      .bubble {
+        width: 40px; /* Smaller bubbles on mobile */
+        height: 40px; /* Smaller bubbles on mobile */
+      }
     }
   </style>
 </head>
