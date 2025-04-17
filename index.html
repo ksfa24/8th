@@ -193,8 +193,8 @@
     <div id="current-song"></div>
     <button id="play-pause-button">❚❚</button>
     <button id="loop-button">Loop</button>
-    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
     <div id="volume-label">Volume</div>
+    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
     <button id="mute-button">Mute</button>
     <button id="prev-button">Previous</button>
     <button id="next-button">Next</button>
@@ -425,7 +425,7 @@
 
         setTimeout(() => {
           confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
-          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
+          confetti.style.transform = `translate(${xSpeed * 200}px, <span class="math-inline">\{ySpeed \* 200\}px\) rotate\(</span>{Math.random() * 360}deg)`;
           confetti.style.opacity = 0;
 
           setTimeout(() => {
