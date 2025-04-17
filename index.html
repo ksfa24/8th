@@ -148,6 +148,10 @@
     font-size: 16px;
     margin-bottom: 5px;
   }
+  #seek-bar {
+    width: 100%;
+    margin-top: 10px;
+  }
 </style>
 </head>
 <body>
@@ -165,6 +169,7 @@
     <button id="mute-button">Mute</button>
     <button id="prev-button">Previous</button>
     <button id="next-button">Next</button>
+    <input type="range" id="seek-bar" min="0" value="0" step="1">
   </div>
   <div id="timer"></div>
   <div id="timer-labels">Days Hours Minutes Seconds</div>
@@ -181,6 +186,7 @@
     const prevButton = document.getElementById('prev-button');
     const nextButton = document.getElementById('next-button');
     const currentSongDisplay = document.getElementById('current-song');
+    const seekBar = document.getElementById('seek-bar');
 
     let musicControlsVisible = false;
 
@@ -273,10 +279,20 @@
         playPauseButton.textContent = '▷';
         isPlaying = true;
       }
+      seekBar.value = 0;
     }
 
     audio.play();
     playPauseButton.textContent = '▷';
+
+    audio.addEventListener('timeupdate', () => {
+      seekBar.max = audio.duration;
+      seekBar.value = audio.currentTime;
+    });
+
+    seekBar.addEventListener('input', () => {
+      audio.currentTime = seekBar.value;
+    });
 
     function updateTimer() {
       const now = new Date();
