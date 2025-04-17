@@ -141,7 +141,7 @@
     }
 
     #music-controls {
-      position: absolute;
+      position: fixed;
       top: 60px;
       right: -200px;
       display: flex;
@@ -151,6 +151,7 @@
       background-color: rgba(0, 0, 0, 0.8);
       padding: 10px;
       border-radius: 10px;
+      z-index: 1000; /* Ensure it's on top */
     }
 
     #music-controls.show {
@@ -201,8 +202,8 @@
 
     .bubble {
       position: absolute;
-      width: 80px; /* Increased size */
-      height: 80px; /* Increased size */
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       background-color: rgba(173, 216, 230, 0.7);
       pointer-events: auto;
@@ -518,7 +519,7 @@
         const endY = Math.random() * -window.innerHeight;
         const endX = Math.random() * window.innerWidth;
 
-        const duration = Math.random() * 7000 + 4000; // Increased duration
+        const duration = Math.random() * 7000 + 4000;
 
         document.body.appendChild(bubble);
 
