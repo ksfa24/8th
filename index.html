@@ -164,11 +164,6 @@
   <div id="music-controls">
     <div id="current-song"></div>
     <button id="play-pause-button">&#9658;</button>
-    <button id="loop-button">Loop</button>
-    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
-    <button id="mute-button">Mute</button>
-    <button id="prev-button">Previous</button>
-    <button id="next-button">Next</button>
     <input type="range" id="seek-bar" min="0" value="0" step="1">
   </div>
   <div id="timer"></div>
@@ -186,6 +181,7 @@
       const timerDisplay = document.getElementById('timer');
       const messageDisplay = document.getElementById('message');
       const targetDate = new Date('April 21, 2025 08:30:00 EST');
+      let musicControlsVisible = false;
 
       creditsButton.addEventListener('click', () => {
         creditsBox.classList.toggle('show');
@@ -194,6 +190,7 @@
       musicControls.addEventListener('click', (event) => {
         if (event.target === musicControls || event.target.id === 'current-song') {
           musicControls.classList.toggle('show');
+          musicControlsVisible = !musicControlsVisible;
         }
       });
 
