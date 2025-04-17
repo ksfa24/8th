@@ -21,7 +21,7 @@
     overflow: hidden;
   }
 
-  #credits-button, #submit-button {
+  #credits-button, #submit-button, #music-toggle-button {
     position: absolute;
     top: 20px;
     background-color: rgba(255, 255, 255, 0.2);
@@ -39,7 +39,11 @@
 
   #submit-button {
     left: 50%;
-    transform: translateX(-50%); /* Center the button */
+    transform: translateX(-50%);
+  }
+
+  #music-toggle-button {
+    right: 20px; /* Moved to top right */
   }
 
   #credits-box {
@@ -82,7 +86,7 @@
     overflow: hidden;
     max-width: 100%;
     cursor: pointer;
-    user-select: none; /* Prevent text selection */
+    user-select: none;
   }
 
   #message {
@@ -121,7 +125,7 @@
 
   #music-controls {
     position: absolute;
-    top: 20px;
+    top: 60px; /* Adjusted to be below the buttons */
     right: -200px;
     display: flex;
     flex-direction: column;
@@ -155,19 +159,6 @@
   #play-pause-button {
     font-size: 1.2em;
     padding: 8px 15px;
-  }
-
-  #music-toggle-button {
-    position: absolute;
-    top: 20px;
-    right: 80px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none;
-    padding: 10px 15px;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
   }
 
   #current-song {
