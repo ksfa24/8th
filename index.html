@@ -360,7 +360,24 @@
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-      timerDisplay.textContent = `<span class="math-inline">\{formatTime\(days\)\}\:</span>{formatTime(hours)}:<span class="math-inline">\{formatTime\(minutes\)\}\:</span>{formatTime(seconds)}`;
+      timerDisplay.textContent = `${formatTime(days)}:${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    }
+
+    function formatTime(time) {
+        if (typeof time === 'number'){
+            const days = Math.floor(time / (60 * 60 * 24));
+            const hours = Math.floor((time % (60 * 60 * 24)) / (60 * 60));
+            const minutes = Math.floor((time % (60 * 60)) / 60);
+            const seconds = Math.floor(time % 60);
+            if (days > 0) {
+                return `${days}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            } else {
+                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+        }
+        else {
+            return '00:00:00:00'
+        }
     }
 
     function getRandomColor() {
@@ -409,7 +426,7 @@
 
         setTimeout(() => {
           confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
-          confetti.style.transform = `translate(${xSpeed * 200}px, <span class="math-inline">\{ySpeed \* 200\}px\) rotate\(</span>{Math.random() * 360}deg)`;
+          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
           confetti.style.opacity = 0;
 
           setTimeout(() => {
