@@ -188,11 +188,9 @@
       creditsBox.classList.toggle('show');
     });
 
-    musicControls.addEventListener('click', (event) => {
-      if (event.target === musicControls || event.target.id === 'current-song') {
-        musicControls.classList.toggle('show');
-        musicControlsVisible = !musicControlsVisible;
-      }
+    musicControls.addEventListener('click', () => {
+      musicControls.classList.toggle('show');
+      musicControlsVisible = !musicControlsVisible;
     });
 
     const targetDate = new Date('April 21, 2025 08:30:00 EST');
