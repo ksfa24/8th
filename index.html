@@ -1,364 +1,373 @@
-<style>
-  body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: sans-serif;
-    background-color: black;
-    color: white;
-    overflow: hidden;
-    position: relative;
-  }
+<!DOCTYPE html>
+<html>
 
-  .background-scroll-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: -1;
-  }
-
-  .background-row {
-    position: absolute;
-    width: 100%;
-    height: 33.33%; /* Divide into three equal rows */
-    overflow: hidden;
-    display: flex; /* Enable flexbox for inline images */
-  }
-
-  .background-row.row1 {
-    top: 0;
-    --image-width: 20%; /* Width of each image */
-    --image-count: 3; /* Number of original images */
-  }
-
-  .background-row.row2 {
-    top: 33.33%;
-    --image-width: 15%;
-    --image-count: 2;
-  }
-
-  .background-row.row3 {
-    top: 66.66%;
-    --image-width: 25%;
-    --image-count: 2;
-  }
-
-  .background-image {
-    height: 100%;
-    opacity: 0.3;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    flex-shrink: 0;
-  }
-
-  /* Duplicate images in HTML to fill the row */
-  .background-row.row1 .background-image {
-    width: var(--image-width);
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-    animation: scrollLeftRow1 30s linear infinite;
-  }
-
-  .background-row.row1 .background-image:nth-child(2) {
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-  }
-
-  .background-row.row1 .background-image:nth-child(3) {
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-  }
-
-  .background-row.row1 .background-image:nth-child(4) {
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
-  }
-
-  .background-row.row1 .background-image:nth-child(5) {
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
-  }
-
-  .background-row.row1 .background-image:nth-child(6) {
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
-  }
-
-  .background-row.row2 .background-image {
-    width: var(--image-width);
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-    animation: scrollRightRow2 40s linear infinite;
-  }
-
-  .background-row.row2 .background-image:nth-child(2) {
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-  }
-
-  .background-row.row2 .background-image:nth-child(3) {
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
-  }
-
-  .background-row.row2 .background-image:nth-child(4) {
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
-  }
-
-  .background-row.row3 .background-image {
-    width: var(--image-width);
-    background-image: url('your-image3-1.jpg');
-    animation: scrollLeftSlowRow3 50s linear infinite;
-  }
-
-  .background-row.row3 .background-image:nth-child(2) {
-    background-image: url('your-image3-2.jpg');
-  }
-
-  .background-row.row3 .background-image:nth-child(3) {
-    background-image: url('your-image3-1.jpg'); /* Duplicate */
-  }
-
-  .background-row.row3 .background-image:nth-child(4) {
-    background-image: url('your-image3-2.jpg'); /* Duplicate */
-  }
-
-  /* Updated animations for seamless loop */
-  @keyframes scrollLeftRow1 {
-    0% {
-      transform: translateX(0%);
+<head>
+  <title>KSFA Timer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      background-color: black;
+      color: white;
+      overflow: hidden;
+      position: relative;
     }
-    100% {
-      transform: translateX(calc(var(--image-width) * var(--image-count) * -1)); /* Move by the width of the original set */
+
+    .background-scroll-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
     }
-  }
 
-  @keyframes scrollRightRow2 {
-    0% {
-      transform: translateX(0%);
+    .background-row {
+      position: absolute;
+      width: 100%;
+      height: 33.33%;
+      overflow: hidden;
+      display: flex;
     }
-    100% {
-      transform: translateX(calc(var(--image-width) * var(--image-count))); /* Move by the width of the original set */
+
+    .background-row.row1 {
+      top: 0;
+      --image-width: 20%;
+      --image-count: 3;
     }
-  }
 
-  @keyframes scrollLeftSlowRow3 {
-    0% {
-      transform: translateX(0%);
+    .background-row.row2 {
+      top: 33.33%;
+      --image-width: 15%;
+      --image-count: 2;
     }
-    100% {
-      transform: translateX(calc(var(--image-width) * var(--image-count) * -1));
+
+    .background-row.row3 {
+      top: 66.66%;
+      --image-width: 25%;
+      --image-count: 2;
     }
-  }
 
-  #credits-button,
-  #submit-button,
-  #music-toggle-button {
-    position: absolute;
-    top: 20px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none;
-    padding: 10px 15px;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    z-index: 1;
-  }
+    .background-image {
+      height: 100%;
+      opacity: 0.3;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      flex-shrink: 0;
+    }
 
-  #credits-button {
-    left: 20px;
-  }
+    .background-row.row1 .background-image {
+      width: var(--image-width);
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+      animation: scrollLeftRow1 30s linear infinite;
+    }
 
-  #submit-button {
-    left: 50%;
-    transform: translateX(-50%);
-  }
+    .background-row.row1 .background-image:nth-child(2) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
 
-  #music-toggle-button {
-    right: 20px;
-  }
+    .background-row.row1 .background-image:nth-child(3) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
 
-  #credits-box {
-    position: fixed;
-    bottom: -100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    transition: bottom 0.5s ease-in-out;
-    text-align: center;
-    max-width: 80%;
-    box-sizing: border-box;
-    z-index: 1;
-  }
+    .background-row.row1 .background-image:nth-child(4) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
 
-  #credits-box.show {
-    bottom: 50%;
-    transform: translate(-50%, 50%);
-  }
+    .background-row.row1 .background-image:nth-child(5) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
 
-  #timer {
-    font-size: 100px;
-    text-align: center;
-    font-family: 'Winky Rough', sans-serif;
-    font-weight: bold;
-    letter-spacing: 0.2em;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
-    z-index: 1;
-  }
+    .background-row.row1 .background-image:nth-child(6) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
 
-  #timer-labels {
-    font-size: 20px;
-    text-align: center;
-    font-family: sans-serif;
-    margin-top: 5px;
-    letter-spacing: 0.2em;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
-    cursor: pointer;
-    user-select: none;
-    z-index: 1;
-  }
+    .background-row.row2 .background-image {
+      width: var(--image-width);
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+      animation: scrollRightRow2 40s linear infinite;
+    }
 
-  #message {
-    font-size: 80px;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 1s ease-in-out,
-    color 0.5s linear;
-    font-family: 'Pacifico',
-    cursive;
-    position: relative;
-    z-index: 1;
-  }
+    .background-row.row2 .background-image:nth-child(2) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
 
-  .confetti {
-    position: absolute;
-    width: 15px;
-    height: 8px;
-    pointer-events: none;
-    transform-origin: center;
-    z-index: 1;
-  }
+    .background-row.row2 .background-image:nth-child(3) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
 
-  @media (max-width: 600px) {
+    .background-row.row2 .background-image:nth-child(4) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
+
+    .background-row.row3 .background-image {
+      width: var(--image-width);
+      background-image: url('your-image3-1.jpg');
+      animation: scrollLeftSlowRow3 50s linear infinite;
+    }
+
+    .background-row.row3 .background-image:nth-child(2) {
+      background-image: url('your-image3-2.jpg');
+    }
+
+    .background-row.row3 .background-image:nth-child(3) {
+      background-image: url('your-image3-1.jpg');
+    }
+
+    .background-row.row3 .background-image:nth-child(4) {
+      background-image: url('your-image3-2.jpg');
+    }
+
+    @keyframes scrollLeftRow1 {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(calc(var(--image-width) * var(--image-count) * -1));
+      }
+    }
+
+    @keyframes scrollRightRow2 {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(calc(var(--image-width) * var(--image-count)));
+      }
+    }
+
+    @keyframes scrollLeftSlowRow3 {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(calc(var(--image-width) * var(--image-count) * -1));
+      }
+    }
+
+    #credits-button,
+    #submit-button,
+    #music-toggle-button {
+      position: absolute;
+      top: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+      z-index: 1;
+    }
+
+    #credits-button {
+      left: 20px;
+    }
+
+    #submit-button {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #music-toggle-button {
+      right: 20px;
+    }
+
+    #credits-box {
+      position: fixed;
+      bottom: -100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      transition: bottom 0.5s ease-in-out;
+      text-align: center;
+      max-width: 80%;
+      box-sizing: border-box;
+      z-index: 1;
+    }
+
+    #credits-box.show {
+      bottom: 50%;
+      transform: translate(-50%, 50%);
+    }
+
     #timer {
-      font-size: 60px;
-      letter-spacing: 0.1em;
+      font-size: 100px;
+      text-align: center;
+      font-family: 'Winky Rough', sans-serif;
+      font-weight: bold;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
+      z-index: 1;
     }
 
     #timer-labels {
-      font-size: 15px;
-      letter-spacing: 0.1em;
+      font-size: 20px;
+      text-align: center;
+      font-family: sans-serif;
+      margin-top: 5px;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
+      cursor: pointer;
+      user-select: none;
+      z-index: 1;
     }
-  }
 
-  .green-text {
-    color: green;
-    cursor: pointer;
-  }
+    #message {
+      font-size: 80px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out,
+      color 0.5s linear;
+      font-family: 'Pacifico',
+      cursive;
+      position: relative;
+      z-index: 1;
+    }
 
-  .orange-text {
-    color: orange;
-    cursor: pointer;
-  }
+    .confetti {
+      position: absolute;
+      width: 15px;
+      height: 8px;
+      pointer-events: none;
+      transform-origin: center;
+      z-index: 1;
+    }
 
-  .red-text {
-    color: red;
-  }
+    @media (max-width: 600px) {
+      #timer {
+        font-size: 60px;
+        letter-spacing: 0.1em;
+      }
 
-  .hot-pink-text {
-    color: hotpink;
-  }
+      #timer-labels {
+        font-size: 15px;
+        letter-spacing: 0.1em;
+      }
+    }
 
-  #music-controls {
-    position: fixed;
-    top: 60px;
-    right: -200px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    transition: right 0.5s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 10px;
-    border-radius: 10px;
-    z-index: 1000;
-  }
+    .green-text {
+      color: green;
+      cursor: pointer;
+    }
 
-  #music-controls.show {
-    right: 20px;
-  }
+    .orange-text {
+      color: orange;
+      cursor: pointer;
+    }
 
-  #music-controls button,
-  #music-controls input {
-    margin-top: 5px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none;
-    padding: 8px 12px;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    width: 150px;
-    text-align: left;
-    z-index: 1;
-  }
+    .red-text {
+      color: red;
+    }
 
-  #music-controls input[type="range"] {
-    width: 140px;
-  }
+    .hot-pink-text {
+      color: hotpink;
+    }
 
-  #play-pause-button {
-    font-size: 1.2em;
-    padding: 8px 15px;
-  }
+    #music-controls {
+      position: fixed;
+      top: 60px;
+      right: -200px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: right 0.5s ease-in-out;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 10px;
+      z-index: 1000;
+    }
 
-  #current-song {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
+    #music-controls.show {
+      right: 20px;
+    }
 
-  #music-slider {
-    width: 150px;
-    margin-top: 5px;
-  }
+    #music-controls button,
+    #music-controls input {
+      margin-top: 5px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 8px 12px;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 150px;
+      text-align: left;
+      z-index: 1;
+    }
 
-  #music-time {
-    font-size: 12px;
-    margin-bottom: 2px;
-  }
+    #music-controls input[type="range"] {
+      width: 140px;
+    }
 
-  #volume-label {
-    font-size: 12px;
-    margin-bottom: 2px;
-  }
+    #play-pause-button {
+      font-size: 1.2em;
+      padding: 8px 15px;
+    }
 
-  .bubble {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: rgba(173, 216, 230, 0.7);
-    pointer-events: auto;
-    cursor: pointer;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    z-index: 1;
-  }
+    #current-song {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
 
-  #bubble-button {
-    display: none;
-    z-index: 1;
-  }
+    #music-slider {
+      width: 150px;
+      margin-top: 5px;
+    }
 
-  @media (max-width: 600px) {
+    #music-time {
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    #volume-label {
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
     .bubble {
-      width: 40px;
-      height: 40px;
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: rgba(173, 216, 230, 0.7);
+      pointer-events: auto;
+      cursor: pointer;
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+      z-index: 1;
     }
-  }
-</style>
+
+    #bubble-button {
+      display: none;
+      z-index: 1;
+    }
+
+    @media (max-width: 600px) {
+      .bubble {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
 
 <body>
   <div class="background-scroll-container">
@@ -439,3 +448,8 @@
     submitButton.addEventListener('click', () => {
       window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
     });
+
+    document.addEventListener('click', (event) => {
+      if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
+        creditsBox.classList.remove('show');
+      }
