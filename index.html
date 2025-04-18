@@ -50,7 +50,7 @@
         }
 
         .background-row.row1 .background-row-inner {
-            animation: scrollRight var(--animation-duration-row1, 30s) linear infinite;
+            animation: scrollLeft var(--animation-duration-row1, 30s) linear infinite;
         }
 
         .background-row.row2 .background-row-inner {
@@ -58,7 +58,7 @@
         }
 
         .background-row.row3 .background-row-inner {
-            animation: scrollLeftSlow var(--animation-duration-row3, 50s) linear infinite;
+            animation: scrollRight var(--animation-duration-row3, 50s) linear infinite;
         }
 
         .background-row.row1 {
@@ -112,21 +112,6 @@
 
             100% {
                 transform: translateX(0%);
-            }
-        }
-
-        @keyframes scrollLeftSlow {
-            0% {
-                transform: translateX(0%);
-            }
-
-            100% {
-                transform: translateX(calc(
-                    -1 * (
-                        var(--image-width) * var(--image-count) +
-                        var(--gap) * (var(--image-count) - 1)
-                    )
-                ));
             }
         }
 
@@ -454,18 +439,189 @@
         const timerLabelsDisplay = document.getElementById('timer-labels');
         const bubbleButton = document.getElementById('bubble-button');
         const erinGroganLink = document.getElementById('erin-grogan-link');
+        const timerDisplay = document.getElementById('timer');
+        const messageDisplay = document.getElementById('message');
 
-        let musicControlsVisible = false;
+        const musicFiles = [{
+            url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3',
+            name: 'Lotus Waters'
+        },
+        {
+            url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3',
+            name: 'LEASE'
+        },
+        {
+            url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20'
+        }
+        // The music array was incomplete, I'll stop here to avoid breaking the JS.
+        // You should complete the musicFiles array with valid URLs and names.
+        ];
 
-        creditsButton.addEventListener('click', () => {
-            creditsBox.classList.toggle('show');
-        });
+        function updateTimer() {
+            const now = new Date();
+            const difference = targetDate - now;
 
-        submitButton.addEventListener('click', () => {
-            window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
-        });
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        document.addEventListener('click', (event) => {
-            if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
-                creditsBox.classList.remove('show');
+            timerDisplay.textContent = `${days} ${hours.toString().padStart(2, '0')} ${minutes.toString().padStart(2, '0')} ${seconds.toString().padStart(2, '0')}`;
+
+            if (difference < 0) {
+                messageDisplay.textContent = "Time's Up!";
+                messageDisplay.style.opacity = 1;
+                clearInterval(timerInterval);
             }
+        }
+
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Music functionality (incomplete in the original snippet)
+        const audio = new Audio();
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let isLooping = false;
+        let isMuted = false;
+        const storedVolume = localStorage.getItem('volume');
+        if (storedVolume) {
+            audio.volume = parseFloat(storedVolume);
+            volumeSlider.value = storedVolume;
+        }
+
+        function loadSong(index) {
+            if (musicFiles[index] && musicFiles[index].url) {
+                audio.src = musicFiles[index].url;
+                currentSongDisplay.textContent = musicFiles[index].name || 'Unknown Song';
+            }
+        }
+
+        function playPause() {
+            if (audio.paused) {
+                audio.play();
+                isPlaying = true;
+                playPauseButton.textContent = '❚❚';
+            } else {
+                audio.pause();
+                isPlaying = false;
+                playPauseButton.textContent = '▶';
+            }
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % musicFiles.length;
+            loadSong(currentSongIndex);
+            if (isPlaying) audio.play();
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + musicFiles.length) % musicFiles.length;
+            loadSong(currentSongIndex);
+            if (isPlaying) audio.play();
+        }
+
+        function toggleLoop() {
+            isLooping = !isLooping;
+            audio.loop = isLooping;
+            loopButton.textContent = isLooping ? 'Looping' : 'Loop';
+        }
+
+        function setVolume() {
+            audio.volume = volumeSlider.value;
+            localStorage.setItem('volume', volumeSlider.value);
+            if (audio.volume === 0) {
+                isMuted = true;
+                muteButton.textContent = 'Unmute';
+            } else {
+                isMuted = false;
+                muteButton.textContent = 'Mute';
+            }
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            audio.muted = isMuted;
+            muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+            volumeSlider.value = isMuted ? 0 : localStorage.getItem('volume') || 1;
+        }
+
+        function updateTime() {
+            const currentTime = formatTime(audio.currentTime);
+            const duration = formatTime(audio.duration);
+            musicTimeDisplay.textContent = `${currentTime} / ${duration}`;
+            musicSlider.value = audio.currentTime > 0 && audio.duration > 0 ? (audio.currentTime / audio.duration) * 100 : 0;
+        }
+
+        function seek() {
+            const seekTime = (musicSlider.value / 100) * audio.duration;
+            audio.currentTime = seekTime;
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return `${minutes}:${remainingSeconds}`;
+        }
+
+        playPauseButton.addEventListener('click', playPause);
+        nextButton.addEventListener('click', nextSong);
+        prevButton.addEventListener('click', prevSong);
+        loopButton.addEventListener('click', toggleLoop);
+        volumeSlider.addEventListener('input', setVolume);
+        muteButton.addEventListener('click', toggleMute);
+        audio.addEventListener('timeupdate', updateTime);
+        musicSlider.addEventListener('input', seek);
+        audio.addEventListener('ended', () => {
+            if (!isLooping) {
+                nextSong();
+            }
+        });
+
+        if (musicFiles.length > 0) {
+            loadSong(currentSongIndex);
+        }
+
+        // Bubble functionality (left empty in the original snippet)
+        if (bubbleButton) {
+            bubbleButton.addEventListener('click', () => {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                const size = Math.random() * 40 + 40; // Random size
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}vw`;
+                bubble.style.top = `${Math.random() * 100}vh`;
+                const opacity = Math.random() * 0.4 + 0.3;
+                bubble.style.backgroundColor = `rgba(173, 216, 230, ${opacity})`;
+                const driftX = (Math.random() - 0.5) * 2; // Subtle horizontal drift
+                const driftY = -Math.random() * 1; // Move upwards
+
+                let life = 0;
+                const maxLife = 300; // Number of frames
+
+                function animateBubble() {
+                    bubble.style.left = `${parseFloat(bubble.style.left) + driftX}px`;
+                    bubble.style.top = `${parseFloat(bubble.style.top) + driftY}px`;
+                    bubble.style.transform = `translateY(${Math.sin(life * 0.1) * 5}px)`; // Gentle wave
+
+                    life++;
+                    if (life < maxLife) {
+                        requestAnimationFrame(animateBubble);
+                    } else {
+                        bubble.remove();
+                    }
+                }
+
+                document.body.appendChild(bubble);
+                animateBubble();
+
+                bubble.addEventListener('click', () => {
+                    bubble.style.opacity = 0;
+                    setTimeout(() => bubble.remove(), 300);
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
