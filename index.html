@@ -53,6 +53,19 @@
             will-change: transform;
         }
 
+        /* Specific animations per row */
+        .background-row.row1 .background-row-inner {
+            animation: scrollRight var(--animation-duration, 30s) linear infinite;
+        }
+
+        .background-row.row2 .background-row-inner {
+            animation: scrollLeft var(--animation-duration, 30s) linear infinite;
+        }
+
+        .background-row.row3 .background-row-inner {
+            animation: scrollRight var(--animation-duration, 30s) linear infinite;
+        }
+
 
         .background-row.row1 {
             top: 0;
@@ -79,21 +92,8 @@
             background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
         }
 
-        /* Apply specific animations per row */
-        .background-row.row1 .background-row-inner {
-            animation: scrollRight var(--animation-duration, 30s) linear infinite;
-        }
 
-        .background-row.row2 .background-row-inner {
-            animation: scrollLeft var(--animation-duration, 40s) linear infinite; /* Row 2 scrolls left */
-        }
-
-        .background-row.row3 .background-row-inner {
-            animation: scrollRight var(--animation-duration, 50s) linear infinite; /* Row 3 scrolls right */
-        }
-
-
-        /* Keyframe for leftward scrolling */
+        /* Calculate translation for scrolling left */
         @keyframes scrollLeft {
             0% {
                 transform: translateX(0%);
@@ -106,12 +106,11 @@
             }
         }
 
-        /* Keyframe for rightward scrolling */
+        /* Calculate translation for scrolling right (reverse of left) */
         @keyframes scrollRight {
             0% {
                 /* Start from the translated position of one set of images + gaps */
-                /* Calculation: image_count * image_width_vw + (image_count - 1) * gap_px */
-                transform: translateX(calc(var(--image-count, 3) * var(--image-width, 20vw) + (var(--image-count, 3) - 1) * var(--gap, 20px)));
+                 transform: translateX(calc(var(--image-count, 3) * var(--image-width, 20vw) + (var(--image-count, 3) - 1) * var(--gap, 20px)));
             }
 
             100% {
@@ -365,7 +364,7 @@
             </div>
         </div>
         <div class="background-row row2"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 40s;">
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 30s;">
             <div class="background-row-inner">
                 <div class="background-image image2"></div>
                 <div class="background-image"></div>
@@ -376,7 +375,7 @@
             </div>
         </div>
         <div class="background-row row3"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 50s;">
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 30s;">
             <div class="background-row-inner">
                 <div class="background-image image3"></div>
                 <div class="background-image"></div>
