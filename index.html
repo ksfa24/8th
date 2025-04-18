@@ -37,15 +37,16 @@
     .background-row {
       position: absolute;
       width: 100%;
-      height: 33.33%; /* Divide into three equal rows */
+      height: 33.33%;
       overflow: hidden;
-      display: flex; /* Enable flexbox for inline images */
+      display: flex;
+      white-space: nowrap; /* Prevent gaps between inline-block/flex items */
     }
 
     .background-row.row1 {
       top: 0;
-      --image-width: 20%; /* Width of each image */
-      --image-count: 3; /* Number of original images */
+      --image-width: 20%;
+      --image-count: 3;
     }
 
     .background-row.row2 {
@@ -66,79 +67,17 @@
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
-      flex-shrink: 0;
-    }
-
-    /* Duplicate images in HTML to fill the row */
-    .background-row.row1 .background-image {
+      display: inline-block; /* Ensure they sit side-by-side without gaps */
       width: var(--image-width);
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-      animation: scrollLeftRow1 30s linear infinite;
     }
 
-    .background-row.row1 .background-image:nth-child(2) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-    }
-
-    .background-row.row1 .background-image:nth-child(3) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-    }
-
-    .background-row.row1 .background-image:nth-child(4) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
-    }
-
-    .background-row.row1 .background-image:nth-child(5) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
-    }
-
-    .background-row.row1 .background-image:nth-child(6) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
-    }
-
-    .background-row.row2 .background-image {
-      width: var(--image-width);
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-      animation: scrollRightRow2 40s linear infinite;
-    }
-
-    .background-row.row2 .background-image:nth-child(2) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-    }
-
-    .background-row.row2 .background-image:nth-child(3) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
-    }
-
-    .background-row.row2 .background-image:nth-child(4) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
-    }
-
-    .background-row.row3 .background-image {
-      width: var(--image-width);
-      background-image: url('your-image3-1.jpg');
-      animation: scrollLeftSlowRow3 50s linear infinite;
-    }
-
-    .background-row.row3 .background-image:nth-child(2) {
-      background-image: url('your-image3-2.jpg');
-    }
-
-    .background-row.row3 .background-image:nth-child(3) {
-      background-image: url('your-image3-1.jpg'); /* Duplicate */
-    }
-
-    .background-row.row3 .background-image:nth-child(4) {
-      background-image: url('your-image3-2.jpg'); /* Duplicate */
-    }
-
-    /* Updated animations for seamless loop */
+    /* Animations for seamless loop */
     @keyframes scrollLeftRow1 {
       0% {
         transform: translateX(0%);
       }
       100% {
-        transform: translateX(calc(var(--image-width) * var(--image-count) * -1)); /* Move by the width of the original set */
+        transform: translateX(calc(var(--image-width) * var(--image-count) * -1));
       }
     }
 
@@ -147,7 +86,7 @@
         transform: translateX(0%);
       }
       100% {
-        transform: translateX(calc(var(--image-width) * var(--image-count))); /* Move by the width of the original set */
+        transform: translateX(calc(var(--image-width) * var(--image-count)));
       }
     }
 
@@ -158,6 +97,18 @@
       100% {
         transform: translateX(calc(var(--image-width) * var(--image-count) * -1));
       }
+    }
+
+    .background-row.row1 {
+      animation: scrollLeftRow1 30s linear infinite;
+    }
+
+    .background-row.row2 {
+      animation: scrollRightRow2 40s linear infinite;
+    }
+
+    .background-row.row3 {
+      animation: scrollLeftSlowRow3 50s linear infinite;
     }
 
     #credits-button,
@@ -374,24 +325,24 @@
 <body>
   <div class="background-scroll-container">
     <div class="background-row row1">
-      <div class="background-image image1"></div>
-      <div class="background-image"></div>
-      <div class="background-image"></div>
-      <div class="background-image"></div>
-      <div class="background-image"></div>
-      <div class="background-image"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
     </div>
     <div class="background-row row2">
-      <div class="background-image image2"></div>
-      <div class="background-image"></div>
-      <div class="background-image"></div>
-      <div class="background-image"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
     </div>
     <div class="background-row row3">
-      <div class="background-image image3"></div>
-      <div class="background-image"></div>
-      <div class="background-image"></div>
-      <div class="background-image"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
     </div>
   </div>
 
@@ -448,4 +399,17 @@
     });
 
     submitButton.addEventListener('click', () => {
-      window
+      window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
+    });
+
+    document.addEventListener('click', (event) => {
+      if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
+        creditsBox.classList.remove('show');
+      }
+      if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) {
+        musicControls.classList.remove('show');
+      }
+    });
+
+    musicToggleButton.addEventListener('click', () => {
+      musicControls.classList.toggle
