@@ -39,33 +39,16 @@
             width: 100%;
             height: 33.33%;
             overflow: hidden;
-            /* Keep overflow hidden on the row */
             display: flex;
         }
 
         .background-row-inner {
             display: flex;
-            /* Prevent wrapping */
             white-space: nowrap;
-            /* Add space between images */
             gap: var(--gap, 20px);
-            /* Hint to the browser to optimize for transformations */
-            will-change: transform;
-        }
-
-        /* Specific animations per row */
-        .background-row.row1 .background-row-inner {
-            animation: scrollRight var(--animation-duration, 30s) linear infinite;
-        }
-
-        .background-row.row2 .background-row-inner {
+            /* Animation applied here */
             animation: scrollLeft var(--animation-duration, 30s) linear infinite;
         }
-
-        .background-row.row3 .background-row-inner {
-            animation: scrollRight var(--animation-duration, 30s) linear infinite;
-        }
-
 
         .background-row.row1 {
             top: 0;
@@ -86,38 +69,32 @@
             background-repeat: no-repeat;
             background-position: center;
             flex-shrink: 0;
-            /* Width now set using vw units */
             width: var(--image-width, 20vw);
-            /* Default background image */
             background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
         }
 
-
-        /* Calculate translation for scrolling left */
+        /* Improved animation calculation */
         @keyframes scrollLeft {
             0% {
                 transform: translateX(0%);
             }
 
             100% {
-                /* Translate by the width of one set of images + gaps */
-                /* Calculation: -(image_count * image_width_vw + (image_count - 1) * gap_px) */
-                transform: translateX(calc(-1 * (var(--image-count, 3) * var(--image-width, 20vw) + (var(--image-count, 3) - 1) * var(--gap, 20px))));
+                /* Calculation:
+                    translateX = - (image_width * image_count + gap * (image_count - 1))
+                    Where:
+                    image_width is in vw
+                    gap is in px (or whatever unit you use)
+                    image_count is the number of *unique* images
+                */
+                transform: translateX(calc(
+                    -1 * (
+                        var(--image-width) * var(--image-count) +
+                        var(--gap) * (var(--image-count) - 1)
+                    )
+                ));
             }
         }
-
-        /* Calculate translation for scrolling right (reverse of left) */
-        @keyframes scrollRight {
-            0% {
-                /* Start from the translated position of one set of images + gaps */
-                 transform: translateX(calc(var(--image-count, 3) * var(--image-width, 20vw) + (var(--image-count, 3) - 1) * var(--gap, 20px)));
-            }
-
-            100% {
-                transform: translateX(0%);
-            }
-        }
-
 
         #credits-button,
         #submit-button,
@@ -361,11 +338,17 @@
                 <div class="background-image image1"></div>
                 <div class="background-image"></div>
                 <div class="background-image"></div>
+                <div class="background-image image1"></div>
+                <div class="background-image"></div>
+                <div class="background-image"></div>
             </div>
         </div>
         <div class="background-row row2"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 30s;">
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 40s;">
             <div class="background-row-inner">
+                <div class="background-image image2"></div>
+                <div class="background-image"></div>
+                <div class="background-image"></div>
                 <div class="background-image image2"></div>
                 <div class="background-image"></div>
                 <div class="background-image"></div>
@@ -375,8 +358,11 @@
             </div>
         </div>
         <div class="background-row row3"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 30s;">
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 50s;">
             <div class="background-row-inner">
+                <div class="background-image image3"></div>
+                <div class="background-image"></div>
+                <div class="background-image"></div>
                 <div class="background-image image3"></div>
                 <div class="background-image"></div>
                 <div class="background-image"></div>
@@ -431,57 +417,4 @@
         const currentSongDisplay = document.getElementById('current-song');
         const musicSlider = document.getElementById('music-slider');
         const musicTimeDisplay = document.getElementById('music-time');
-        const timerLabelsDisplay = document.getElementById('timer-labels');
-        const bubbleButton = document.getElementById('bubble-button');
-        const erinGroganLink = document.getElementById('erin-grogan-link');
-
-        let musicControlsVisible = false;
-
-        creditsButton.addEventListener('click', () => {
-            creditsBox.classList.toggle('show');
-        });
-
-        submitButton.addEventListener('click', () => {
-            window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
-        });
-
-        document.addEventListener('click', (event) => {
-            if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
-                creditsBox.classList.remove('show');
-            }
-            if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) {
-                musicControls.classList.remove('show');
-            }
-        });
-
-        musicToggleButton.addEventListener('click', () => {
-            musicControls.classList.toggle('show');
-            musicControlsVisible = !musicControlsVisible;
-        });
-
-        const targetDate = new Date('April 20, 2025 08:30:00 EST');
-        const timerDisplay = document.getElementById('timer');
-        const messageDisplay = document.getElementById('message');
-
-        const musicFiles = [{
-            url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3',
-            name: 'Lotus Waters'
-        },
-        {
-            url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3',
-            name: 'LEASE'
-        },
-        {
-            url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20'
-        }
-        // The music array was incomplete, I'll stop here to avoid breaking the JS.
-        // You should complete the musicFiles array with valid URLs and names.
-        ];
-
-        // ... rest of your JavaScript code (assuming it handles the timer, music player, etc.)
-        // Note: The music player and timer logic is not directly related to the background loop
-        // and is left unchanged from your original code snippet.
-    </script>
-</body>
-
-</html>
+        const timerLabelsDisplay =
