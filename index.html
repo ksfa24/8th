@@ -5,6 +5,7 @@
   <title>KSFA Timer</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/23f0.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap"
@@ -35,6 +36,7 @@
       cursor: pointer;
       border-radius: 5px;
       font-size: 16px;
+      z-index: 1001; /* Ensure buttons are above other elements */
     }
 
     #credits-button {
@@ -53,20 +55,23 @@
     #credits-box {
       position: fixed;
       bottom: -100%;
+      /* Start hidden below */
       left: 50%;
       transform: translateX(-50%);
       background-color: rgba(0, 0, 0, 0.8);
       padding: 20px;
       border-radius: 10px;
-      transition: bottom 0.5s ease-in-out;
+      transition: bottom 0.5s ease-in-out, transform 0.5s ease-in-out; /* Added transform transition */
       text-align: center;
       max-width: 80%;
       box-sizing: border-box;
+      z-index: 1002; /* Ensure credits box is above confetti/bubbles */
     }
 
     #credits-box.show {
       bottom: 50%;
       transform: translate(-50%, 50%);
+      /* Center vertically and horizontally */
     }
 
     #timer {
@@ -98,10 +103,10 @@
       text-align: center;
       opacity: 0;
       transition: opacity 1s ease-in-out,
-      color 0.5s linear;
-      font-family: 'Pacifico',
-      cursive;
-      position: relative;
+        color 0.5s linear;
+      font-family: 'Pacifico', cursive; /* Ensure this font is loaded if needed, or use a fallback */
+      position: relative; /* Needed for confetti positioning */
+      z-index: 1; /* Behind controls/credits */
     }
 
     .confetti {
@@ -110,6 +115,7 @@
       height: 8px;
       pointer-events: none;
       transform-origin: center;
+      z-index: 0; /* Behind message text if needed, but generally ok */
     }
 
     @media (max-width: 600px) {
@@ -121,6 +127,10 @@
       #timer-labels {
         font-size: 15px;
         letter-spacing: 0.1em;
+      }
+
+      #message {
+        font-size: 40px; /* Adjust message size for smaller screens */
       }
     }
 
@@ -145,6 +155,7 @@
       position: fixed;
       top: 60px;
       right: -200px;
+      /* Start hidden off-screen */
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -152,11 +163,12 @@
       background-color: rgba(0, 0, 0, 0.8);
       padding: 10px;
       border-radius: 10px;
-      z-index: 1000;
+      z-index: 1000; /* Ensure music controls are above most elements */
     }
 
     #music-controls.show {
       right: 20px;
+      /* Slide in */
     }
 
     #music-controls button,
@@ -170,20 +182,28 @@
       border-radius: 5px;
       width: 150px;
       text-align: left;
+      box-sizing: border-box; /* Include padding in width */
     }
 
     #music-controls input[type="range"] {
-      width: 140px;
+      width: 140px; /* Adjust width slightly to fit */
+      padding: 0; /* Range inputs often don't need padding */
+      height: 20px; /* Give range inputs some height */
     }
 
     #play-pause-button {
       font-size: 1.2em;
       padding: 8px 15px;
+      text-align: center; /* Center play/pause icon */
     }
 
     #current-song {
       font-size: 16px;
       margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; /* Add ellipsis if song name is too long */
+      width: 100%; /* Ensure it uses the container width */
     }
 
     #music-slider {
@@ -206,14 +226,15 @@
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      background-color: rgba(173, 216, 230, 0.7);
-      pointer-events: auto;
+      background-color: rgba(173, 216, 230, 0.7); /* Light blue semi-transparent */
+      pointer-events: auto; /* Allow clicks */
       cursor: pointer;
-      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* For popping effect */
+      z-index: 500; /* Above background, below controls */
     }
 
     #bubble-button {
-      display: none;
+      display: none; /* Initially hidden, controlled by JS */
     }
 
     @media (max-width: 600px) {
@@ -221,6 +242,19 @@
         width: 40px;
         height: 40px;
       }
+      #music-controls {
+        width: 170px; /* Adjust width on smaller screens */
+        right: -180px; /* Adjust hidden position */
+      }
+       #music-controls.show {
+         right: 10px; /* Adjust shown position */
+       }
+       #music-controls button, #music-controls input {
+         width: 100%; /* Make controls fill width */
+       }
+        #music-controls input[type="range"] {
+          width: calc(100% - 10px); /* Adjust range slider width */
+       }
     }
   </style>
 </head>
@@ -229,6 +263,7 @@
   <button id="credits-button">Credits</button>
   <button id="submit-button">Submit</button>
   <button id="music-toggle-button">♫</button>
+
   <div id="credits-box">
     <p>Created by Samad Slaten</p>
     <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text" id="erin-grogan-link">Erin Grogan</span>,
@@ -236,11 +271,11 @@
     <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni Smith</span>,
       Anthony Royal</p>
   </div>
+
   <div id="music-controls">
     <div id="current-song"></div>
     <button id="play-pause-button">❚❚</button>
-    <button id="loop-button">Loop</button>
-    <div id="volume-label">Volume</div>
+    <button id="loop-button">Loop Off</button> <div id="volume-label">Volume</div>
     <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
     <button id="mute-button">Mute</button>
     <button id="prev-button">Previous</button>
@@ -249,11 +284,13 @@
     <div id="music-time">00:00 / 00:00</div>
     <input type="range" id="music-slider" min="0" max="100" value="0">
   </div>
+
   <div id="timer"></div>
   <div id="timer-labels">Days Hours Minutes Seconds</div>
   <div id="message">Good Luck Kippsters!</div>
 
   <script>
+    // --- DOM Element References ---
     const creditsButton = document.getElementById('credits-button');
     const submitButton = document.getElementById('submit-button');
     const creditsBox = document.getElementById('credits-box');
@@ -271,34 +308,14 @@
     const timerLabelsDisplay = document.getElementById('timer-labels');
     const bubbleButton = document.getElementById('bubble-button');
     const erinGroganLink = document.getElementById('erin-grogan-link');
-
-    let musicControlsVisible = false;
-
-    creditsButton.addEventListener('click', () => {
-      creditsBox.classList.toggle('show');
-    });
-
-    submitButton.addEventListener('click', () => {
-      window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
-    });
-
-    document.addEventListener('click', (event) => {
-      if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
-        creditsBox.classList.remove('show');
-      }
-      if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) {
-        musicControls.classList.remove('show');
-      }
-    });
-
-    musicToggleButton.addEventListener('click', () => {
-      musicControls.classList.toggle('show');
-      musicControlsVisible = !musicControlsVisible;
-    });
-
-    const targetDate = new Date('April 20, 2025 08:30:00 EST');
     const timerDisplay = document.getElementById('timer');
     const messageDisplay = document.getElementById('message');
+
+    // --- State Variables ---
+    let musicControlsVisible = false;
+    const targetDate = new Date('April 20, 2025 08:30:00 EST');
+    let timerInterval; // To store the interval ID for clearing later
+    let messageColorInterval; // To store the interval ID for message color changes
 
     const musicFiles = [{
         url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3',
@@ -321,139 +338,288 @@
         name: 'DEATHCAMP'
       },
       {
-        url: '',
+        url: '', // Special case for silence
         name: 'Silence'
       }
     ];
     let currentTrack = 0;
-    let audio = new Audio(musicFiles[currentTrack].url);
+    let audio = new Audio(); // Create audio element but don't set src yet
     let isLooping = false;
     let isMuted = false;
-    let isPlaying = true;
+    let isPlaying = false; // Start paused until user interaction or autoplay works
+    let lastVolume = 1; // To store volume before muting
 
-    audio.loop = false;
-    currentSongDisplay.textContent = musicFiles[currentTrack].name;
+    // --- Event Listeners ---
 
+    // Credits Box Toggle
+    creditsButton.addEventListener('click', () => {
+      creditsBox.classList.toggle('show');
+    });
+
+    // Submit Button (Mail Link)
+    submitButton.addEventListener('click', () => {
+      window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
+    });
+
+    // Close Popups on Outside Click
+    document.addEventListener('click', (event) => {
+      // Close Credits Box if shown and click is outside
+      if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
+        creditsBox.classList.remove('show');
+      }
+      // Close Music Controls if shown and click is outside
+      if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) {
+        musicControls.classList.remove('show');
+        musicControlsVisible = false; // Update state variable
+      }
+    });
+
+    // Music Controls Toggle
+    musicToggleButton.addEventListener('click', () => {
+      musicControls.classList.toggle('show');
+      musicControlsVisible = !musicControlsVisible; // Toggle state variable
+    });
+
+    // --- Music Player Controls ---
+
+    // Loop Button
     loopButton.addEventListener('click', () => {
       isLooping = !isLooping;
       audio.loop = isLooping;
       loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off';
     });
 
+    // Volume Slider
     volumeSlider.addEventListener('input', () => {
       audio.volume = volumeSlider.value;
+      if (audio.volume > 0) {
+         isMuted = false;
+         audio.muted = false;
+         muteButton.textContent = 'Mute';
+      } else if (!isMuted) { // If volume dragged to 0, update mute state
+         isMuted = true;
+         audio.muted = true;
+         muteButton.textContent = 'Unmute';
+         lastVolume = 0.01; // Set a tiny last volume if dragged to 0
+      }
     });
 
+    // Mute Button
     muteButton.addEventListener('click', () => {
       isMuted = !isMuted;
       audio.muted = isMuted;
-      muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+      if (isMuted) {
+         lastVolume = audio.volume > 0 ? audio.volume : 0.01; // Store current volume (or tiny value if already 0)
+        // Don't set audio.volume = 0, just use audio.muted
+         volumeSlider.value = 0; // Update slider visually
+         muteButton.textContent = 'Unmute';
+      } else {
+         // Restore last volume only via slider, audio.muted handles actual sound
+         volumeSlider.value = lastVolume; // Update slider visually
+         // Trigger input event for slider to update audio.volume if needed
+         volumeSlider.dispatchEvent(new Event('input'));
+         muteButton.textContent = 'Mute';
+      }
     });
 
+
+    // Play/Pause Button
     playPauseButton.addEventListener('click', () => {
+      // Prevent playing if the current track is "Silence"
+      if (musicFiles[currentTrack].name === 'Silence') return;
+
       if (isPlaying) {
         audio.pause();
         playPauseButton.textContent = '▷';
       } else {
-        audio.play();
-        playPauseButton.textContent = '❚❚';
+        // Check if audio context needs resuming (required after user interaction)
+        if (audio.readyState === 0) { // If src not loaded or cleared
+            console.log("Attempting to load audio source before playing...");
+            audio.load(); // Try loading src again
+        }
+        audio.play().then(() => {
+           playPauseButton.textContent = '❚❚'; // Update only on successful play
+           isPlaying = true; // Set isPlaying true only if play succeeds
+        }).catch(error => {
+          console.error("Play failed:", error);
+          // Handle error, perhaps show a message to the user
+          playPauseButton.textContent = '▷'; // Stay paused
+          isPlaying = false;
+        });
       }
-      isPlaying = !isPlaying;
     });
 
-    audio.addEventListener('ended', () => {
-      if (!isLooping) {
-        nextSong();
-      }
-    });
-
+    // Go to Previous Song
     prevButton.addEventListener('click', () => {
       currentTrack = (currentTrack - 1 + musicFiles.length) % musicFiles.length;
       updateSong();
     });
 
+    // Go to Next Song
     nextButton.addEventListener('click', () => {
-      nextSong();
+      nextSong(); // Use the dedicated function
     });
 
+    // Music Progress Slider Interaction
+    musicSlider.addEventListener('input', () => {
+      // Only seek if the track is not "Silence" and has a duration
+      if (musicFiles[currentTrack].name !== 'Silence' && audio.duration) {
+        audio.currentTime = (audio.duration * musicSlider.value) / 100;
+      }
+    });
+
+    // --- Audio Event Listeners ---
+
+    // Handle Song Ending
+    audio.addEventListener('ended', () => {
+      if (!isLooping && musicFiles[currentTrack].name !== 'Silence') {
+        nextSong();
+      }
+    });
+
+    // Update Progress Slider and Time Display
+    audio.addEventListener('timeupdate', () => {
+      // Only update if the track is not "Silence" and has a duration
+      if (musicFiles[currentTrack].name !== 'Silence' && audio.duration && isFinite(audio.duration)) {
+        const progress = (audio.currentTime / audio.duration) * 100;
+        musicSlider.value = progress || 0; // Avoid NaN if duration is 0 briefly
+        musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
+        musicSlider.disabled = false; // Ensure slider is enabled
+      } else if (musicFiles[currentTrack].name === 'Silence'){
+         // Reset display for "Silence"
+         musicSlider.value = 0;
+         musicTimeDisplay.textContent = '00:00 / 00:00';
+         musicSlider.disabled = true; // Disable slider for silence
+      }
+      // No else needed, if duration is not ready, just don't update
+    });
+
+    // Handle audio errors
+    audio.addEventListener('error', (e) => {
+      console.error("Audio Error:", audio.error);
+      currentSongDisplay.textContent = `Error loading: ${musicFiles[currentTrack].name}`;
+      isPlaying = false;
+      playPauseButton.textContent = '▷';
+      musicSlider.value = 0;
+      musicTimeDisplay.textContent = 'Error / Error';
+      musicSlider.disabled = true;
+      // Optionally try loading the next song or show a persistent error
+      // nextSong(); // Be careful not to create an infinite loop if all fail
+    });
+
+    // Fired when audio can start playing (useful after load() or src change)
+    audio.addEventListener('canplay', () => {
+        // If we intended to play this track, ensure the button reflects playability
+        if (isPlaying && audio.paused && musicFiles[currentTrack].name !== 'Silence') {
+            // This state can happen if play() was called before 'canplay'
+            // Try playing again if needed, or just ensure UI is correct
+             playPauseButton.textContent = '❚❚';
+        }
+        // Update duration display as soon as it's available
+        if (audio.duration && isFinite(audio.duration)) {
+             musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
+        }
+    });
+
+
+    // --- Music Player Functions ---
+
+    // Function to go to the next song
     function nextSong() {
       currentTrack = (currentTrack + 1) % musicFiles.length;
       updateSong();
     }
 
+    // Function to update the audio source and UI
     function updateSong() {
-      audio.src = musicFiles[currentTrack].url;
-      currentSongDisplay.textContent = musicFiles[currentTrack].name;
-      audio.play();
-      if (musicFiles[currentTrack].url === '') {
-        playPauseButton.textContent = '▷';
+      const track = musicFiles[currentTrack];
+      currentSongDisplay.textContent = track.name; // Update display first
+      audio.loop = isLooping; // Ensure loop state is reapplied
+
+      // Reset time/slider for new track
+      musicSlider.value = 0;
+      musicTimeDisplay.textContent = '00:00 / 00:00';
+
+
+      if (track.name === 'Silence') {
+        audio.pause(); // Explicitly pause
+        audio.src = ''; // Clear source
         isPlaying = false;
+        playPauseButton.textContent = '▷';
+        musicSlider.disabled = true; // Disable slider
       } else {
-        playPauseButton.textContent = '❚❚';
-        isPlaying = true;
+        audio.src = track.url;
+        audio.load(); // Essential after changing src
+        musicSlider.disabled = false; // Re-enable slider for actual tracks
+        // Attempt to play - success/failure and UI update handled by play() promise and 'canplay' event
+        audio.play().then(() => {
+          isPlaying = true;
+          playPauseButton.textContent = '❚❚';
+        }).catch(error => {
+          console.log("Autoplay prevented for new track:", error);
+          isPlaying = false;
+          playPauseButton.textContent = '▷';
+        });
       }
-      updateBubbleButtonVisibility();
+      updateBubbleButtonVisibility(); // Update bubble button based on the new track
     }
 
-    audio.play();
-    playPauseButton.textContent = '❚❚';
-    updateBubbleButtonVisibility();
-
-    musicSlider.addEventListener('input', () => {
-      if (audio.duration) {
-        audio.currentTime = (audio.duration * musicSlider.value) / 100;
-      }
-    });
-
-    audio.addEventListener('timeupdate', () => {
-      if (audio.duration) {
-        musicSlider.value = (audio.currentTime * 100) / audio.duration;
-        musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
-      }
-    });
-
-    function formatTime(time) {
-      const minutes = Math.floor(time / 60);
-      const seconds = Math.floor(time % 60);
-      return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    // Set Initial Volume and Song
+    function initializePlayer() {
+        audio.volume = volumeSlider.value;
+        audio.muted = isMuted;
+        loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off';
+        muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+        playPauseButton.textContent = isPlaying ? '❚❚' : '▷'; // Should be '▷' initially
+        currentSongDisplay.textContent = musicFiles[currentTrack].name; // Show first track name
+        updateBubbleButtonVisibility(); // Set bubble button visibility initially
+        musicSlider.disabled = (musicFiles[currentTrack].name === 'Silence'); // Disable slider if starting on silence
     }
+
+
+    // --- Timer Functions ---
 
     function updateTimer() {
       const now = new Date();
       const difference = targetDate - now;
 
       if (difference <= 0) {
-        clearInterval(timerInterval);
-        timerDisplay.textContent = '00:00:00:00';
-        messageDisplay.style.opacity = 1;
-        createConfetti();
-        setInterval(changeMessageColor, 500);
-        return;
+        clearInterval(timerInterval); // Stop the timer interval
+        if (messageColorInterval) clearInterval(messageColorInterval); // Stop color change if running
+        timerDisplay.textContent = '00:00:00:00'; // Display zero
+        timerLabelsDisplay.textContent = ' '; // Clear labels or set custom message
+        messageDisplay.style.opacity = 1; // Show the message
+        createConfetti(); // Launch confetti
+        messageColorInterval = setInterval(changeMessageColor, 500); // Start color changing
+        return; // Exit the function
       }
 
+      // Calculate time components
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
+      // Format the time string based on remaining time
       let formattedTime = '';
+      let labels = '';
 
       if (days > 0) {
-        formattedTime += days + ':';
-        formattedTime += String(hours).padStart(2, '0') + ':';
-        formattedTime += String(minutes).padStart(2, '0') + ':';
-        formattedTime += String(seconds).padStart(2, '0');
+        formattedTime = `${days}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        labels = 'Days Hours Minutes Seconds';
       } else if (hours > 0) {
-        formattedTime += hours + ':';
-        formattedTime += String(minutes).padStart(2, '0') + ':';
-        formattedTime += String(seconds).padStart(2, '0');
+        formattedTime = `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        labels = 'Hours Minutes Seconds';
       } else {
-        formattedTime += String(minutes).padStart(2, '0') + ':';
-        formattedTime += String(seconds).padStart(2, '0');
+        formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        labels = 'Minutes Seconds';
       }
 
       timerDisplay.textContent = formattedTime;
+      timerLabelsDisplay.textContent = labels; // Update labels dynamically
     }
+
+    // --- Effects Functions (Confetti, Bubbles, Color Change) ---
 
     function getRandomColor() {
       const letters = '0123456789ABCDEF';
@@ -470,84 +636,110 @@
 
     function createConfetti() {
       const messageRect = messageDisplay.getBoundingClientRect();
-      const messageLeft = messageRect.left;
-      const messageRight = messageRect.right;
+      // Ensure messageRect is valid before using its properties
+      if (!messageRect || messageRect.width === 0 || messageRect.height === 0) {
+         console.warn("Message display not ready for confetti positioning.");
+         return;
+      }
+      const messageCenterX = messageRect.left + messageRect.width / 2;
       const messageCenterY = messageRect.top + messageRect.height / 2;
+      const confettiCount = 100; // Increase count for more effect
 
-      for (let i = 0; i < 50; i++) {
+
+      for (let i = 0; i < confettiCount; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.backgroundColor = getRandomColor();
 
-        let side = messageLeft;
-        let xDirection = 1;
+        // Start confetti near the center of the message
+        confetti.style.left = messageCenterX + (Math.random() - 0.5) * 50 + 'px';
+        confetti.style.top = messageCenterY + (Math.random() - 0.5) * 50 + 'px';
 
-        if (i % 2 === 0) {
-          side = messageRight;
-          xDirection = -1;
-        }
-
-        confetti.style.left = side + 'px';
-        confetti.style.top = messageCenterY + 'px';
-
-        const angle = (Math.random() - 0.5) * Math.PI / 2;
-        const speed = Math.random() * 5 + 3;
-        const xSpeed = Math.cos(angle) * speed * xDirection;
-        const ySpeed = Math.sin(angle) * speed;
+        // Calculate trajectory
+        const angle = Math.random() * Math.PI * 2; // Random direction
+        const speed = Math.random() * 8 + 5; // Random speed
+        const distance = Math.random() * 200 + 150; // How far it travels
+        const xEnd = Math.cos(angle) * distance;
+        const yEnd = Math.sin(angle) * distance;
+        const rotation = Math.random() * 720 - 360; // Random rotation
 
         document.body.appendChild(confetti);
 
-        const lifetime = Math.random() * 2000 + 1000;
+        const lifetime = Math.random() * 3000 + 2000; // Duration 2-5 seconds
 
-        setTimeout(() => {
-          confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
-          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
+        // Use requestAnimationFrame for smoother animation start (optional but good practice)
+        requestAnimationFrame(() => {
+          confetti.style.transition = `transform ${lifetime / 1000}s cubic-bezier(0.1, 0.9, 0.2, 1), opacity ${lifetime / 1000}s linear`;
+          confetti.style.transform = `translate(${xEnd}px, ${yEnd}px) rotate(${rotation}deg)`;
           confetti.style.opacity = 0;
+        });
 
-          setTimeout(() => {
-            confetti.remove();
-          }, lifetime);
-        }, 10);
+        // Remove confetti element after animation
+        setTimeout(() => {
+          confetti.remove();
+        }, lifetime);
       }
     }
 
+    // Bubble Button Action
     bubbleButton.addEventListener('click', () => {
-      createBubbles();
+      createBubbles(10); // Create 10 bubbles on click
     });
 
-    function createBubbles() {
-      const numBubbles = 10;
+    // Create Bubble Elements
+    function createBubbles(numBubbles = 1) { // Allow specifying number of bubbles
       for (let i = 0; i < numBubbles; i++) {
         const bubble = document.createElement('div');
         bubble.className = 'bubble';
+
+        // Start position at the bottom, random horizontal position
         const startX = Math.random() * window.innerWidth;
-        const startY = window.innerHeight;
+        const startY = window.innerHeight + 100; // Start slightly below viewport
         bubble.style.left = startX + 'px';
         bubble.style.top = startY + 'px';
 
-        const endY = Math.random() * -window.innerHeight;
-        const endX = Math.random() * window.innerWidth;
+        // Randomize size slightly
+        const size = Math.random() * 40 + 40; // Size between 40px and 80px
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        // Adjust background for visual variety (optional)
+         bubble.style.backgroundColor = `rgba(173, 216, 230, ${Math.random() * 0.3 + 0.4})`; // Vary opacity
 
-        const duration = Math.random() * 7000 + 4000;
+        // End position above the top, slightly different horizontal position for drift
+        const endY = -100; // End well above viewport
+        const endX = startX + (Math.random() - 0.5) * window.innerWidth * 0.5; // Horizontal drift
+
+        const duration = Math.random() * 8000 + 5000; // Duration 5-13 seconds
 
         document.body.appendChild(bubble);
 
-        setTimeout(() => {
-          bubble.style.transition = `transform ${duration / 1000}s linear, opacity ${duration / 1000}s linear`;
-          bubble.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`;
-          bubble.style.opacity = 0;
-          setTimeout(() => {
-            bubble.remove();
-          }, duration);
-        }, 10);
-
-        bubble.addEventListener('click', () => {
-          bubble.remove();
+        // Animate bubble rising
+        requestAnimationFrame(() => {
+            bubble.style.transition = `transform ${duration / 1000}s linear, opacity ${duration / 1000}s ease-out`;
+            bubble.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`;
+            bubble.style.opacity = 0; // Fade out as it reaches the top
         });
+
+
+        // Remove bubble element after animation
+        setTimeout(() => {
+          bubble.remove();
+        }, duration);
+
+        // Pop bubble on click
+        bubble.addEventListener('click', () => {
+            // Optional: Add a 'pop' animation/sound
+            bubble.style.transition = 'transform 0.15s ease-out, opacity 0.15s ease-out'; // Faster transition for pop
+            bubble.style.transform += ' scale(1.2)'; // Quick scale up
+            bubble.style.opacity = 0; // Fade out quickly
+             setTimeout(() => bubble.remove(), 150); // Remove after short delay
+        }, { once: true }); // Remove listener after first click
       }
     }
 
+    // Show/Hide Bubble Button based on Current Song
     function updateBubbleButtonVisibility() {
+      // Show only for the first two tracks (index 0 and 1)
       if (currentTrack < 2) {
         bubbleButton.style.display = 'block';
       } else {
@@ -555,25 +747,51 @@
       }
     }
 
-    updateTimer();
-    const timerInterval = setInterval(updateTimer, 1000);
+    // Helper Function to Format Time (MM:SS)
+    function formatTime(time) {
+       if (isNaN(time) || time === null) return '00:00'; // Handle invalid time input
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60);
+      // Use padStart for cleaner formatting
+      return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
 
-    window.addEventListener('load', () => {
-      audio.play().catch(error => {
-        console.error('Autoplay prevented:', error);
-      });
-    });
-
+    // --- Easter Egg ---
     erinGroganLink.addEventListener('click', () => {
       currentTrack = 4; // DEATHCAMP index
-      audio.src = musicFiles[currentTrack].url;
-      currentSongDisplay.textContent = musicFiles[currentTrack].name;
-      audio.volume = 0.77;
-      audio.play();
-      playPauseButton.textContent = '❚❚';
-      isPlaying = true;
-      updateBubbleButtonVisibility();
+      const newVolume = 0.77;
+      updateSong(); // Load and try to play DEATHCAMP
+
+      // Set volume *after* updateSong initiates playback potentially
+      // Use 'canplay' event listener as a more robust way? Or just timeout.
+      setTimeout(() => {
+          audio.volume = newVolume;
+          volumeSlider.value = newVolume; // *** UPDATE SLIDER VISUALLY ***
+          // Ensure mute state is consistent
+          if (newVolume > 0 && isMuted) { // If was muted, unmute
+              isMuted = false;
+              audio.muted = false;
+              muteButton.textContent = 'Mute';
+          } else if (newVolume <= 0 && !isMuted) { // If setting volume to 0, mute
+              isMuted = true;
+              audio.muted = true; // Use muted property
+              muteButton.textContent = 'Unmute';
+              lastVolume = 0.01; // Set tiny last vol
+          }
+      }, 100); // Increased delay slightly
+
     });
+
+     // --- Initial Setup ---
+    document.addEventListener('DOMContentLoaded', () => {
+      updateTimer(); 
+      timerInterval = setInterval(updateTimer, 1000); 
+      initializePlayer(); 
+
+      console.log("Page loaded. Music player initialized. Playback requires user interaction or successful autoplay.");
+    });
+
+
   </script>
 </body>
 
