@@ -47,7 +47,18 @@
             white-space: nowrap;
             gap: var(--gap, 20px);
             /* Animation applied here */
-            animation: scrollLeft var(--animation-duration, 30s) linear infinite;
+        }
+
+        .background-row.row1 .background-row-inner {
+            animation: scrollRight var(--animation-duration-row1, 30s) linear infinite;
+        }
+
+        .background-row.row2 .background-row-inner {
+            animation: scrollLeft var(--animation-duration-row2, 40s) linear infinite;
+        }
+
+        .background-row.row3 .background-row-inner {
+            animation: scrollLeftSlow var(--animation-duration-row3, 50s) linear infinite;
         }
 
         .background-row.row1 {
@@ -73,20 +84,43 @@
             background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
         }
 
-        /* Improved animation calculation */
+        /* Animations for seamless loop */
         @keyframes scrollLeft {
             0% {
                 transform: translateX(0%);
             }
 
             100% {
-                /* Calculation:
-                    translateX = - (image_width * image_count + gap * (image_count - 1))
-                    Where:
-                    image_width is in vw
-                    gap is in px (or whatever unit you use)
-                    image_count is the number of *unique* images
-                */
+                transform: translateX(calc(
+                    -1 * (
+                        var(--image-width) * var(--image-count) +
+                        var(--gap) * (var(--image-count) - 1)
+                    )
+                ));
+            }
+        }
+
+        @keyframes scrollRight {
+            0% {
+                transform: translateX(calc(
+                    -1 * (
+                        var(--image-width) * var(--image-count) +
+                        var(--gap) * (var(--image-count) - 1)
+                    )
+                ));
+            }
+
+            100% {
+                transform: translateX(0%);
+            }
+        }
+
+        @keyframes scrollLeftSlow {
+            0% {
+                transform: translateX(0%);
+            }
+
+            100% {
                 transform: translateX(calc(
                     -1 * (
                         var(--image-width) * var(--image-count) +
@@ -330,7 +364,7 @@
 <body>
     <div class="background-scroll-container">
         <div class="background-row row1"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 30s;">
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration-row1: 30s;">
             <div class="background-row-inner">
                 <div class="background-image image1"></div>
                 <div class="background-image"></div>
@@ -344,7 +378,7 @@
             </div>
         </div>
         <div class="background-row row2"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 40s;">
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration-row2: 40s;">
             <div class="background-row-inner">
                 <div class="background-image image2"></div>
                 <div class="background-image"></div>
@@ -358,7 +392,7 @@
             </div>
         </div>
         <div class="background-row row3"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 50s;">
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration-row3: 50s;">
             <div class="background-row-inner">
                 <div class="background-image image3"></div>
                 <div class="background-image"></div>
@@ -417,4 +451,21 @@
         const currentSongDisplay = document.getElementById('current-song');
         const musicSlider = document.getElementById('music-slider');
         const musicTimeDisplay = document.getElementById('music-time');
-        const timerLabelsDisplay =
+        const timerLabelsDisplay = document.getElementById('timer-labels');
+        const bubbleButton = document.getElementById('bubble-button');
+        const erinGroganLink = document.getElementById('erin-grogan-link');
+
+        let musicControlsVisible = false;
+
+        creditsButton.addEventListener('click', () => {
+            creditsBox.classList.toggle('show');
+        });
+
+        submitButton.addEventListener('click', () => {
+            window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
+        });
+
+        document.addEventListener('click', (event) => {
+            if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
+                creditsBox.classList.remove('show');
+            }
