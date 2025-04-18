@@ -8,4 +8,8 @@
     font-size: 15px;
     letter-spacing: 0.1em;
   }
+
+    .background-row.row1 .background-row-inner {
+    animation: scrollRight var(--animation-duration-row1, 30s) linear infinite;
+  }
 }
