@@ -47,18 +47,21 @@
       top: 0;
       --image-width: 20%;
       --image-count: 3;
+      animation: scrollLeftRow1 30s linear infinite;
     }
 
     .background-row.row2 {
       top: 33.33%;
       --image-width: 15%;
       --image-count: 2;
+      animation: scrollRightRow2 40s linear infinite;
     }
 
     .background-row.row3 {
       top: 66.66%;
       --image-width: 25%;
       --image-count: 2;
+      animation: scrollLeftSlowRow3 50s linear infinite;
     }
 
     .background-image {
@@ -97,18 +100,6 @@
       100% {
         transform: translateX(calc(var(--image-width) * var(--image-count) * -1));
       }
-    }
-
-    .background-row.row1 {
-      animation: scrollLeftRow1 30s linear infinite;
-    }
-
-    .background-row.row2 {
-      animation: scrollRightRow2 40s linear infinite;
-    }
-
-    .background-row.row3 {
-      animation: scrollLeftSlowRow3 50s linear infinite;
     }
 
     #credits-button,
@@ -328,21 +319,14 @@
       <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
       <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
       <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
     </div>
     <div class="background-row row2">
       <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
       <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
     </div>
     <div class="background-row row3">
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+      <div class="background-image" style="background-image: url('your-image3-1.jpg');"></div>
+      <div class="background-image" style="background-image: url('your-image3-2.jpg');"></div>
     </div>
   </div>
 
@@ -412,4 +396,37 @@
     });
 
     musicToggleButton.addEventListener('click', () => {
-      musicControls.classList.toggle
+      musicControls.classList.toggle('show');
+      musicControlsVisible = !musicControlsVisible;
+    });
+
+    const targetDate = new Date('April 20, 2025 08:30:00 EST');
+    const timerDisplay = document.getElementById('timer');
+    const messageDisplay = document.getElementById('message');
+
+    function updateTimer() {
+      const now = new Date();
+      const difference = targetDate - now;
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      timerDisplay.textContent = `${days} ${hours.toString().padStart(2, '0')} ${minutes.toString().padStart(2, '0')} ${seconds.toString().padStart(2, '0')}`;
+
+      if (difference < 0) {
+        messageDisplay.textContent = "Time's Up!";
+        messageDisplay.style.opacity = 1;
+        clearInterval(timerInterval);
+      }
+    }
+
+    const timerInterval = setInterval(updateTimer, 1000);
+
+    // Music functionality
+    const audio = new Audio();
+    let currentSongIndex = 0;
+    let isPlaying = false;
+    let isLooping = false;
+    let isMuted = false;
