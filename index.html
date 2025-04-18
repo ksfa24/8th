@@ -34,9 +34,27 @@
       z-index: -1;
     }
 
+    .background-row {
+      position: absolute;
+      width: 100%;
+      height: 33.33%; /* Divide into three equal rows */
+      overflow: hidden;
+    }
+
+    .background-row.row1 {
+      top: 0;
+    }
+
+    .background-row.row2 {
+      top: 33.33%;
+    }
+
+    .background-row.row3 {
+      top: 66.66%;
+    }
+
     .background-image {
       position: absolute;
-      top: 0;
       width: 100%;
       height: 100%;
       opacity: 0.3;
@@ -60,6 +78,19 @@
       left: 0;
       background-image: url('your-image3.jpg'); /* Replace with your image URL */
       animation: scrollLeftSlow 50s linear infinite; /* Even slower */
+    }
+
+    /* Apply specific positioning to images within their rows */
+    .background-row.row1 .background-image.image1 {
+      top: 0;
+    }
+
+    .background-row.row2 .background-image.image2 {
+      top: 0;
+    }
+
+    .background-row.row3 .background-image.image3 {
+      top: 0;
     }
 
     @keyframes scrollLeft {
@@ -305,9 +336,15 @@
 
 <body>
   <div class="background-scroll-container">
-    <div class="background-image image1"></div>
-    <div class="background-image image2"></div>
-    <div class="background-image image3"></div>
+    <div class="background-row row1">
+      <div class="background-image image1"></div>
+    </div>
+    <div class="background-row row2">
+      <div class="background-image image2"></div>
+    </div>
+    <div class="background-row row3">
+      <div class="background-image image3"></div>
+    </div>
   </div>
 
   <button id="credits-button">Credits</button>
@@ -446,39 +483,4 @@
     });
 
     audio.addEventListener('ended', () => {
-      if (!isLooping) {
-        nextSong();
-      }
-    });
-
-    prevButton.addEventListener('click', () => {
-      currentTrack = (currentTrack - 1 + musicFiles.length) % musicFiles.length;
-      updateSong();
-    });
-
-    nextButton.addEventListener('click', () => {
-      nextSong();
-    });
-
-    function nextSong() {
-      currentTrack = (currentTrack + 1) % musicFiles.length;
-      updateSong();
-    }
-
-    function updateSong() {
-      audio.src = musicFiles[currentTrack].url;
-      currentSongDisplay.textContent = musicFiles[currentTrack].name;
-      audio.play();
-      if (musicFiles[currentTrack].url === '') {
-        playPauseButton.textContent = '▷';
-        isPlaying = false;
-      } else {
-        playPauseButton.textContent = '❚❚';
-        isPlaying = true;
-      }
-      updateBubbleButtonVisibility();
-    }
-
-    audio.play();
-    playPauseButton.textContent = '❚❚';
-    updateBubbleButtonVisibility();
+      if (!is
