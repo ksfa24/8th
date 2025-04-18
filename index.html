@@ -40,56 +40,81 @@
       height: 33.33%;
       overflow: hidden;
       display: flex;
-      white-space: nowrap; /* Prevent gaps between inline-block/flex items */
     }
 
     .background-row.row1 {
       top: 0;
-      --image-width: 20%;
-      --image-count: 3;
-      animation: scrollLeftRow1 30s linear infinite;
     }
 
     .background-row.row2 {
       top: 33.33%;
-      --image-width: 15%;
-      --image-count: 2;
-      animation: scrollRightRow2 40s linear infinite;
     }
 
     .background-row.row3 {
       top: 66.66%;
-      --image-width: 25%;
-      --image-count: 2;
-      animation: scrollLeftSlowRow3 50s linear infinite;
     }
 
     .background-image {
       height: 100%;
       opacity: 0.3;
-      background-size: cover;
+      background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-      display: inline-block; /* Ensure they sit side-by-side without gaps */
-      width: var(--image-width);
+      margin-right: 10px;
+      flex-shrink: 0;
     }
 
-    /* Animations for seamless loop */
+    .background-row.row1 .background-image {
+      width: 20%;
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+      animation: scrollLeftRow1 30s linear infinite;
+    }
+
+    .background-row.row2 .background-image {
+      width: 15%;
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+      animation: scrollRightRow2 40s linear infinite;
+    }
+
+    .background-row.row3 .background-image {
+      width: 25%;
+      background-image: url('your-image3-1.jpg');
+      animation: scrollLeftSlowRow3 50s linear infinite;
+    }
+
+    .background-row.row1 .background-image:nth-child(2) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
+
+    .background-row.row1 .background-image:nth-child(3) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
+
+    .background-row.row2 .background-image:nth-child(2) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
+
+    .background-row.row3 .background-image:nth-child(2) {
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
+
     @keyframes scrollLeftRow1 {
       0% {
         transform: translateX(0%);
       }
+
       100% {
-        transform: translateX(calc(var(--image-width) * var(--image-count) * -1));
+        transform: translateX(calc(-100% + 100vw - (var(--image-width-row1) * var(--image-count-row1))));
       }
     }
 
     @keyframes scrollRightRow2 {
       0% {
-        transform: translateX(0%);
+        transform: translateX(calc(100% - 100vw + (var(--image-width-row2) * var(--image-count-row2))));
       }
+
       100% {
-        transform: translateX(calc(var(--image-width) * var(--image-count)));
+        transform: translateX(0%);
       }
     }
 
@@ -97,8 +122,9 @@
       0% {
         transform: translateX(0%);
       }
+
       100% {
-        transform: translateX(calc(var(--image-width) * var(--image-count) * -1));
+        transform: translateX(calc(-100% + 100vw - (var(--image-width-row3) * var(--image-count-row3))));
       }
     }
 
@@ -216,7 +242,6 @@
 
     .orange-text {
       color: orange;
-      cursor: pointer;
     }
 
     .red-text {
@@ -312,21 +337,22 @@
       }
     }
   </style>
+</head>
 
 <body>
   <div class="background-scroll-container">
-    <div class="background-row row1">
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+    <div class="background-row row1" style="--image-width-row1: 20%; --image-count-row1: 3;">
+      <div class="background-image image1"></div>
+      <div class="background-image"></div>
+      <div class="background-image"></div>
     </div>
-    <div class="background-row row2">
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
-      <div class="background-image" style="background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');"></div>
+    <div class="background-row row2" style="--image-width-row2: 15%; --image-count-row2: 2;">
+      <div class="background-image image2"></div>
+      <div class="background-image"></div>
     </div>
-    <div class="background-row row3">
-      <div class="background-image" style="background-image: url('your-image3-1.jpg');"></div>
-      <div class="background-image" style="background-image: url('your-image3-2.jpg');"></div>
+    <div class="background-row row3" style="--image-width-row3: 25%; --image-count-row3: 2;">
+      <div class="background-image image3"></div>
+      <div class="background-image"></div>
     </div>
   </div>
 
@@ -404,29 +430,13 @@
     const timerDisplay = document.getElementById('timer');
     const messageDisplay = document.getElementById('message');
 
-    function updateTimer() {
-      const now = new Date();
-      const difference = targetDate - now;
-
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-      timerDisplay.textContent = `${days} ${hours.toString().padStart(2, '0')} ${minutes.toString().padStart(2, '0')} ${seconds.toString().padStart(2, '0')}`;
-
-      if (difference < 0) {
-        messageDisplay.textContent = "Time's Up!";
-        messageDisplay.style.opacity = 1;
-        clearInterval(timerInterval);
-      }
-    }
-
-    const timerInterval = setInterval(updateTimer, 1000);
-
-    // Music functionality
-    const audio = new Audio();
-    let currentSongIndex = 0;
-    let isPlaying = false;
-    let isLooping = false;
-    let isMuted = false;
+    const musicFiles = [{
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3',
+        name: 'Lotus Waters'
+      },
+      {
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3',
+        name: 'LEASE'
+      },
+      {
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20
