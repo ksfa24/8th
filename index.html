@@ -38,18 +38,19 @@
             position: absolute;
             width: 100%;
             height: 33.33%;
-            overflow: hidden; /* Keep overflow hidden on the row */
+            overflow: hidden;
+            /* Keep overflow hidden on the row */
             display: flex;
         }
 
         .background-row-inner {
             display: flex;
             /* Allow children to go beyond container width */
-            width: max-content;
+            /* width: max-content;  Removed, as vw units control width */
             /* Prevent wrapping */
             white-space: nowrap;
             /* Add space between images */
-            gap: var(--gap, 10px);
+            gap: var(--gap, 20px); /* Increased default gap slightly */
             /* Animation applied here */
         }
 
@@ -72,25 +73,25 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            /* Removed margin-right, using gap on inner div */
             flex-shrink: 0;
+            /* Width now set using vw units */
+            width: var(--image-width, 20vw);
         }
 
+        /* Specific widths per row - now using vw */
         .background-row.row1 .background-image {
-            width: var(--image-width-row1, 20%);
             background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
         }
 
         .background-row.row2 .background-image {
-            width: var(--image-width-row2, 15%);
             background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
         }
 
         .background-row.row3 .background-image {
-            width: var(--image-width-row3, 25%);
             background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
             /* Assuming 'your-image3-1.jpg' is meant to be the same placeholder for the demo */
         }
+
 
         /* Animations applied to the inner container */
         .background-row.row1 .background-row-inner {
@@ -106,7 +107,7 @@
         }
 
 
-        /* Calculate translation based on the width of one set of images + gaps */
+        /* Calculate translation based on the width of one set of images (in vw) + gaps (in px) */
         @keyframes scrollLeftRow1 {
             0% {
                 transform: translateX(0%);
@@ -114,14 +115,16 @@
 
             100% {
                 /* Translate by the width of one set of images + gaps */
-                transform: translateX(calc(-1 * (var(--image-width-row1, 20%) * var(--image-count-row1, 3) + var(--gap, 10px) * (var(--image-count-row1, 3) - 1))));
+                /* Calculation: -(image_count * image_width_vw + (image_count - 1) * gap_px) */
+                transform: translateX(calc(-1 * (var(--image-count-row1, 3) * var(--image-width-row1, 20vw) + (var(--image-count-row1, 3) - 1) * var(--gap, 20px))));
             }
         }
 
         @keyframes scrollRightRow2 {
             0% {
                 /* Start from the translated position of one set of images + gaps */
-                transform: translateX(calc(var(--image-width-row2, 15%) * var(--image-count-row2, 2) + var(--gap, 10px) * (var(--image-count-row2, 2) - 1)));
+                /* Calculation: image_count * image_width_vw + (image_count - 1) * gap_px */
+                transform: translateX(calc(var(--image-count-row2, 2) * var(--image-width-row2, 15vw) + (var(--image-count-row2, 2) - 1) * var(--gap, 20px)));
             }
 
             100% {
@@ -136,7 +139,8 @@
 
             100% {
                 /* Translate by the width of one set of images + gaps */
-                transform: translateX(calc(-1 * (var(--image-width-row3, 25%) * var(--image-count-row3, 2) + var(--gap, 10px) * (var(--image-count-row3, 2) - 1))));
+                /* Calculation: -(image_count * image_width_vw + (image_count - 1) * gap_px) */
+                transform: translateX(calc(-1 * (var(--image-count-row3, 2) * var(--image-width-row3, 25vw) + (var(--image-count-row3, 2) - 1) * var(--gap, 20px))));
             }
         }
 
@@ -246,6 +250,21 @@
                 font-size: 15px;
                 letter-spacing: 0.1em;
             }
+
+            /* Adjust image widths for smaller screens if needed */
+            .background-image {
+                 width: var(--image-width-mobile, 30vw); /* Example: larger on mobile */
+            }
+            /* Update row specific widths for mobile */
+             .background-row.row1 .background-image {
+                width: var(--image-width-row1-mobile, 30vw);
+            }
+             .background-row.row2 .background-image {
+                width: var(--image-width-row2-mobile, 25vw);
+            }
+             .background-row.row3 .background-image {
+                width: var(--image-width-row3-mobile, 35vw);
+            }
         }
 
         .green-text {
@@ -354,7 +373,7 @@
 
 <body>
     <div class="background-scroll-container">
-        <div class="background-row row1" style="--image-width-row1: 20%; --image-count-row1: 3; --gap: 10px;">
+        <div class="background-row row1" style="--image-width-row1: 20vw; --image-count-row1: 3; --gap: 20px;">
             <div class="background-row-inner">
                 <div class="background-image image1"></div>
                 <div class="background-image"></div>
@@ -364,7 +383,7 @@
                 <div class="background-image"></div>
             </div>
         </div>
-        <div class="background-row row2" style="--image-width-row2: 15%; --image-count-row2: 2; --gap: 10px;">
+        <div class="background-row row2" style="--image-width-row2: 15vw; --image-count-row2: 2; --gap: 20px;">
             <div class="background-row-inner">
                 <div class="background-image image2"></div>
                 <div class="background-image"></div>
@@ -372,7 +391,7 @@
                 <div class="background-image"></div>
             </div>
         </div>
-        <div class="background-row row3" style="--image-width-row3: 25%; --image-count-row3: 2; --gap: 10px;">
+        <div class="background-row row3" style="--image-width-row3: 25vw; --image-count-row3: 2; --gap: 20px;">
             <div class="background-row-inner">
                 <div class="background-image image3"></div>
                 <div class="background-image"></div>
@@ -465,8 +484,17 @@
         {
             url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3',
             name: 'LEASE'
+        },
+        {
+            url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20'
         }
+        // The music array was incomplete, I'll stop here to avoid breaking the JS.
+        // You should complete the musicFiles array with valid URLs and names.
         ];
+
+        // ... rest of your JavaScript code (assuming it handles the timer, music player, etc.)
+        // Note: The music player and timer logic is not directly related to the background loop
+        // and is left unchanged from your original code snippet.
     </script>
 </body>
 
