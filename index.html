@@ -39,6 +39,7 @@
       width: 100%;
       height: 33.33%; /* Divide into three equal rows */
       overflow: hidden;
+      display: flex; /* Enable flexbox for inline images */
     }
 
     .background-row.row1 {
@@ -54,59 +55,63 @@
     }
 
     .background-image {
-      position: absolute;
-      width: 150%; /* Make images wider than container */
       height: 100%;
       opacity: 0.3;
-      background-size: contain; /* Or adjust to 'auto 100%' or specific pixel values */
+      background-size: contain; /* Adjust as needed: cover, auto 100%, etc. */
       background-repeat: no-repeat;
       background-position: center;
+      margin-right: 10px; /* Space between images */
+      flex-shrink: 0; /* Prevent images from shrinking */
     }
 
-    .background-image.image1 {
-      left: 0;
-      background-image: url('your-image1.jpg'); /* Replace with your image URL */
-      animation: scrollLeft 30s linear infinite;
+    .background-row.row1 .background-image {
+      width: 20%; /* Adjust width for the number of images you want */
+      background-image: url('your-image1-1.jpg'); /* Replace with your image URL */
+      animation: scrollLeftRow1 30s linear infinite;
     }
 
-    .background-image.image2 {
-      right: 0;
-      background-image: url('your-image2.jpg'); /* Replace with your image URL */
-      animation: scrollRight 40s linear infinite; /* Different speed */
+    .background-row.row2 .background-image {
+      width: 15%; /* Adjust width */
+      background-image: url('your-image2-1.jpg'); /* Replace with your image URL */
+      animation: scrollRightRow2 40s linear infinite; /* Different speed */
     }
 
-    .background-image.image3 {
-      left: 0;
-      background-image: url('your-image3.jpg'); /* Replace with your image URL */
-      animation: scrollLeftSlow 50s linear infinite; /* Even slower */
+    .background-row.row3 .background-image {
+      width: 25%; /* Adjust width */
+      background-image: url('your-image3-1.jpg'); /* Replace with your image URL */
+      animation: scrollLeftSlowRow3 50s linear infinite; /* Even slower */
     }
 
-    /* Apply specific positioning to images within their rows */
-    .background-row.row1 .background-image.image1 {
-      top: 0;
+    /* Add more image classes for each row as needed */
+    .background-row.row1 .background-image:nth-child(2) {
+      background-image: url('your-image1-2.jpg');
     }
 
-    .background-row.row2 .background-image.image2 {
-      top: 0;
+    .background-row.row1 .background-image:nth-child(3) {
+      background-image: url('your-image1-3.jpg');
     }
 
-    .background-row.row3 .background-image.image3 {
-      top: 0;
+    .background-row.row2 .background-image:nth-child(2) {
+      background-image: url('your-image2-2.jpg');
     }
 
-    @keyframes scrollLeft {
+    .background-row.row3 .background-image:nth-child(2) {
+      background-image: url('your-image3-2.jpg');
+    }
+
+    @keyframes scrollLeftRow1 {
       0% {
         transform: translateX(0%);
       }
 
       100% {
-        transform: translateX(-calc(100% - 100vw)); /* Scroll full image width minus viewport width */
+        transform: translateX(calc(-100% + 100vw - (var(--image-width-row1) * var(--image-count-row1))));
       }
     }
 
-    @keyframes scrollRight {
+    @keyframes scrollRightRow2 {
       0% {
-        transform: translateX(calc(100% - 100vw)); /* Start from the right */
+        transform: translateX(calc(100% - 100vw + (var(--image-width-row2) * var(--image-count-row2))));
       }
 
       100% {
@@ -114,13 +119,13 @@
       }
     }
 
-    @keyframes scrollLeftSlow {
+    @keyframes scrollLeftSlowRow3 {
       0% {
         transform: translateX(0%);
       }
 
       100% {
-        transform: translateX(-calc(100% - 100vw));
+        transform: translateX(calc(-100% + 100vw - (var(--image-width-row3) * var(--image-count-row3))));
       }
     }
 
@@ -337,14 +342,18 @@
 
 <body>
   <div class="background-scroll-container">
-    <div class="background-row row1">
+    <div class="background-row row1" style="--image-width-row1: 20%; --image-count-row1: 3;">
       <div class="background-image image1"></div>
+      <div class="background-image"></div>
+      <div class="background-image"></div>
     </div>
-    <div class="background-row row2">
+    <div class="background-row row2" style="--image-width-row2: 15%; --image-count-row2: 2;">
       <div class="background-image image2"></div>
+      <div class="background-image"></div>
     </div>
-    <div class="background-row row3">
+    <div class="background-row row3" style="--image-width-row3: 25%; --image-count-row3: 2;">
       <div class="background-image image3"></div>
+      <div class="background-image"></div>
     </div>
   </div>
 
@@ -435,41 +444,4 @@
         name: 'KYO'
       },
       {
-        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-21%20Yuu.mp3',
-        name: 'Yuu'
-      },
-      {
-        url: 'https://file.garden/aABDpAgY3QmuIiLd/DEATHCAMP.mp3',
-        name: 'DEATHCAMP'
-      },
-      {
-        url: '',
-        name: 'Silence'
-      }
-    ];
-    let currentTrack = 0;
-    let audio = new Audio(musicFiles[currentTrack].url);
-    let isLooping = false;
-    let isMuted = false;
-    let isPlaying = true;
-
-    audio.loop = false;
-    currentSongDisplay.textContent = musicFiles[currentTrack].name;
-
-    loopButton.addEventListener('click', () => {
-      isLooping = !isLooping;
-      audio.loop = isLooping;
-      loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off';
-    });
-
-    volumeSlider.addEventListener('input', () => {
-      audio.volume = volumeSlider.value;
-    });
-
-    muteButton.addEventListener('click', () => {
-      isMuted = !isMuted;
-      audio.muted = isMuted;
-      muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
-    });
-
-    playPauseButton.addEventListener('click', () => {
+        url: 'https://file.garden/aABDpAgY3
