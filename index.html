@@ -45,13 +45,14 @@
 
         .background-row-inner {
             display: flex;
-            /* Allow children to go beyond container width */
-            /* width: max-content;  Removed, as vw units control width */
             /* Prevent wrapping */
             white-space: nowrap;
             /* Add space between images */
-            gap: var(--gap, 20px); /* Increased default gap slightly */
+            gap: var(--gap, 20px);
             /* Animation applied here */
+            animation: scrollLeftRow1 var(--animation-duration, 30s) linear infinite;
+            /* Hint to the browser to optimize for transformations */
+            will-change: transform;
         }
 
 
@@ -76,38 +77,13 @@
             flex-shrink: 0;
             /* Width now set using vw units */
             width: var(--image-width, 20vw);
-        }
-
-        /* Specific widths per row - now using vw */
-        .background-row.row1 .background-image {
+            /* Default background image */
             background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-        }
-
-        .background-row.row2 .background-image {
-            background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-        }
-
-        .background-row.row3 .background-image {
-            background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
-            /* Assuming 'your-image3-1.jpg' is meant to be the same placeholder for the demo */
-        }
-
-
-        /* Animations applied to the inner container */
-        .background-row.row1 .background-row-inner {
-            animation: scrollLeftRow1 30s linear infinite;
-        }
-
-        .background-row.row2 .background-row-inner {
-            animation: scrollRightRow2 40s linear infinite;
-        }
-
-        .background-row.row3 .background-row-inner {
-            animation: scrollLeftSlowRow3 50s linear infinite;
         }
 
 
         /* Calculate translation based on the width of one set of images (in vw) + gaps (in px) */
+        /* Applied to all rows via the inner container */
         @keyframes scrollLeftRow1 {
             0% {
                 transform: translateX(0%);
@@ -116,31 +92,7 @@
             100% {
                 /* Translate by the width of one set of images + gaps */
                 /* Calculation: -(image_count * image_width_vw + (image_count - 1) * gap_px) */
-                transform: translateX(calc(-1 * (var(--image-count-row1, 3) * var(--image-width-row1, 20vw) + (var(--image-count-row1, 3) - 1) * var(--gap, 20px))));
-            }
-        }
-
-        @keyframes scrollRightRow2 {
-            0% {
-                /* Start from the translated position of one set of images + gaps */
-                /* Calculation: image_count * image_width_vw + (image_count - 1) * gap_px */
-                transform: translateX(calc(var(--image-count-row2, 2) * var(--image-width-row2, 15vw) + (var(--image-count-row2, 2) - 1) * var(--gap, 20px)));
-            }
-
-            100% {
-                transform: translateX(0%);
-            }
-        }
-
-        @keyframes scrollLeftSlowRow3 {
-            0% {
-                transform: translateX(0%);
-            }
-
-            100% {
-                /* Translate by the width of one set of images + gaps */
-                /* Calculation: -(image_count * image_width_vw + (image_count - 1) * gap_px) */
-                transform: translateX(calc(-1 * (var(--image-count-row3, 2) * var(--image-width-row3, 25vw) + (var(--image-count-row3, 2) - 1) * var(--gap, 20px))));
+                transform: translateX(calc(-1 * (var(--image-count, 3) * var(--image-width, 20vw) + (var(--image-count, 3) - 1) * var(--gap, 20px))));
             }
         }
 
@@ -253,17 +205,23 @@
 
             /* Adjust image widths for smaller screens if needed */
             .background-image {
-                 width: var(--image-width-mobile, 30vw); /* Example: larger on mobile */
+                width: var(--image-width-mobile, 30vw);
+                /* Example: larger on mobile */
             }
-            /* Update row specific widths for mobile */
-             .background-row.row1 .background-image {
+
+            /* Update row specific widths for mobile (if you want different sizes per row on mobile) */
+            .background-row.row1 .background-image {
                 width: var(--image-width-row1-mobile, 30vw);
             }
-             .background-row.row2 .background-image {
+
+            .background-row.row2 .background-image {
                 width: var(--image-width-row2-mobile, 25vw);
+                /* Kept slightly smaller for variety, adjust as needed */
             }
-             .background-row.row3 .background-image {
+
+            .background-row.row3 .background-image {
                 width: var(--image-width-row3-mobile, 35vw);
+                /* Kept slightly larger for variety, adjust as needed */
             }
         }
 
@@ -359,7 +317,6 @@
 
         #bubble-button {
             display: none;
-            z-index: 1;
         }
 
         @media (max-width: 600px) {
@@ -373,7 +330,8 @@
 
 <body>
     <div class="background-scroll-container">
-        <div class="background-row row1" style="--image-width-row1: 20vw; --image-count-row1: 3; --gap: 20px;">
+        <div class="background-row row1"
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 30s;">
             <div class="background-row-inner">
                 <div class="background-image image1"></div>
                 <div class="background-image"></div>
@@ -383,19 +341,25 @@
                 <div class="background-image"></div>
             </div>
         </div>
-        <div class="background-row row2" style="--image-width-row2: 15vw; --image-count-row2: 2; --gap: 20px;">
+        <div class="background-row row2"
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 30s;">
             <div class="background-row-inner">
                 <div class="background-image image2"></div>
                 <div class="background-image"></div>
+                <div class="background-image"></div>
                 <div class="background-image image2"></div>
+                <div class="background-image"></div>
                 <div class="background-image"></div>
             </div>
         </div>
-        <div class="background-row row3" style="--image-width-row3: 25vw; --image-count-row3: 2; --gap: 20px;">
+        <div class="background-row row3"
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 30s;">
             <div class="background-row-inner">
                 <div class="background-image image3"></div>
                 <div class="background-image"></div>
+                <div class="background-image"></div>
                 <div class="background-image image3"></div>
+                <div class="background-image"></div>
                 <div class="background-image"></div>
             </div>
         </div>
