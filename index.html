@@ -50,15 +50,15 @@
         }
 
         .background-row.row1 .background-row-inner {
-            animation: scrollRight var(--animation-duration-row1, 30s) linear infinite;
+            animation: scrollRightRow1 var(--animation-duration-row1, 30s) linear infinite;
         }
 
         .background-row.row2 .background-row-inner {
-            animation: scrollLeft var(--animation-duration-row2, 40s) linear infinite;
+            animation: scrollLeftRow2 var(--animation-duration-row2, 40s) linear infinite;
         }
 
         .background-row.row3 .background-row-inner {
-            animation: scrollRight var(--animation-duration-row3, 50s) linear infinite;
+            animation: scrollRightRow3 var(--animation-duration-row3, 50s) linear infinite;
         }
 
         .background-row.row1 {
@@ -85,7 +85,7 @@
         }
 
         /* Animations for seamless loop */
-        @keyframes scrollLeft {
+        @keyframes scrollLeftRow2 {
             0% {
                 transform: translateX(0%);
             }
@@ -100,7 +100,22 @@
             }
         }
 
-        @keyframes scrollRight {
+        @keyframes scrollRightRow1 {
+            0% {
+                transform: translateX(calc(
+                    -1 * (
+                        var(--image-width) * var(--image-count) +
+                        var(--gap) * (var(--image-count) - 1)
+                    )
+                ));
+            }
+
+            100% {
+                transform: translateX(0%);
+            }
+        }
+
+        @keyframes scrollRightRow3 {
             0% {
                 transform: translateX(calc(
                     -1 * (
@@ -470,13 +485,4 @@
         const musicControls = document.getElementById('music-controls');
         const prevButton = document.getElementById('prev-button');
         const nextButton = document.getElementById('next-button');
-        const currentSongDisplay = document.getElementById('current-song');
-        const musicSlider = document.getElementById('music-slider');
-        const musicTimeDisplay = document.getElementById('music-time');
-        const timerLabelsDisplay = document.getElementById('timer-labels');
-        const bubbleButton = document.getElementById('bubble-button');
-        const erinGroganLink = document.getElementById('erin-grogan-link');
-
-        let musicControlsVisible = false;
-
-        creditsButton.
+        const currentSong
