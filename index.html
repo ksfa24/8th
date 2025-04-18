@@ -55,16 +55,17 @@
 
     .background-image {
       position: absolute;
-      width: 100%;
+      width: 150%; /* Make images wider than container */
       height: 100%;
       opacity: 0.3;
-      background-size: cover;
+      background-size: contain; /* Or adjust to 'auto 100%' or specific pixel values */
+      background-repeat: no-repeat;
       background-position: center;
     }
 
     .background-image.image1 {
       left: 0;
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Replace with your image URL */
+      background-image: url('your-image1.jpg'); /* Replace with your image URL */
       animation: scrollLeft 30s linear infinite;
     }
 
@@ -99,17 +100,17 @@
       }
 
       100% {
-        transform: translateX(-100%);
+        transform: translateX(-calc(100% - 100vw)); /* Scroll full image width minus viewport width */
       }
     }
 
     @keyframes scrollRight {
       0% {
-        transform: translateX(0%);
+        transform: translateX(calc(100% - 100vw)); /* Start from the right */
       }
 
       100% {
-        transform: translateX(100%);
+        transform: translateX(0%);
       }
     }
 
@@ -119,7 +120,7 @@
       }
 
       100% {
-        transform: translateX(-100%);
+        transform: translateX(-calc(100% - 100vw));
       }
     }
 
@@ -472,15 +473,3 @@
     });
 
     playPauseButton.addEventListener('click', () => {
-      if (isPlaying) {
-        audio.pause();
-        playPauseButton.textContent = '▷';
-      } else {
-        audio.play();
-        playPauseButton.textContent = '❚❚';
-      }
-      isPlaying = !isPlaying;
-    });
-
-    audio.addEventListener('ended', () => {
-      if (!is
