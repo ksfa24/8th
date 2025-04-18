@@ -49,8 +49,6 @@
             white-space: nowrap;
             /* Add space between images */
             gap: var(--gap, 20px);
-            /* Animation applied here */
-            animation: scrollLeftRow1 var(--animation-duration, 30s) linear infinite;
             /* Hint to the browser to optimize for transformations */
             will-change: transform;
         }
@@ -81,10 +79,22 @@
             background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
         }
 
+        /* Apply specific animations per row */
+        .background-row.row1 .background-row-inner {
+            animation: scrollRight var(--animation-duration, 30s) linear infinite;
+        }
 
-        /* Calculate translation based on the width of one set of images (in vw) + gaps (in px) */
-        /* Applied to all rows via the inner container */
-        @keyframes scrollLeftRow1 {
+        .background-row.row2 .background-row-inner {
+            animation: scrollLeft var(--animation-duration, 40s) linear infinite; /* Row 2 scrolls left */
+        }
+
+        .background-row.row3 .background-row-inner {
+            animation: scrollRight var(--animation-duration, 50s) linear infinite; /* Row 3 scrolls right */
+        }
+
+
+        /* Keyframe for leftward scrolling */
+        @keyframes scrollLeft {
             0% {
                 transform: translateX(0%);
             }
@@ -93,6 +103,19 @@
                 /* Translate by the width of one set of images + gaps */
                 /* Calculation: -(image_count * image_width_vw + (image_count - 1) * gap_px) */
                 transform: translateX(calc(-1 * (var(--image-count, 3) * var(--image-width, 20vw) + (var(--image-count, 3) - 1) * var(--gap, 20px))));
+            }
+        }
+
+        /* Keyframe for rightward scrolling */
+        @keyframes scrollRight {
+            0% {
+                /* Start from the translated position of one set of images + gaps */
+                /* Calculation: image_count * image_width_vw + (image_count - 1) * gap_px */
+                transform: translateX(calc(var(--image-count, 3) * var(--image-width, 20vw) + (var(--image-count, 3) - 1) * var(--gap, 20px)));
+            }
+
+            100% {
+                transform: translateX(0%);
             }
         }
 
@@ -342,7 +365,7 @@
             </div>
         </div>
         <div class="background-row row2"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 30s;">
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 40s;">
             <div class="background-row-inner">
                 <div class="background-image image2"></div>
                 <div class="background-image"></div>
@@ -353,7 +376,7 @@
             </div>
         </div>
         <div class="background-row row3"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 30s;">
+            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration: 50s;">
             <div class="background-row-inner">
                 <div class="background-image image3"></div>
                 <div class="background-image"></div>
