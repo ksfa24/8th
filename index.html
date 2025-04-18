@@ -33,33 +33,35 @@
 
   .background-row.row1 {
     top: 0;
+    --image-width: 20%; /* Width of each image */
+    --image-count: 3; /* Number of original images */
   }
 
   .background-row.row2 {
     top: 33.33%;
+    --image-width: 15%;
+    --image-count: 2;
   }
 
   .background-row.row3 {
     top: 66.66%;
+    --image-width: 25%;
+    --image-count: 2;
   }
 
   .background-image {
     height: 100%;
     opacity: 0.3;
-    background-size: cover; /* Adjust as needed: cover, auto 100%, etc. */
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    flex-shrink: 0; /* Prevent images from shrinking */
+    flex-shrink: 0;
   }
 
-  .background-row.row1 {
-    --image-width: 20%; /* Width of each image */
-    --image-count: 3; /* Number of images in the row */
-  }
-
+  /* Duplicate images in HTML to fill the row */
   .background-row.row1 .background-image {
     width: var(--image-width);
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Replace with your image URL */
+    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
     animation: scrollLeftRow1 30s linear infinite;
   }
 
@@ -71,52 +73,70 @@
     background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
   }
 
-  .background-row.row2 {
-    --image-width: 15%;
-    --image-count: 2;
+  .background-row.row1 .background-image:nth-child(4) {
+    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
+  }
+
+  .background-row.row1 .background-image:nth-child(5) {
+    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
+  }
+
+  .background-row.row1 .background-image:nth-child(6) {
+    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
   }
 
   .background-row.row2 .background-image {
     width: var(--image-width);
-    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Replace with your image URL */
-    animation: scrollRightRow2 40s linear infinite; /* Different speed */
+    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    animation: scrollRightRow2 40s linear infinite;
   }
 
   .background-row.row2 .background-image:nth-child(2) {
     background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
   }
 
-  .background-row.row3 {
-    --image-width: 25%;
-    --image-count: 2;
+  .background-row.row2 .background-image:nth-child(3) {
+    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
+  }
+
+  .background-row.row2 .background-image:nth-child(4) {
+    background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
   }
 
   .background-row.row3 .background-image {
     width: var(--image-width);
-    background-image: url('your-image3-1.jpg'); /* Replace with your image URL */
-    animation: scrollLeftSlowRow3 50s linear infinite; /* Even slower */
+    background-image: url('your-image3-1.jpg');
+    animation: scrollLeftSlowRow3 50s linear infinite;
   }
 
   .background-row.row3 .background-image:nth-child(2) {
     background-image: url('your-image3-2.jpg');
   }
 
-  /* Key change for infinite loop animation */
+  .background-row.row3 .background-image:nth-child(3) {
+    background-image: url('your-image3-1.jpg'); /* Duplicate */
+  }
+
+  .background-row.row3 .background-image:nth-child(4) {
+    background-image: url('your-image3-2.jpg'); /* Duplicate */
+  }
+
+  /* Updated animations for seamless loop */
   @keyframes scrollLeftRow1 {
     0% {
       transform: translateX(0%);
     }
     100% {
-      transform: translateX(calc(-100%)); /* Move the entire row width to the left */
+      transform: translateX(calc(var(--image-width) * var(--image-count) * -1)); /* Move by the width of the original set */
     }
   }
 
   @keyframes scrollRightRow2 {
     0% {
-      transform: translateX(calc(var(--image-width) * var(--image-count))); /* Start from the right edge of the images */
+      transform: translateX(0%);
     }
     100% {
-      transform: translateX(0%);
+      transform: translateX(calc(var(--image-width) * var(--image-count))); /* Move by the width of the original set */
     }
   }
 
@@ -125,7 +145,7 @@
       transform: translateX(0%);
     }
     100% {
-      transform: translateX(calc(-100%));
+      transform: translateX(calc(var(--image-width) * var(--image-count) * -1));
     }
   }
 
@@ -243,6 +263,7 @@
 
   .orange-text {
     color: orange;
+    cursor: pointer;
   }
 
   .red-text {
@@ -345,13 +366,20 @@
       <div class="background-image image1"></div>
       <div class="background-image"></div>
       <div class="background-image"></div>
+      <div class="background-image"></div>
+      <div class="background-image"></div>
+      <div class="background-image"></div>
     </div>
     <div class="background-row row2">
       <div class="background-image image2"></div>
       <div class="background-image"></div>
+      <div class="background-image"></div>
+      <div class="background-image"></div>
     </div>
     <div class="background-row row3">
       <div class="background-image image3"></div>
+      <div class="background-image"></div>
+      <div class="background-image"></div>
       <div class="background-image"></div>
     </div>
   </div>
@@ -411,38 +439,3 @@
     submitButton.addEventListener('click', () => {
       window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
     });
-
-    document.addEventListener('click', (event) => {
-      if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
-        creditsBox.classList.remove('show');
-      }
-      if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) {
-        musicControls.classList.remove('show');
-      }
-    });
-
-    musicToggleButton.addEventListener('click', () => {
-      musicControls.classList.toggle('show');
-      musicControlsVisible = !musicControlsVisible;
-    });
-
-    const targetDate = new Date('April 20, 2025 08:30:00 EST');
-    const timerDisplay = document.getElementById('timer');
-    const messageDisplay = document.getElementById('message');
-
-    const musicFiles = [{
-        url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3',
-        name: 'Lotus Waters'
-      },
-      {
-        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3',
-        name: 'LEASE'
-      },
-      {
-        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20KYO.mp3',
-        name: 'KYO'
-      },
-      {
-        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-21%20Yuu.mp3',
-        name: 'Yuu'
-      },
