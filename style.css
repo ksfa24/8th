@@ -9,7 +9,60 @@
     letter-spacing: 0.1em;
   }
 
-    .background-row.row1 .background-row-inner {
-    animation: scrollRight var(--animation-duration-row1, 30s) linear infinite;
-  }
+.background-row.row1 .background-row-inner {
+    animation: scrollRightRow1 var(--animation-duration-row1, 30s) linear infinite;
+ }
+
+ .background-row.row2 .background-row-inner {
+    animation: scrollLeftRow2 var(--animation-duration-row2, 40s) linear infinite;
+ }
+
+ .background-row.row3 .background-row-inner {
+    animation: scrollRightRow3 var(--animation-duration-row3, 50s) linear infinite;
+ }
+
+/* Animations for seamless loop */
+@keyframes scrollLeftRow2 {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(calc(
+            -1 * (
+                var(--image-width) * var(--image-count) +
+                var(--gap) * (var(--image-count) - 1)
+            )
+        ));
+    }
+}
+
+@keyframes scrollRightRow1 {
+    0% {
+        transform: translateX(calc(
+            -1 * (
+                var(--image-width) * var(--image-count) +
+                var(--gap) * (var(--image-count) - 1)
+            )
+        ));
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+@keyframes scrollRightRow3 {
+    0% {
+        transform: translateX(calc(
+            -1 * (
+                var(--image-width) * var(--image-count) +
+                var(--gap) * (var(--image-count) - 1)
+            )
+        ));
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
 }
