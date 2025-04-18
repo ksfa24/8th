@@ -37,15 +37,15 @@
     .background-row {
       position: absolute;
       width: 100%;
-      height: 33.33%;
+      height: 33.33%; /* Divide into three equal rows */
       overflow: hidden;
-      display: flex;
+      display: flex; /* Enable flexbox for inline images */
     }
 
     .background-row.row1 {
       top: 0;
-      --image-width: 20%;
-      --image-count: 3;
+      --image-width: 20%; /* Width of each image */
+      --image-count: 3; /* Number of original images */
     }
 
     .background-row.row2 {
@@ -69,6 +69,7 @@
       flex-shrink: 0;
     }
 
+    /* Duplicate images in HTML to fill the row */
     .background-row.row1 .background-image {
       width: var(--image-width);
       background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
@@ -84,15 +85,15 @@
     }
 
     .background-row.row1 .background-image:nth-child(4) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
     }
 
     .background-row.row1 .background-image:nth-child(5) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
     }
 
     .background-row.row1 .background-image:nth-child(6) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
     }
 
     .background-row.row2 .background-image {
@@ -106,11 +107,11 @@
     }
 
     .background-row.row2 .background-image:nth-child(3) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
     }
 
     .background-row.row2 .background-image:nth-child(4) {
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Duplicate */
     }
 
     .background-row.row3 .background-image {
@@ -124,19 +125,20 @@
     }
 
     .background-row.row3 .background-image:nth-child(3) {
-      background-image: url('your-image3-1.jpg');
+      background-image: url('your-image3-1.jpg'); /* Duplicate */
     }
 
     .background-row.row3 .background-image:nth-child(4) {
-      background-image: url('your-image3-2.jpg');
+      background-image: url('your-image3-2.jpg'); /* Duplicate */
     }
 
+    /* Updated animations for seamless loop */
     @keyframes scrollLeftRow1 {
       0% {
         transform: translateX(0%);
       }
       100% {
-        transform: translateX(calc(var(--image-width) * var(--image-count) * -1));
+        transform: translateX(calc(var(--image-width) * var(--image-count) * -1)); /* Move by the width of the original set */
       }
     }
 
@@ -145,7 +147,7 @@
         transform: translateX(0%);
       }
       100% {
-        transform: translateX(calc(var(--image-width) * var(--image-count)));
+        transform: translateX(calc(var(--image-width) * var(--image-count))); /* Move by the width of the original set */
       }
     }
 
@@ -446,10 +448,4 @@
     });
 
     submitButton.addEventListener('click', () => {
-      window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
-    });
-
-    document.addEventListener('click', (event) => {
-      if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
-        creditsBox.classList.remove('show');
-      }
+      window
