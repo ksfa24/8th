@@ -63,25 +63,17 @@
       flex-shrink: 0; /* Prevent images from shrinking */
     }
 
+    .background-row.row1 {
+      --image-width: 20%; /* Width of each image */
+      --image-count: 3; /* Number of images in the row */
+    }
+
     .background-row.row1 .background-image {
-      width: 20%; /* Adjust width for the number of images you want */
+      width: var(--image-width);
       background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Replace with your image URL */
       animation: scrollLeftRow1 30s linear infinite;
     }
 
-    .background-row.row2 .background-image {
-      width: 15%; /* Adjust width */
-      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Replace with your image URL */
-      animation: scrollRightRow2 40s linear infinite; /* Different speed */
-    }
-
-    .background-row.row3 .background-image {
-      width: 25%; /* Adjust width */
-      background-image: url('your-image3-1.jpg'); /* Replace with your image URL */
-      animation: scrollLeftSlowRow3 50s linear infinite; /* Even slower */
-    }
-
-    /* Add more image classes for each row as needed */
     .background-row.row1 .background-image:nth-child(2) {
       background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
     }
@@ -90,41 +82,61 @@
       background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
     }
 
+    .background-row.row2 {
+      --image-width: 15%;
+      --image-count: 2;
+    }
+
+    .background-row.row2 .background-image {
+      width: var(--image-width);
+      background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg'); /* Replace with your image URL */
+      animation: scrollRightRow2 40s linear infinite; /* Different speed */
+    }
+
     .background-row.row2 .background-image:nth-child(2) {
       background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+    }
+
+    .background-row.row3 {
+      --image-width: 25%;
+      --image-count: 2;
+    }
+
+    .background-row.row3 .background-image {
+      width: var(--image-width);
+      background-image: url('your-image3-1.jpg'); /* Replace with your image URL */
+      animation: scrollLeftSlowRow3 50s linear infinite; /* Even slower */
     }
 
     .background-row.row3 .background-image:nth-child(2) {
       background-image: url('your-image3-2.jpg');
     }
 
+    /* Keyframe animations for infinite looping */
     @keyframes scrollLeftRow1 {
       0% {
-        transform: translateX(0%);
+        transform: translateX(0);
       }
-
       100% {
-        transform: translateX(calc(-100% + 100vw - (var(--image-width-row1) * var(--image-count-row1))));
+        transform: translateX(calc(-100% / var(--image-count)));
       }
     }
 
     @keyframes scrollRightRow2 {
       0% {
-        transform: translateX(calc(100% - 100vw + (var(--image-width-row2) * var(--image-count-row2))));
+        transform: translateX(0);
       }
-
       100% {
-        transform: translateX(0%);
+        transform: translateX(calc(100% / var(--image-count)));
       }
     }
 
     @keyframes scrollLeftSlowRow3 {
       0% {
-        transform: translateX(0%);
+        transform: translateX(0);
       }
-
       100% {
-        transform: translateX(calc(-100% + 100vw - (var(--image-width-row3) * var(--image-count-row3))));
+        transform: translateX(calc(-100% / var(--image-count)));
       }
     }
 
@@ -341,16 +353,16 @@
 
 <body>
   <div class="background-scroll-container">
-    <div class="background-row row1" style="--image-width-row1: 20%; --image-count-row1: 3;">
+    <div class="background-row row1">
       <div class="background-image image1"></div>
       <div class="background-image"></div>
       <div class="background-image"></div>
     </div>
-    <div class="background-row row2" style="--image-width-row2: 15%; --image-count-row2: 2;">
+    <div class="background-row row2">
       <div class="background-image image2"></div>
       <div class="background-image"></div>
     </div>
-    <div class="background-row row3" style="--image-width-row3: 25%; --image-count-row3: 2;">
+    <div class="background-row row3">
       <div class="background-image image3"></div>
       <div class="background-image"></div>
     </div>
@@ -439,4 +451,5 @@
         name: 'LEASE'
       },
       {
-        url: 'https
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20KYO.mp3',
+        name: 'KYO
