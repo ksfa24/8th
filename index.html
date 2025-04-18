@@ -2,715 +2,579 @@
 <html>
 
 <head>
-    <title>KSFA Timer</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap"
-        rel="stylesheet">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: sans-serif;
-            background-color: black;
-            color: white;
-            overflow: hidden;
-            position: relative;
-        }
+  <title>KSFA Timer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      background-color: black;
+      color: white;
+      overflow: hidden;
+    }
 
-        .background-scroll-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
+    #credits-button,
+    #submit-button,
+    #music-toggle-button {
+      position: absolute;
+      top: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
 
-        .background-row {
-            position: absolute;
-            width: 100%;
-            height: 33.33%;
-            overflow: hidden;
-            display: flex;
-        }
+    #credits-button {
+      left: 20px;
+    }
 
-        .background-row-inner {
-            display: flex;
-            white-space: nowrap;
-            gap: var(--gap, 20px);
-            /* Animation applied here */
-        }
+    #submit-button {
+      left: 50%;
+      transform: translateX(-50%);
+    }
 
-        .background-row.row1 .background-row-inner {
-            animation: scrollRightRow1 var(--animation-duration-row1, 30s) linear infinite;
-        }
+    #music-toggle-button {
+      right: 20px;
+    }
 
-        .background-row.row2 .background-row-inner {
-            animation: scrollLeftRow2 var(--animation-duration-row2, 40s) linear infinite;
-        }
+    #credits-box {
+      position: fixed;
+      bottom: -100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      transition: bottom 0.5s ease-in-out;
+      text-align: center;
+      max-width: 80%;
+      box-sizing: border-box;
+    }
 
-        .background-row.row3 .background-row-inner {
-            animation: scrollRightRow3 var(--animation-duration-row3, 50s) linear infinite;
-        }
+    #credits-box.show {
+      bottom: 50%;
+      transform: translate(-50%, 50%);
+    }
 
-        .background-row.row1 {
-            top: 0;
-        }
+    #timer {
+      font-size: 100px;
+      text-align: center;
+      font-family: 'Winky Rough', sans-serif;
+      font-weight: bold;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
+    }
 
-        .background-row.row2 {
-            top: 33.33%;
-        }
+    #timer-labels {
+      font-size: 20px;
+      text-align: center;
+      font-family: sans-serif;
+      margin-top: 5px;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
+      cursor: pointer;
+      user-select: none;
+    }
 
-        .background-row.row3 {
-            top: 66.66%;
-        }
+    #message {
+      font-size: 80px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out,
+      color 0.5s linear;
+      font-family: 'Pacifico',
+      cursive;
+      position: relative;
+    }
 
-        .background-image {
-            height: 100%;
-            opacity: 0.3;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            flex-shrink: 0;
-            width: var(--image-width, 20vw);
-            /* Background image URL will be set dynamically */
-        }
+    .confetti {
+      position: absolute;
+      width: 15px;
+      height: 8px;
+      pointer-events: none;
+      transform-origin: center;
+    }
 
-        /* Animations for seamless loop */
-        @keyframes scrollLeftRow2 {
-            0% {
-                transform: translateX(0%);
-            }
+    @media (max-width: 600px) {
+      #timer {
+        font-size: 60px;
+        letter-spacing: 0.1em;
+      }
 
-            100% {
-                transform: translateX(calc(
-                    -1 * (
-                        var(--image-width) * var(--image-count) +
-                        var(--gap) * (var(--image-count) - 1)
-                    )
-                ));
-            }
-        }
+      #timer-labels {
+        font-size: 15px;
+        letter-spacing: 0.1em;
+      }
+    }
 
-        @keyframes scrollRightRow1 {
-            0% {
-                transform: translateX(calc(
-                    -1 * (
-                        var(--image-width) * var(--image-count) +
-                        var(--gap) * (var(--image-count) - 1)
-                    )
-                ));
-            }
+    .green-text {
+      color: green;
+      cursor: pointer;
+    }
 
-            100% {
-                transform: translateX(0%);
-            }
-        }
+    .orange-text {
+      color: orange;
+    }
 
-        @keyframes scrollRightRow3 {
-            0% {
-                transform: translateX(calc(
-                    -1 * (
-                        var(--image-width) * var(--image-count) +
-                        var(--gap) * (var(--image-count) - 1)
-                    )
-                ));
-            }
+    .red-text {
+      color: red;
+    }
 
-            100% {
-                transform: translateX(0%);
-            }
-        }
+    .hot-pink-text {
+      color: hotpink;
+    }
 
-        #credits-button,
-        #submit-button,
-        #music-toggle-button {
-            position: absolute;
-            top: 20px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: none;
-            padding: 10px 15px;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            z-index: 1;
-        }
+    #music-controls {
+      position: fixed;
+      top: 60px;
+      right: -200px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: right 0.5s ease-in-out;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 10px;
+      z-index: 1000;
+    }
 
-        #credits-button {
-            left: 20px;
-        }
+    #music-controls.show {
+      right: 20px;
+    }
 
-        #submit-button {
-            left: 50%;
-            transform: translateX(-50%);
-        }
+    #music-controls button,
+    #music-controls input {
+      margin-top: 5px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 8px 12px;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 150px;
+      text-align: left;
+    }
 
-        #music-toggle-button {
-            right: 20px;
-        }
+    #music-controls input[type="range"] {
+      width: 140px;
+    }
 
-        #credits-box {
-            position: fixed;
-            bottom: -100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            transition: bottom 0.5s ease-in-out;
-            text-align: center;
-            max-width: 80%;
-            box-sizing: border-box;
-            z-index: 1;
-        }
+    #play-pause-button {
+      font-size: 1.2em;
+      padding: 8px 15px;
+    }
 
-        #credits-box.show {
-            bottom: 50%;
-            transform: translate(-50%, 50%);
-        }
+    #current-song {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
 
-        #timer {
-            font-size: 100px;
-            text-align: center;
-            font-family: 'Winky Rough', sans-serif;
-            font-weight: bold;
-            letter-spacing: 0.2em;
-            white-space: nowrap;
-            overflow: hidden;
-            max-width: 100%;
-            z-index: 1;
-        }
+    #music-slider {
+      width: 150px;
+      margin-top: 5px;
+    }
 
-        #timer-labels {
-            font-size: 20px;
-            text-align: center;
-            font-family: sans-serif;
-            margin-top: 5px;
-            letter-spacing: 0.2em;
-            white-space: nowrap;
-            overflow: hidden;
-            max-width: 100%;
-            cursor: pointer;
-            user-select: none;
-            z-index: 1;
-        }
+    #music-time {
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
 
-        #message {
-            font-size: 80px;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 1s ease-in-out,
-                color 0.5s linear;
-            font-family: 'Pacifico',
-                cursive;
-            position: relative;
-            z-index: 1;
-        }
+    #volume-label {
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
 
-        .confetti {
-            position: absolute;
-            width: 15px;
-            height: 8px;
-            pointer-events: none;
-            transform-origin: center;
-            z-index: 1;
-        }
+    .bubble {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: rgba(173, 216, 230, 0.7);
+      pointer-events: auto;
+      cursor: pointer;
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    }
 
-        @media (max-width: 600px) {
-            #timer {
-                font-size: 50px; /* Smaller timer font size for mobile */
-                letter-spacing: 0.1em;
-            }
+    #bubble-button {
+      display: none;
+    }
 
-            #timer-labels {
-                font-size: 15px;
-                letter-spacing: 0.1em;
-            }
-
-            .background-row.row1 .background-row-inner {
-                animation: scrollRightRow1 var(--animation-duration-row1, 30s) linear infinite;
-            }
-
-            .background-row.row2 .background-row-inner {
-                animation: scrollLeftRow2 var(--animation-duration-row2, 40s) linear infinite;
-            }
-
-            .background-row.row3 .background-row-inner {
-                animation: scrollRightRow3 var(--animation-duration-row3, 50s) linear infinite;
-            }
-
-            /* Animations for seamless loop */
-            @keyframes scrollLeftRow2 {
-                0% {
-                    transform: translateX(0%);
-                }
-
-                100% {
-                    transform: translateX(calc(
-                        -1 * (
-                            var(--image-width) * var(--image-count) +
-                            var(--gap) * (var(--image-count) - 1)
-                        )
-                    ));
-                }
-            }
-
-            @keyframes scrollRightRow1 {
-                0% {
-                    transform: translateX(calc(
-                        -1 * (
-                            var(--image-width) * var(--image-count) +
-                            var(--gap) * (var(--image-count) - 1)
-                        )
-                    ));
-                }
-
-                100% {
-                    transform: translateX(0%);
-                }
-            }
-
-            @keyframes scrollRightRow3 {
-                0% {
-                    transform: translateX(calc(
-                        -1 * (
-                            var(--image-width) * var(--image-count) +
-                            var(--gap) * (var(--image-count) - 1)
-                        )
-                    ));
-                }
-
-                100% {
-                    transform: translateX(0%);
-                }
-            }
-        }
-
-        .green-text {
-            color: green;
-            cursor: pointer;
-        }
-
-        .orange-text {
-            color: orange;
-        }
-
-        .red-text {
-            color: red;
-        }
-
-        .hot-pink-text {
-            color: hotpink;
-        }
-
-        #music-controls {
-            position: fixed;
-            top: 60px;
-            right: -200px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            transition: right 0.5s ease-in-out;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 10px;
-            z-index: 1000;
-        }
-
-        #music-controls.show {
-            right: 20px;
-        }
-
-        #music-controls button,
-        #music-controls input {
-            margin-top: 5px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: none;
-            padding: 8px 12px;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            width: 150px;
-            text-align: left;
-            z-index: 1;
-        }
-
-        #music-controls input[type="range"] {
-            width: 140px;
-        }
-
-        #play-pause-button {
-            font-size: 1.2em;
-            padding: 8px 15px;
-        }
-
-        #current-song {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        #music-slider {
-            width: 150px;
-            margin-top: 5px;
-        }
-
-        #music-time {
-            font-size: 12px;
-            margin-bottom: 2px;
-        }
-
-        #volume-label {
-            font-size: 12px;
-            margin-bottom: 2px;
-        }
-
-        .bubble {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: rgba(173, 216, 230, 0.7);
-            pointer-events: auto;
-            cursor: pointer;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-            z-index: 1;
-        }
-
-        #bubble-button {
-            display: none;
-        }
-
-        @media (max-width: 600px) {
-            .bubble {
-                width: 40px;
-                height: 40px;
-            }
-        }
-    </style>
+    @media (max-width: 600px) {
+      .bubble {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="background-scroll-container">
-        <div class="background-row row1"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration-row1: 30s;">
-            <div class="background-row-inner row1-inner">
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-            </div>
-        </div>
-        <div class="background-row row2"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration-row2: 40s;">
-            <div class="background-row-inner row2-inner">
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-            </div>
-        </div>
-        <div class="background-row row3"
-            style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration-row3: 50s;">
-            <div class="background-row-inner row3-inner">
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-                <div class="background-image"></div>
-            </div>
-        </div>
-    </div>
+  <button id="credits-button">Credits</button>
+  <button id="submit-button">Submit</button>
+  <button id="music-toggle-button">♫</button>
+  <div id="credits-box">
+    <p>Created by Samad Slaten</p>
+    <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text" id="erin-grogan-link">Erin Grogan</span>,
+      Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
+    <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni Smith</span>,
+      Anthony Royal</p>
+  </div>
+  <div id="music-controls">
+    <div id="current-song"></div>
+    <button id="play-pause-button">❚❚</button>
+    <button id="loop-button">Loop</button>
+    <div id="volume-label">Volume</div>
+    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+    <button id="mute-button">Mute</button>
+    <button id="prev-button">Previous</button>
+    <button id="next-button">Next</button>
+    <button id="bubble-button">🫧</button>
+    <div id="music-time">00:00 / 00:00</div>
+    <input type="range" id="music-slider" min="0" max="100" value="0">
+  </div>
+  <div id="timer"></div>
+  <div id="timer-labels">Days Hours Minutes Seconds</div>
+  <div id="message">Good Luck Kippsters!</div>
 
-    <button id="credits-button">Credits</button>
-    <button id="submit-button">Submit</button>
-    <button id="music-toggle-button">♫</button>
-    <div id="credits-box">
-        <p>Created by Samad Slaten</p>
-        <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text"
-                id="erin-grogan-link">Erin Grogan</span>,
-            Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
-        <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni
-                Smith</span>,
-            Anthony Royal</p>
-    </div>
-    <div id="music-controls">
-        <div id="current-song"></div>
-        <button id="play-pause-button">❚❚</button>
-        <button id="loop-button">Loop</button>
-        <div id="volume-label">Volume</div>
-        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
-        <button id="mute-button">Mute</button>
-        <button id="prev-button">Previous</button>
-        <button id="next-button">Next</button>
-        <button id="bubble-button">🫧</button>
-        <div id="music-time">00:00 / 00:00</div>
-        <input type="range" id="music-slider" min="0" max="100" value="0">
-    </div>
-    <div id="timer"></div>
-    <div id="timer-labels">Days Hours Minutes Seconds</div>
-    <div id="message">Good Luck Kippsters!</div>
+  <script>
+    const creditsButton = document.getElementById('credits-button');
+    const submitButton = document.getElementById('submit-button');
+    const creditsBox = document.getElementById('credits-box');
+    const loopButton = document.getElementById('loop-button');
+    const volumeSlider = document.getElementById('volume-slider');
+    const muteButton = document.getElementById('mute-button');
+    const playPauseButton = document.getElementById('play-pause-button');
+    const musicToggleButton = document.getElementById('music-toggle-button');
+    const musicControls = document.getElementById('music-controls');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+    const currentSongDisplay = document.getElementById('current-song');
+    const musicSlider = document.getElementById('music-slider');
+    const musicTimeDisplay = document.getElementById('music-time');
+    const timerLabelsDisplay = document.getElementById('timer-labels');
+    const bubbleButton = document.getElementById('bubble-button');
+    const erinGroganLink = document.getElementById('erin-grogan-link');
 
-    <script>
-        const creditsButton = document.getElementById('credits-button');
-        const submitButton = document.getElementById('submit-button');
-        const creditsBox = document.getElementById('credits-box');
-        const loopButton = document.getElementById('loop-button');
-        const volumeSlider = document.getElementById('volume-slider');
-        const muteButton = document.getElementById('mute-button');
-        const playPauseButton = document.getElementById('play-pause-button');
-        const musicToggleButton = document.getElementById('music-toggle
-        const musicControls = document.getElementById('music-controls');
-        const prevButton = document.getElementById('prev-button');
-        const nextButton = document.getElementById('next-button');
-        const currentSongDisplay = document.getElementById('current-song');
-        const musicSlider = document.getElementById('music-slider');
-        const musicTimeDisplay = document.getElementById('music-time');
-        const timerLabelsDisplay = document.getElementById('timer-labels');
-        const bubbleButton = document.getElementById('bubble-button');
-        const erinGroganLink = document.getElementById('erin-grogan-link');
+    let musicControlsVisible = false;
 
-        let musicControlsVisible = false;
+    creditsButton.addEventListener('click', () => {
+      creditsBox.classList.toggle('show');
+    });
 
-        creditsButton.addEventListener('click', function () {
-            creditsBox.classList.toggle('show');
+    submitButton.addEventListener('click', () => {
+      window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion';
+    });
+
+    document.addEventListener('click', (event) => {
+      if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
+        creditsBox.classList.remove('show');
+      }
+      if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) {
+        musicControls.classList.remove('show');
+      }
+    });
+
+    musicToggleButton.addEventListener('click', () => {
+      musicControls.classList.toggle('show');
+      musicControlsVisible = !musicControlsVisible;
+    });
+
+    const targetDate = new Date('April 20, 2025 08:30:00 EST');
+    const timerDisplay = document.getElementById('timer');
+    const messageDisplay = document.getElementById('message');
+
+    const musicFiles = [{
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3',
+        name: 'Lotus Waters'
+      },
+      {
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3',
+        name: 'LEASE'
+      },
+      {
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20KYO.mp3',
+        name: 'KYO'
+      },
+      {
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/1-21%20Yuu.mp3',
+        name: 'Yuu'
+      },
+      {
+        url: 'https://file.garden/aABDpAgY3QmuIiLd/DEATHCAMP.mp3',
+        name: 'DEATHCAMP'
+      },
+      {
+        url: '',
+        name: 'Silence'
+      }
+    ];
+    let currentTrack = 0;
+    let audio = new Audio(musicFiles[currentTrack].url);
+    let isLooping = false;
+    let isMuted = false;
+    let isPlaying = true;
+
+    audio.loop = false;
+    currentSongDisplay.textContent = musicFiles[currentTrack].name;
+
+    loopButton.addEventListener('click', () => {
+      isLooping = !isLooping;
+      audio.loop = isLooping;
+      loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off';
+    });
+
+    volumeSlider.addEventListener('input', () => {
+      audio.volume = volumeSlider.value;
+    });
+
+    muteButton.addEventListener('click', () => {
+      isMuted = !isMuted;
+      audio.muted = isMuted;
+      muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+    });
+
+    playPauseButton.addEventListener('click', () => {
+      if (isPlaying) {
+        audio.pause();
+        playPauseButton.textContent = '▷';
+      } else {
+        audio.play();
+        playPauseButton.textContent = '❚❚';
+      }
+      isPlaying = !isPlaying;
+    });
+
+    audio.addEventListener('ended', () => {
+      if (!isLooping) {
+        nextSong();
+      }
+    });
+
+    prevButton.addEventListener('click', () => {
+      currentTrack = (currentTrack - 1 + musicFiles.length) % musicFiles.length;
+      updateSong();
+    });
+
+    nextButton.addEventListener('click', () => {
+      nextSong();
+    });
+
+    function nextSong() {
+      currentTrack = (currentTrack + 1) % musicFiles.length;
+      updateSong();
+    }
+
+    function updateSong() {
+      audio.src = musicFiles[currentTrack].url;
+      currentSongDisplay.textContent = musicFiles[currentTrack].name;
+      audio.play();
+      if (musicFiles[currentTrack].url === '') {
+        playPauseButton.textContent = '▷';
+        isPlaying = false;
+      } else {
+        playPauseButton.textContent = '❚❚';
+        isPlaying = true;
+      }
+      updateBubbleButtonVisibility();
+    }
+
+    audio.play();
+    playPauseButton.textContent = '❚❚';
+    updateBubbleButtonVisibility();
+
+    musicSlider.addEventListener('input', () => {
+      if (audio.duration) {
+        audio.currentTime = (audio.duration * musicSlider.value) / 100;
+      }
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        musicSlider.value = (audio.currentTime * 100) / audio.duration;
+        musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
+      }
+    });
+
+    function formatTime(time) {
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60);
+      return (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    }
+
+    function updateTimer() {
+      const now = new Date();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        clearInterval(timerInterval);
+        timerDisplay.textContent = '00:00:00:00';
+        messageDisplay.style.opacity = 1;
+        createConfetti();
+        setInterval(changeMessageColor, 500);
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      let formattedTime = '';
+
+      if (days > 0) {
+        formattedTime += days + ':';
+        formattedTime += String(hours).padStart(2, '0') + ':';
+        formattedTime += String(minutes).padStart(2, '0') + ':';
+        formattedTime += String(seconds).padStart(2, '0');
+      } else if (hours > 0) {
+        formattedTime += hours + ':';
+        formattedTime += String(minutes).padStart(2, '0') + ':';
+        formattedTime += String(seconds).padStart(2, '0');
+      } else {
+        formattedTime += String(minutes).padStart(2, '0') + ':';
+        formattedTime += String(seconds).padStart(2, '0');
+      }
+
+      timerDisplay.textContent = formattedTime;
+    }
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function changeMessageColor() {
+      messageDisplay.style.color = getRandomColor();
+    }
+
+    function createConfetti() {
+      const messageRect = messageDisplay.getBoundingClientRect();
+      const messageLeft = messageRect.left;
+      const messageRight = messageRect.right;
+      const messageCenterY = messageRect.top + messageRect.height / 2;
+
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.backgroundColor = getRandomColor();
+
+        let side = messageLeft;
+        let xDirection = 1;
+
+        if (i % 2 === 0) {
+          side = messageRight;
+          xDirection = -1;
+        }
+
+        confetti.style.left = side + 'px';
+        confetti.style.top = messageCenterY + 'px';
+
+        const angle = (Math.random() - 0.5) * Math.PI / 2;
+        const speed = Math.random() * 5 + 3;
+        const xSpeed = Math.cos(angle) * speed * xDirection;
+        const ySpeed = Math.sin(angle) * speed;
+
+        document.body.appendChild(confetti);
+
+        const lifetime = Math.random() * 2000 + 1000;
+
+        setTimeout(() => {
+          confetti.style.transition = `transform ${lifetime / 1000}s linear, opacity ${lifetime / 1000}s linear`;
+          confetti.style.transform = `translate(${xSpeed * 200}px, ${ySpeed * 200}px) rotate(${Math.random() * 360}deg)`;
+          confetti.style.opacity = 0;
+
+          setTimeout(() => {
+            confetti.remove();
+          }, lifetime);
+        }, 10);
+      }
+    }
+
+    bubbleButton.addEventListener('click', () => {
+      createBubbles();
+    });
+
+    function createBubbles() {
+      const numBubbles = 10;
+      for (let i = 0; i < numBubbles; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const startX = Math.random() * window.innerWidth;
+        const startY = window.innerHeight;
+        bubble.style.left = startX + 'px';
+        bubble.style.top = startY + 'px';
+
+        const endY = Math.random() * -window.innerHeight;
+        const endX = Math.random() * window.innerWidth;
+
+        const duration = Math.random() * 7000 + 4000;
+
+        document.body.appendChild(bubble);
+
+        setTimeout(() => {
+          bubble.style.transition = `transform ${duration / 1000}s linear, opacity ${duration / 1000}s linear`;
+          bubble.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`;
+          bubble.style.opacity = 0;
+          setTimeout(() => {
+            bubble.remove();
+          }, duration);
+        }, 10);
+
+        bubble.addEventListener('click', () => {
+          bubble.remove();
         });
+      }
+    }
 
-        musicToggleButton.addEventListener('click', function () {
-            musicControlsVisible = !musicControlsVisible;
-            musicControls.classList.toggle('show', musicControlsVisible);
-        });
+    function updateBubbleButtonVisibility() {
+      if (currentTrack < 2) {
+        bubbleButton.style.display = 'block';
+      } else {
+        bubbleButton.style.display = 'none';
+      }
+    }
 
-        const songs = [
-            { title: 'The World Was Wide Enough', src: 'https://file.garden/aABDpAgY3QmuIiLd/The%20World%20Was%20Wide%20Enough.mp3' },
-            { title: 'Non-Stop', src: 'https://file.garden/aABDpAgY3QmuIiLd/Non-Stop.mp3' },
-            { title: 'Alexander Hamilton', src: 'https://file.garden/aABDpAgY3QmuIiLd/Alexander%20Hamilton.mp3' },
-            { title: 'Yorktown (The World Turned Upside Down)', src: 'https://file.garden/aABDpAgY3QmuIiLd/Yorktown%20(The%20World%20Turned%20Upside%20Down).mp3' }
-        ];
+    updateTimer();
+    const timerInterval = setInterval(updateTimer, 1000);
 
-        let currentSongIndex = 0;
-        let audio = new Audio(songs[currentSongIndex].src);
-        let isPlaying = false;
-        let isLooping = false;
+    window.addEventListener('load', () => {
+      audio.play().catch(error => {
+        console.error('Autoplay prevented:', error);
+      });
+    });
 
-        function updateSongDetails() {
-            currentSongDisplay.textContent = songs[currentSongIndex].title;
-        }
-
-        function playSong() {
-            audio.play();
-            isPlaying = true;
-            playPauseButton.textContent = '❚❚';
-        }
-
-        function pauseSong() {
-            audio.pause();
-            isPlaying = false;
-            playPauseButton.textContent = '▶';
-        }
-
-        function togglePlay() {
-            isPlaying ? pauseSong() : playSong();
-        }
-
-        function nextSong() {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
-            audio.src = songs[currentSongIndex].src;
-            playSong();
-            updateSongDetails();
-        }
-
-        function prevSong() {
-            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-            audio.src = songs[currentSongIndex].src;
-            playSong();
-            updateSongDetails();
-        }
-
-        function toggleLoop() {
-            isLooping = !isLooping;
-            audio.loop = isLooping;
-            loopButton.textContent = isLooping ? 'Looping' : 'Loop';
-        }
-
-        function updateMusicTime() {
-            const minutes = Math.floor(audio.currentTime / 60);
-            const seconds = Math.floor(audio.currentTime - minutes * 60);
-            const durMinutes = Math.floor(audio.duration / 60);
-            const durSeconds = Math.floor(audio.duration - durMinutes * 60);
-            musicTimeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} / ${isNaN(durMinutes) ? '00' : durMinutes.toString().padStart(2, '0')}:${isNaN(durSeconds) ? '00' : durSeconds.toString().padStart(2, '0')}`;
-
-            const progress = (audio.currentTime / audio.duration) * 100;
-            musicSlider.value = isNaN(progress) ? 0 : progress;
-        }
-
-        playPauseButton.addEventListener('click', togglePlay);
-        nextButton.addEventListener('click', nextSong);
-        prevButton.addEventListener('click', prevSong);
-        loopButton.addEventListener('click', toggleLoop);
-
-        audio.addEventListener('timeupdate', updateMusicTime);
-        audio.addEventListener('ended', nextSong);
-
-        musicSlider.addEventListener('input', function () {
-            const time = (musicSlider.value / 100) * audio.duration;
-            audio.currentTime = time;
-        });
-
-        volumeSlider.addEventListener('input', function () {
-            audio.volume = volumeSlider.value;
-        });
-
-        muteButton.addEventListener('click', function () {
-            audio.muted = !audio.muted;
-            muteButton.textContent = audio.muted ? 'Unmute' : 'Mute';
-        });
-
-        const colors = ['green', 'orange', 'red', 'hotpink'];
-        let currentColorIndex = 0;
-
-        timerLabelsDisplay.addEventListener('click', function () {
-            currentColorIndex = (currentColorIndex + 1) % colors.length;
-            timerLabelsDisplay.className = colors[currentColorIndex] + '-text';
-        });
-
-        function createConfetti() {
-            for (let i = 0; i < 100; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.style.left = `${Math.random() * 100}vw`;
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                confetti.style.animationDelay = `${Math.random()}s`;
-                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-                document.body.appendChild(confetti);
-
-                confetti.addEventListener('animationend', () => {
-                    confetti.remove();
-                });
-            }
-        }
-
-        submitButton.addEventListener('click', createConfetti);
-
-        let bubbleInterval;
-
-        function createBubble() {
-            const bubble = document.createElement('div');
-            bubble.classList.add('bubble');
-            bubble.style.left = `${Math.random() * 100}vw`;
-            bubble.style.bottom = '-80px';
-            bubble.style.animationDuration = `${Math.random() * 3 + 2}s`;
-            bubble.style.animationDelay = `${Math.random()}s`;
-            document.body.appendChild(bubble);
-
-            bubble.addEventListener('click', () => {
-                bubble.style.transform = 'scale(1.2)';
-                bubble.style.opacity = '0';
-                setTimeout(() => bubble.remove(), 300);
-            });
-
-            bubble.addEventListener('animationend', () => {
-                bubble.remove();
-            });
-
-            const randomHue = Math.random() * 360;
-            bubble.style.backgroundColor = `hsla(${randomHue}, 70%, 70%, 0.7)`;
-        }
-
-        bubbleButton.addEventListener('click', () => {
-            if (bubbleInterval) {
-                clearInterval(bubbleInterval);
-                bubbleInterval = null;
-                bubbleButton.textContent = '🫧';
-            } else {
-                bubbleInterval = setInterval(createBubble, 500);
-                bubbleButton.textContent = '❌';
-            }
-        });
-
-        erinGroganLink.addEventListener('click', function () {
-            window.location.href = 'https://www.instagram.com/eringrogan12/';
-        });
-
-        function updateTimer() {
-            const targetDate = new Date('2025-05-13T08:00:00-04:00');
-            const now = new Date();
-            const difference = targetDate - now;
-
-            if (difference > 0) {
-                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-                document.getElementById('timer').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-            } else {
-                document.getElementById('timer').textContent = "It's Time!";
-                document.getElementById('message').style.opacity = 1;
-                document.getElementById('message').style.color = 'gold';
-                createConfetti();
-            }
-        }
-
-        updateSongDetails();
-        playSong();
-        updateTimer();
-        setInterval(updateTimer, 1000);
-
-        // Function to set background image URLs
-        function setBackgroundImageUrls(rowClass, imageUrls) {
-            const rowInner = document.querySelector(`.${rowClass}`);
-            const imageDivs = rowInner.querySelectorAll('.background-image');
-
-            imageDivs.forEach((div, index) => {
-                div.style.backgroundImage = `url('${imageUrls[index % imageUrls.length]}')`;
-            });
-        }
-
-        // Example usage: Replace with your actual image URLs
-        const row1ImageUrls = [
-            'https://file.garden/aABDpAgY3QmuIiLd/image1.jpg',
-            'https://file.garden/aABDpAgY3QmuIiLd/image2.jpg',
-            'https://file.garden/aABDpAgY3QmuIiLd/image3.jpg'
-        ];
-        const row2ImageUrls = [
-            'https://file.garden/aABDpAgY3QmuIiLd/image4.jpg',
-            'https://file.garden/aABDpAgY3QmuIiLd/image5.jpg',
-            'https://file.garden/aABDpAgY3QmuIiLd/image6.jpg'
-        ];
-        const row3ImageUrls = [
-            'https://file.garden/aABDpAgY3QmuIiLd/image7.jpg',
-            'https://file.garden/aABDpAgY3QmuIiLd/image8.jpg',
-            'https://file.garden/aABDpAgY3QmuIiLd/image9.jpg'
-        ];
-
-        setBackgroundImageUrls('row1-inner', row1ImageUrls);
-        setBackgroundImageUrls('row2-inner', row2ImageUrls);
-        setBackgroundImageUrls('row3-inner', row3ImageUrls);
-    </script>
+    erinGroganLink.addEventListener('click', () => {
+      currentTrack = 4; // DEATHCAMP index
+      audio.src = musicFiles[currentTrack].url;
+      currentSongDisplay.textContent = musicFiles[currentTrack].name;
+      audio.volume = 0.77;
+      audio.play();
+      playPauseButton.textContent = '❚❚';
+      isPlaying = true;
+      updateBubbleButtonVisibility();
+    });
+  </script>
 </body>
 
 </html>
