@@ -81,7 +81,7 @@
             background-position: center;
             flex-shrink: 0;
             width: var(--image-width, 20vw);
-            background-image: url('https://file.garden/aABDpAgY3QmuIiLd/placeholder-image.jpg');
+            /* Background image URL will be set dynamically */
         }
 
         /* Animations for seamless loop */
@@ -236,63 +236,63 @@
                 letter-spacing: 0.1em;
             }
 
-        .background-row.row1 .background-row-inner {
-            animation: scrollRightRow1 var(--animation-duration-row1, 30s) linear infinite;
-         }
-
-         .background-row.row2 .background-row-inner {
-            animation: scrollLeftRow2 var(--animation-duration-row2, 40s) linear infinite;
-         }
-
-         .background-row.row3 .background-row-inner {
-            animation: scrollRightRow3 var(--animation-duration-row3, 50s) linear infinite;
-         }
-
-        /* Animations for seamless loop */
-        @keyframes scrollLeftRow2 {
-            0% {
-                transform: translateX(0%);
+            .background-row.row1 .background-row-inner {
+                animation: scrollRightRow1 var(--animation-duration-row1, 30s) linear infinite;
             }
 
-            100% {
-                transform: translateX(calc(
-                    -1 * (
-                        var(--image-width) * var(--image-count) +
-                        var(--gap) * (var(--image-count) - 1)
-                    )
-                ));
-            }
-        }
-
-        @keyframes scrollRightRow1 {
-            0% {
-                transform: translateX(calc(
-                    -1 * (
-                        var(--image-width) * var(--image-count) +
-                        var(--gap) * (var(--image-count) - 1)
-                    )
-                ));
+            .background-row.row2 .background-row-inner {
+                animation: scrollLeftRow2 var(--animation-duration-row2, 40s) linear infinite;
             }
 
-            100% {
-                transform: translateX(0%);
-            }
-        }
-
-        @keyframes scrollRightRow3 {
-            0% {
-                transform: translateX(calc(
-                    -1 * (
-                        var(--image-width) * var(--image-count) +
-                        var(--gap) * (var(--image-count) - 1)
-                    )
-                ));
+            .background-row.row3 .background-row-inner {
+                animation: scrollRightRow3 var(--animation-duration-row3, 50s) linear infinite;
             }
 
-            100% {
-                transform: translateX(0%);
+            /* Animations for seamless loop */
+            @keyframes scrollLeftRow2 {
+                0% {
+                    transform: translateX(0%);
+                }
+
+                100% {
+                    transform: translateX(calc(
+                        -1 * (
+                            var(--image-width) * var(--image-count) +
+                            var(--gap) * (var(--image-count) - 1)
+                        )
+                    ));
+                }
             }
-        }
+
+            @keyframes scrollRightRow1 {
+                0% {
+                    transform: translateX(calc(
+                        -1 * (
+                            var(--image-width) * var(--image-count) +
+                            var(--gap) * (var(--image-count) - 1)
+                        )
+                    ));
+                }
+
+                100% {
+                    transform: translateX(0%);
+                }
+            }
+
+            @keyframes scrollRightRow3 {
+                0% {
+                    transform: translateX(calc(
+                        -1 * (
+                            var(--image-width) * var(--image-count) +
+                            var(--gap) * (var(--image-count) - 1)
+                        )
+                    ));
+                }
+
+                100% {
+                    transform: translateX(0%);
+                }
+            }
         }
 
         .green-text {
@@ -402,42 +402,42 @@
     <div class="background-scroll-container">
         <div class="background-row row1"
             style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration-row1: 30s;">
-            <div class="background-row-inner">
-                <div class="background-image image1"></div>
+            <div class="background-row-inner row1-inner">
                 <div class="background-image"></div>
                 <div class="background-image"></div>
-                <div class="background-image image1"></div>
                 <div class="background-image"></div>
                 <div class="background-image"></div>
-                <div class="background-image image1"></div>
+                <div class="background-image"></div>
+                <div class="background-image"></div>
+                <div class="background-image"></div>
                 <div class="background-image"></div>
                 <div class="background-image"></div>
             </div>
         </div>
         <div class="background-row row2"
             style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration-row2: 40s;">
-            <div class="background-row-inner">
-                <div class="background-image image2"></div>
+            <div class="background-row-inner row2-inner">
                 <div class="background-image"></div>
                 <div class="background-image"></div>
-                <div class="background-image image2"></div>
                 <div class="background-image"></div>
                 <div class="background-image"></div>
-                <div class="background-image image2"></div>
+                <div class="background-image"></div>
+                <div class="background-image"></div>
+                <div class="background-image"></div>
                 <div class="background-image"></div>
                 <div class="background-image"></div>
             </div>
         </div>
         <div class="background-row row3"
             style="--image-width: 20vw; --image-count: 3; --gap: 20px; --animation-duration-row3: 50s;">
-            <div class="background-row-inner">
-                <div class="background-image image3"></div>
+            <div class="background-row-inner row3-inner">
                 <div class="background-image"></div>
                 <div class="background-image"></div>
-                <div class="background-image image3"></div>
                 <div class="background-image"></div>
                 <div class="background-image"></div>
-                <div class="background-image image3"></div>
+                <div class="background-image"></div>
+                <div class="background-image"></div>
+                <div class="background-image"></div>
                 <div class="background-image"></div>
                 <div class="background-image"></div>
             </div>
@@ -481,8 +481,236 @@
         const volumeSlider = document.getElementById('volume-slider');
         const muteButton = document.getElementById('mute-button');
         const playPauseButton = document.getElementById('play-pause-button');
-        const musicToggleButton = document.getElementById('music-toggle-button');
+        const musicToggleButton = document.getElementById('music-toggle
         const musicControls = document.getElementById('music-controls');
         const prevButton = document.getElementById('prev-button');
         const nextButton = document.getElementById('next-button');
-        const currentSong
+        const currentSongDisplay = document.getElementById('current-song');
+        const musicSlider = document.getElementById('music-slider');
+        const musicTimeDisplay = document.getElementById('music-time');
+        const timerLabelsDisplay = document.getElementById('timer-labels');
+        const bubbleButton = document.getElementById('bubble-button');
+        const erinGroganLink = document.getElementById('erin-grogan-link');
+
+        let musicControlsVisible = false;
+
+        creditsButton.addEventListener('click', function () {
+            creditsBox.classList.toggle('show');
+        });
+
+        musicToggleButton.addEventListener('click', function () {
+            musicControlsVisible = !musicControlsVisible;
+            musicControls.classList.toggle('show', musicControlsVisible);
+        });
+
+        const songs = [
+            { title: 'The World Was Wide Enough', src: 'https://file.garden/aABDpAgY3QmuIiLd/The%20World%20Was%20Wide%20Enough.mp3' },
+            { title: 'Non-Stop', src: 'https://file.garden/aABDpAgY3QmuIiLd/Non-Stop.mp3' },
+            { title: 'Alexander Hamilton', src: 'https://file.garden/aABDpAgY3QmuIiLd/Alexander%20Hamilton.mp3' },
+            { title: 'Yorktown (The World Turned Upside Down)', src: 'https://file.garden/aABDpAgY3QmuIiLd/Yorktown%20(The%20World%20Turned%20Upside%20Down).mp3' }
+        ];
+
+        let currentSongIndex = 0;
+        let audio = new Audio(songs[currentSongIndex].src);
+        let isPlaying = false;
+        let isLooping = false;
+
+        function updateSongDetails() {
+            currentSongDisplay.textContent = songs[currentSongIndex].title;
+        }
+
+        function playSong() {
+            audio.play();
+            isPlaying = true;
+            playPauseButton.textContent = '❚❚';
+        }
+
+        function pauseSong() {
+            audio.pause();
+            isPlaying = false;
+            playPauseButton.textContent = '▶';
+        }
+
+        function togglePlay() {
+            isPlaying ? pauseSong() : playSong();
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            audio.src = songs[currentSongIndex].src;
+            playSong();
+            updateSongDetails();
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            audio.src = songs[currentSongIndex].src;
+            playSong();
+            updateSongDetails();
+        }
+
+        function toggleLoop() {
+            isLooping = !isLooping;
+            audio.loop = isLooping;
+            loopButton.textContent = isLooping ? 'Looping' : 'Loop';
+        }
+
+        function updateMusicTime() {
+            const minutes = Math.floor(audio.currentTime / 60);
+            const seconds = Math.floor(audio.currentTime - minutes * 60);
+            const durMinutes = Math.floor(audio.duration / 60);
+            const durSeconds = Math.floor(audio.duration - durMinutes * 60);
+            musicTimeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} / ${isNaN(durMinutes) ? '00' : durMinutes.toString().padStart(2, '0')}:${isNaN(durSeconds) ? '00' : durSeconds.toString().padStart(2, '0')}`;
+
+            const progress = (audio.currentTime / audio.duration) * 100;
+            musicSlider.value = isNaN(progress) ? 0 : progress;
+        }
+
+        playPauseButton.addEventListener('click', togglePlay);
+        nextButton.addEventListener('click', nextSong);
+        prevButton.addEventListener('click', prevSong);
+        loopButton.addEventListener('click', toggleLoop);
+
+        audio.addEventListener('timeupdate', updateMusicTime);
+        audio.addEventListener('ended', nextSong);
+
+        musicSlider.addEventListener('input', function () {
+            const time = (musicSlider.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+
+        volumeSlider.addEventListener('input', function () {
+            audio.volume = volumeSlider.value;
+        });
+
+        muteButton.addEventListener('click', function () {
+            audio.muted = !audio.muted;
+            muteButton.textContent = audio.muted ? 'Unmute' : 'Mute';
+        });
+
+        const colors = ['green', 'orange', 'red', 'hotpink'];
+        let currentColorIndex = 0;
+
+        timerLabelsDisplay.addEventListener('click', function () {
+            currentColorIndex = (currentColorIndex + 1) % colors.length;
+            timerLabelsDisplay.className = colors[currentColorIndex] + '-text';
+        });
+
+        function createConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                confetti.style.animationDelay = `${Math.random()}s`;
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                document.body.appendChild(confetti);
+
+                confetti.addEventListener('animationend', () => {
+                    confetti.remove();
+                });
+            }
+        }
+
+        submitButton.addEventListener('click', createConfetti);
+
+        let bubbleInterval;
+
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.left = `${Math.random() * 100}vw`;
+            bubble.style.bottom = '-80px';
+            bubble.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            bubble.style.animationDelay = `${Math.random()}s`;
+            document.body.appendChild(bubble);
+
+            bubble.addEventListener('click', () => {
+                bubble.style.transform = 'scale(1.2)';
+                bubble.style.opacity = '0';
+                setTimeout(() => bubble.remove(), 300);
+            });
+
+            bubble.addEventListener('animationend', () => {
+                bubble.remove();
+            });
+
+            const randomHue = Math.random() * 360;
+            bubble.style.backgroundColor = `hsla(${randomHue}, 70%, 70%, 0.7)`;
+        }
+
+        bubbleButton.addEventListener('click', () => {
+            if (bubbleInterval) {
+                clearInterval(bubbleInterval);
+                bubbleInterval = null;
+                bubbleButton.textContent = '🫧';
+            } else {
+                bubbleInterval = setInterval(createBubble, 500);
+                bubbleButton.textContent = '❌';
+            }
+        });
+
+        erinGroganLink.addEventListener('click', function () {
+            window.location.href = 'https://www.instagram.com/eringrogan12/';
+        });
+
+        function updateTimer() {
+            const targetDate = new Date('2025-05-13T08:00:00-04:00');
+            const now = new Date();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('timer').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            } else {
+                document.getElementById('timer').textContent = "It's Time!";
+                document.getElementById('message').style.opacity = 1;
+                document.getElementById('message').style.color = 'gold';
+                createConfetti();
+            }
+        }
+
+        updateSongDetails();
+        playSong();
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // Function to set background image URLs
+        function setBackgroundImageUrls(rowClass, imageUrls) {
+            const rowInner = document.querySelector(`.${rowClass}`);
+            const imageDivs = rowInner.querySelectorAll('.background-image');
+
+            imageDivs.forEach((div, index) => {
+                div.style.backgroundImage = `url('${imageUrls[index % imageUrls.length]}')`;
+            });
+        }
+
+        // Example usage: Replace with your actual image URLs
+        const row1ImageUrls = [
+            'https://file.garden/aABDpAgY3QmuIiLd/image1.jpg',
+            'https://file.garden/aABDpAgY3QmuIiLd/image2.jpg',
+            'https://file.garden/aABDpAgY3QmuIiLd/image3.jpg'
+        ];
+        const row2ImageUrls = [
+            'https://file.garden/aABDpAgY3QmuIiLd/image4.jpg',
+            'https://file.garden/aABDpAgY3QmuIiLd/image5.jpg',
+            'https://file.garden/aABDpAgY3QmuIiLd/image6.jpg'
+        ];
+        const row3ImageUrls = [
+            'https://file.garden/aABDpAgY3QmuIiLd/image7.jpg',
+            'https://file.garden/aABDpAgY3QmuIiLd/image8.jpg',
+            'https://file.garden/aABDpAgY3QmuIiLd/image9.jpg'
+        ];
+
+        setBackgroundImageUrls('row1-inner', row1ImageUrls);
+        setBackgroundImageUrls('row2-inner', row2ImageUrls);
+        setBackgroundImageUrls('row3-inner', row3ImageUrls);
+    </script>
+</body>
+
+</html>
