@@ -5,14 +5,13 @@
   <title>KSFA Timer</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="https://file.garden/aABDpAgY3QmuIiLd/images%20(1).ico" type="image/png">
+  <link rel="icon" href="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/23f0.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap"
     rel="stylesheet">
   <style>
     body {
-      /* Removed background-color: black here, handled by background container */
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -22,10 +21,10 @@
       font-family: sans-serif;
       color: white;
       overflow: hidden; /* Prevent scrollbars */
-      position: relative; /* Needed for absolute/fixed positioning context */
+      position: relative; /* Needed for positioning context */
     }
 
-    /* --- NEW: Background Container and Rows --- */
+    /* --- Background Container and Rows --- */
     #background-container {
         position: fixed; /* Keep it fixed behind everything */
         top: 0;
@@ -45,12 +44,20 @@
     }
 
     #row1 {
-        /* Assumes row1.jpg is in the same folder as the HTML file */
-        background-image: url('row(1).png');
+        /* --- IMPORTANT: Image Source --- */
+        /* Place 'row1.jpg' in the SAME FOLDER as this HTML file, */
+        /* OR replace 'row1.jpg' with a permanent URL. */
+        background-image: url('row1.jpg');
         background-repeat: repeat-x; /* Repeat horizontally */
         background-size: auto 100%; /* Fit height, width adjusts, allows repeat */
-        /* Animation */
-        animation: scrollRight 60s linear infinite; /* Adjust 60s for speed */
+        /* CSS Animation removed - now handled by JS */
+        /* Add cursor style for dragging indication */
+        cursor: grab;
+        /* Prevent text selection during drag */
+        user-select: none;
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE */
     }
 
      /* Placeholder styles for other rows - replace with your images/styles */
@@ -61,21 +68,10 @@
     #row3 {
         background-color: #111; /* Darker gray placeholder */
     }
-
-    /* Animation Keyframes */
-    @keyframes scrollRight {
-        0% {
-            background-position-x: 0;
-        }
-        100% {
-            /* Adjust this value to the actual width of row1.jpg for perfect loop */
-            /* Using a large value often works well with repeat-x */
-            background-position-x: 2000px;
-        }
-    }
-    /* --- END NEW Background --- */
+    /* --- END Background --- */
 
 
+    /* --- Foreground Styles --- */
     #credits-button,
     #submit-button,
     #music-toggle-button {
@@ -88,21 +84,12 @@
       cursor: pointer;
       border-radius: 5px;
       font-size: 16px;
-      z-index: 1001; /* Ensure buttons are above other elements */
+      z-index: 1001;
     }
 
-    #credits-button {
-      left: 20px;
-    }
-
-    #submit-button {
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    #music-toggle-button {
-      right: 20px;
-    }
+    #credits-button { left: 20px; }
+    #submit-button { left: 50%; transform: translateX(-50%); }
+    #music-toggle-button { right: 20px; }
 
     #credits-box {
       position: fixed;
@@ -118,11 +105,7 @@
       box-sizing: border-box;
       z-index: 1002;
     }
-
-    #credits-box.show {
-      bottom: 50%;
-      transform: translate(-50%, 50%);
-    }
+    #credits-box.show { bottom: 50%; transform: translate(-50%, 50%); }
 
     #timer {
       font-size: 100px;
@@ -133,7 +116,7 @@
       white-space: nowrap;
       overflow: hidden;
       max-width: 100%;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Add shadow for readability */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     }
 
     #timer-labels {
@@ -147,19 +130,18 @@
       max-width: 100%;
       cursor: pointer;
       user-select: none;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Add shadow for readability */
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
     }
 
     #message {
       font-size: 80px;
       text-align: center;
       opacity: 0;
-      transition: opacity 1s ease-in-out,
-        color 0.5s linear;
+      transition: opacity 1s ease-in-out, color 0.5s linear;
       font-family: 'Pacifico', cursive;
       position: relative;
       z-index: 1;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Add shadow for readability */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     }
 
     .confetti {
@@ -172,25 +154,9 @@
     }
 
     @media (max-width: 600px) {
-      #timer {
-        font-size: 60px;
-        letter-spacing: 0.1em;
-      }
-
-      #timer-labels {
-        font-size: 15px;
-        letter-spacing: 0.1em;
-      }
-
-      #message {
-        font-size: 40px;
-      }
-       /* Adjust animation for potentially smaller image width visibility */
-       /* You might need a different animation speed or target width on mobile */
-       @keyframes scrollRight {
-          0% { background-position-x: 0; }
-          100% { background-position-x: 1000px; } /* Smaller target for mobile? */
-       }
+      #timer { font-size: 60px; letter-spacing: 0.1em; }
+      #timer-labels { font-size: 15px; letter-spacing: 0.1em; }
+      #message { font-size: 40px; }
     }
 
     .green-text { color: green; cursor: pointer; }
@@ -211,23 +177,9 @@
       border-radius: 10px;
       z-index: 1000;
     }
-
     #music-controls.show { right: 20px; }
 
-    #music-controls button,
-    #music-controls input {
-      margin-top: 5px;
-      background-color: rgba(255, 255, 255, 0.2);
-      border: none;
-      padding: 8px 12px;
-      color: white;
-      cursor: pointer;
-      border-radius: 5px;
-      width: 150px;
-      text-align: left;
-      box-sizing: border-box;
-    }
-
+    #music-controls button, #music-controls input { margin-top: 5px; background-color: rgba(255, 255, 255, 0.2); border: none; padding: 8px 12px; color: white; cursor: pointer; border-radius: 5px; width: 150px; text-align: left; box-sizing: border-box; }
     #music-controls input[type="range"] { width: 140px; padding: 0; height: 20px; }
     #play-pause-button { font-size: 1.2em; padding: 8px 15px; text-align: center; }
     #current-song { font-size: 16px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
@@ -246,7 +198,6 @@
       transition: transform 0.3s ease-out, opacity 0.3s ease-out;
       z-index: 500;
     }
-
     #bubble-button { display: none; }
 
     @media (max-width: 600px) {
@@ -256,6 +207,7 @@
       #music-controls button, #music-controls input { width: 100%; }
       #music-controls input[type="range"] { width: calc(100% - 10px); }
     }
+    /* --- END Foreground Styles --- */
   </style>
 </head>
 
@@ -296,349 +248,148 @@
   <div id="timer-labels">Days Hours Minutes Seconds</div>
   <div id="message">Good Luck Kippsters!</div>
   <script>
-      // --- Existing Javascript ---
-      // (No changes needed in Javascript for this background modification)
+    // --- DOM Element References ---
+    const creditsButton = document.getElementById('credits-button');
+    const submitButton = document.getElementById('submit-button');
+    const creditsBox = document.getElementById('credits-box');
+    const loopButton = document.getElementById('loop-button');
+    const volumeSlider = document.getElementById('volume-slider');
+    const muteButton = document.getElementById('mute-button');
+    const playPauseButton = document.getElementById('play-pause-button');
+    const musicToggleButton = document.getElementById('music-toggle-button');
+    const musicControls = document.getElementById('music-controls');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+    const currentSongDisplay = document.getElementById('current-song');
+    const musicSlider = document.getElementById('music-slider');
+    const musicTimeDisplay = document.getElementById('music-time');
+    const timerLabelsDisplay = document.getElementById('timer-labels');
+    const bubbleButton = document.getElementById('bubble-button');
+    const erinGroganLink = document.getElementById('erin-grogan-link');
+    const timerDisplay = document.getElementById('timer');
+    const messageDisplay = document.getElementById('message');
+    const row1 = document.getElementById('row1'); // Reference for row1
 
-      // --- DOM Element References ---
-      const creditsButton = document.getElementById('credits-button');
-      const submitButton = document.getElementById('submit-button');
-      const creditsBox = document.getElementById('credits-box');
-      const loopButton = document.getElementById('loop-button');
-      const volumeSlider = document.getElementById('volume-slider');
-      const muteButton = document.getElementById('mute-button');
-      const playPauseButton = document.getElementById('play-pause-button');
-      const musicToggleButton = document.getElementById('music-toggle-button');
-      const musicControls = document.getElementById('music-controls');
-      const prevButton = document.getElementById('prev-button');
-      const nextButton = document.getElementById('next-button');
-      const currentSongDisplay = document.getElementById('current-song');
-      const musicSlider = document.getElementById('music-slider');
-      const musicTimeDisplay = document.getElementById('music-time');
-      const timerLabelsDisplay = document.getElementById('timer-labels');
-      const bubbleButton = document.getElementById('bubble-button');
-      const erinGroganLink = document.getElementById('erin-grogan-link');
-      const timerDisplay = document.getElementById('timer');
-      const messageDisplay = document.getElementById('message');
+    // --- State Variables ---
+    let musicControlsVisible = false;
+    const targetDate = new Date('May 20, 2025 08:30:00 EDT'); // Updated Target Date
+    let timerInterval;
+    let messageColorInterval;
+    const musicFiles = [{ url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3', name: 'Lotus Waters' }, { url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3', name: 'LEASE' }, { url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20KYO.mp3', name: 'KYO' }, { url: 'https://file.garden/aABDpAgY3QmuIiLd/1-21%20Yuu.mp3', name: 'Yuu' }, { url: 'https://file.garden/aABDpAgY3QmuIiLd/DEATHCAMP.mp3', name: 'DEATHCAMP' }, { url: '', name: 'Silence' } ];
+    let currentTrack = 0;
+    let audio = new Audio();
+    let isLooping = false;
+    let isMuted = false;
+    let isPlaying = false;
+    let lastVolume = 1;
 
-      // --- State Variables ---
-      let musicControlsVisible = false;
-      const targetDate = new Date('May 20, 2025 08:30:00 EST');
-      let timerInterval; // To store the interval ID for clearing later
-      let messageColorInterval; // To store the interval ID for message color changes
+    // --- Background Scroll/Drag State ---
+    let isDragging = false;
+    let startX;
+    let startBgX;
+    let currentBgX = 0;
+    let scrollSpeed = 0.8; // Pixels scroll per frame (adjust for speed)
+    let animationFrameId = null;
 
-      const musicFiles = [{
-          url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3',
-          name: 'Lotus Waters'
-        },
-        {
-          url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3',
-          name: 'LEASE'
-        },
-        {
-          url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20KYO.mp3',
-          name: 'KYO'
-        },
-        {
-          url: 'https://file.garden/aABDpAgY3QmuIiLd/1-21%20Yuu.mp3',
-          name: 'Yuu'
-        },
-        {
-          url: 'https://file.garden/aABDpAgY3QmuIiLd/DEATHCAMP.mp3',
-          name: 'DEATHCAMP'
-        },
-        {
-          url: '', // Special case for silence
-          name: 'Silence'
-        }
-      ];
-      let currentTrack = 0;
-      let audio = new Audio(); // Create audio element but don't set src yet
-      let isLooping = false;
-      let isMuted = false;
-      let isPlaying = false; // Start paused until user interaction or autoplay works
-      let lastVolume = 1; // To store volume before muting
-
-      // --- Event Listeners ---
-
-      creditsButton.addEventListener('click', () => { creditsBox.classList.toggle('show'); });
-      submitButton.addEventListener('click', () => { window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion'; });
-
-      document.addEventListener('click', (event) => {
-        if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) {
-          creditsBox.classList.remove('show');
-        }
-        if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) {
-          musicControls.classList.remove('show');
-          musicControlsVisible = false;
-        }
-      });
-
-      musicToggleButton.addEventListener('click', () => {
-        musicControls.classList.toggle('show');
-        musicControlsVisible = !musicControlsVisible;
-      });
-
-      // --- Music Player Controls ---
-      loopButton.addEventListener('click', () => {
-          isLooping = !isLooping;
-          audio.loop = isLooping;
-          loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off';
-      });
-
-      volumeSlider.addEventListener('input', () => {
-          const newVolume = parseFloat(volumeSlider.value);
-          audio.volume = newVolume;
-          if (newVolume > 0) {
-              if (isMuted) { // If user drags slider up from mute
-                  isMuted = false;
-                  audio.muted = false;
-                  muteButton.textContent = 'Mute';
-                  // Restore lastVolume only if it was significant
-                  if (lastVolume <= 0.01) lastVolume = newVolume;
-              }
-          } else { // Volume is 0
-              if (!isMuted) { // Mute if not already muted
-                  isMuted = true;
-                  audio.muted = true;
-                  muteButton.textContent = 'Unmute';
-                  lastVolume = 0.01; // Store tiny last volume
-              }
-          }
-      });
+    // --- Event Listeners ---
+    creditsButton.addEventListener('click', () => { creditsBox.classList.toggle('show'); });
+    submitButton.addEventListener('click', () => { window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion'; });
+    document.addEventListener('click', (event) => { if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) { creditsBox.classList.remove('show'); } if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) { musicControls.classList.remove('show'); musicControlsVisible = false; } });
+    musicToggleButton.addEventListener('click', () => { musicControls.classList.toggle('show'); musicControlsVisible = !musicControlsVisible; });
+    erinGroganLink.addEventListener('click', () => { currentTrack = 4; const newVolume = 0.77; updateSong(); setTimeout(() => { audio.volume = newVolume; volumeSlider.value = newVolume; if (newVolume > 0 && isMuted) { isMuted = false; audio.muted = false; muteButton.textContent = 'Mute'; } else if (newVolume <= 0 && !isMuted) { isMuted = true; audio.muted = true; muteButton.textContent = 'Unmute'; lastVolume = 0.01; } }, 100); });
 
 
-      muteButton.addEventListener('click', () => {
-        isMuted = !isMuted;
-        audio.muted = isMuted;
-        if (isMuted) {
-           // Store current volume only if it's > 0, otherwise keep the tiny lastVolume
-           lastVolume = audio.volume > 0 ? audio.volume : lastVolume;
-           volumeSlider.value = 0; // Update slider visually
-           muteButton.textContent = 'Unmute';
-        } else {
-           volumeSlider.value = lastVolume; // Update slider visually
-           // Trigger input event for slider to update audio.volume based on lastVolume
-           volumeSlider.dispatchEvent(new Event('input'));
-           muteButton.textContent = 'Mute';
-        }
-      });
+    // --- Background Drag Event Listeners ---
+    function handleDragStart(clientX) {
+        isDragging = true;
+        startX = clientX;
+        startBgX = currentBgX;
+        row1.style.cursor = 'grabbing';
+        cancelAnimationFrame(animationFrameId);
+        row1.ondragstart = () => false;
+    }
+
+    function handleDragMove(clientX) {
+        if (!isDragging) return;
+        const diffX = clientX - startX;
+        currentBgX = startBgX + diffX;
+        row1.style.backgroundPositionX = currentBgX + 'px';
+    }
+
+    function handleDragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        row1.style.cursor = 'grab';
+        row1.ondragstart = null;
+        startScrollAnimation();
+    }
+
+    row1.addEventListener('mousedown', (e) => { handleDragStart(e.clientX); });
+    document.addEventListener('mousemove', (e) => { handleDragMove(e.clientX); });
+    document.addEventListener('mouseup', () => { handleDragEnd(); });
+    row1.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { handleDragStart(e.touches[0].clientX); } }, { passive: true }); // Use passive true if not preventing default
+    document.addEventListener('touchmove', (e) => { if (!isDragging) return; /* No preventDefault needed if page scroll isn't an issue */ if (e.touches.length === 1) { handleDragMove(e.touches[0].clientX); } }, { passive: true }); // Use passive true if not preventing default
+    document.addEventListener('touchend', () => { handleDragEnd(); });
+    document.addEventListener('touchcancel', () => { handleDragEnd(); });
 
 
-      playPauseButton.addEventListener('click', () => {
-        if (musicFiles[currentTrack].name === 'Silence') return;
-        if (isPlaying) {
-          audio.pause();
-          // isPlaying = false; // Set state immediately for UI responsiveness
-          // playPauseButton.textContent = '▷'; // Update UI immediately
-        } else {
-          if (audio.readyState === 0) { audio.load(); }
-          audio.play().then(() => {
-             isPlaying = true; // Set state only on successful play
-             playPauseButton.textContent = '❚❚';
-          }).catch(error => {
-            console.error("Play failed:", error);
-             isPlaying = false; // Ensure state is false on failure
-             playPauseButton.textContent = '▷';
-          });
-        }
-         // Update UI optimistically/immediately for pause, handle play in promise
-         if (audio.paused) {
-             isPlaying = false;
-             playPauseButton.textContent = '▷';
-         }
-      });
-
-      prevButton.addEventListener('click', () => {
-        currentTrack = (currentTrack - 1 + musicFiles.length) % musicFiles.length;
-        updateSong();
-      });
-
-      nextButton.addEventListener('click', () => { nextSong(); });
-
-      musicSlider.addEventListener('input', () => {
-        if (musicFiles[currentTrack].name !== 'Silence' && audio.duration) {
-          audio.currentTime = (audio.duration * musicSlider.value) / 100;
-        }
-      });
-
-      // --- Audio Event Listeners ---
-      audio.addEventListener('ended', () => {
-        if (!isLooping && musicFiles[currentTrack].name !== 'Silence') { nextSong(); }
-      });
-
-      audio.addEventListener('timeupdate', () => {
-        if (musicFiles[currentTrack].name !== 'Silence' && audio.duration && isFinite(audio.duration)) {
-          const progress = (audio.currentTime / audio.duration) * 100;
-          musicSlider.value = progress || 0;
-          musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
-          musicSlider.disabled = false;
-        } else if (musicFiles[currentTrack].name === 'Silence'){
-           musicSlider.value = 0;
-           musicTimeDisplay.textContent = '00:00 / 00:00';
-           musicSlider.disabled = true;
-        }
-      });
-
-      audio.addEventListener('error', (e) => {
-        console.error("Audio Error:", audio.error);
-        currentSongDisplay.textContent = `Error loading: ${musicFiles[currentTrack].name}`;
-        isPlaying = false;
-        playPauseButton.textContent = '▷';
-        musicSlider.value = 0;
-        musicTimeDisplay.textContent = 'Error / Error';
-        musicSlider.disabled = true;
-      });
-
-      audio.addEventListener('canplay', () => {
-        if (isPlaying && audio.paused && musicFiles[currentTrack].name !== 'Silence') {
-             playPauseButton.textContent = '❚❚'; // Ensure UI correct if play was intended
-        }
-        if (audio.duration && isFinite(audio.duration)) {
-             musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
-        }
-      });
-
-      // Add listeners to update isPlaying state accurately
-      audio.addEventListener('play', () => {
-          if (musicFiles[currentTrack].name !== 'Silence') {
-              isPlaying = true;
-              playPauseButton.textContent = '❚❚';
-          }
-      });
-
-      audio.addEventListener('pause', () => {
-          isPlaying = false;
-          playPauseButton.textContent = '▷';
-      });
+    // --- Music Player Logic ---
+    loopButton.addEventListener('click', () => { isLooping = !isLooping; audio.loop = isLooping; loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off'; });
+    volumeSlider.addEventListener('input', () => { const newVolume = parseFloat(volumeSlider.value); audio.volume = newVolume; if (newVolume > 0) { if (isMuted) { isMuted = false; audio.muted = false; muteButton.textContent = 'Mute'; if (lastVolume <= 0.01) lastVolume = newVolume; } } else { if (!isMuted) { isMuted = true; audio.muted = true; muteButton.textContent = 'Unmute'; lastVolume = 0.01; } } });
+    muteButton.addEventListener('click', () => { isMuted = !isMuted; audio.muted = isMuted; if (isMuted) { lastVolume = audio.volume > 0 ? audio.volume : lastVolume; volumeSlider.value = 0; muteButton.textContent = 'Unmute'; } else { volumeSlider.value = lastVolume; volumeSlider.dispatchEvent(new Event('input')); muteButton.textContent = 'Mute'; } });
+    playPauseButton.addEventListener('click', () => { if (musicFiles[currentTrack].name === 'Silence') return; if (isPlaying) { audio.pause(); } else { if (audio.readyState === 0) { audio.load(); } audio.play().then(() => {}).catch(error => { console.error("Play failed:", error); }); } if (audio.paused) { isPlaying = false; playPauseButton.textContent = '▷'; } });
+    prevButton.addEventListener('click', () => { currentTrack = (currentTrack - 1 + musicFiles.length) % musicFiles.length; updateSong(); });
+    nextButton.addEventListener('click', () => { nextSong(); });
+    musicSlider.addEventListener('input', () => { if (musicFiles[currentTrack].name !== 'Silence' && audio.duration) { audio.currentTime = (audio.duration * musicSlider.value) / 100; } });
+    audio.addEventListener('ended', () => { if (!isLooping && musicFiles[currentTrack].name !== 'Silence') { nextSong(); } });
+    audio.addEventListener('timeupdate', () => { if (musicFiles[currentTrack].name !== 'Silence' && audio.duration && isFinite(audio.duration)) { const progress = (audio.currentTime / audio.duration) * 100; musicSlider.value = progress || 0; musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration); musicSlider.disabled = false; } else if (musicFiles[currentTrack].name === 'Silence'){ musicSlider.value = 0; musicTimeDisplay.textContent = '00:00 / 00:00'; musicSlider.disabled = true; } });
+    audio.addEventListener('error', (e) => { console.error("Audio Error:", audio.error); currentSongDisplay.textContent = `Error loading: ${musicFiles[currentTrack].name}`; isPlaying = false; playPauseButton.textContent = '▷'; musicSlider.value = 0; musicTimeDisplay.textContent = 'Error / Error'; musicSlider.disabled = true; });
+    audio.addEventListener('canplay', () => { if (isPlaying && audio.paused && musicFiles[currentTrack].name !== 'Silence') { playPauseButton.textContent = '❚❚'; } if (audio.duration && isFinite(audio.duration)) { musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration); } });
+    audio.addEventListener('play', () => { if (musicFiles[currentTrack].name !== 'Silence') { isPlaying = true; playPauseButton.textContent = '❚❚'; } });
+    audio.addEventListener('pause', () => { isPlaying = false; playPauseButton.textContent = '▷'; });
+    function nextSong() { currentTrack = (currentTrack + 1) % musicFiles.length; updateSong(); }
+    function updateSong() { const track = musicFiles[currentTrack]; currentSongDisplay.textContent = track.name; audio.loop = isLooping; musicSlider.value = 0; musicTimeDisplay.textContent = '00:00 / 00:00'; if (track.name === 'Silence') { audio.pause(); audio.src = ''; musicSlider.disabled = true; } else { audio.src = track.url; audio.load(); musicSlider.disabled = false; audio.play().then(() => {}).catch(error => { console.log("Autoplay prevented for new track:", error); }); } updateBubbleButtonVisibility(); }
+    function initializePlayer() { audio.volume = volumeSlider.value; audio.muted = isMuted; loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off'; muteButton.textContent = isMuted ? 'Unmute' : 'Mute'; playPauseButton.textContent = isPlaying ? '❚❚' : '▷'; currentSongDisplay.textContent = musicFiles[currentTrack].name; updateBubbleButtonVisibility(); musicSlider.disabled = (musicFiles[currentTrack].name === 'Silence'); if (musicFiles[currentTrack].name !== 'Silence') { audio.src = musicFiles[currentTrack].url; audio.preload = 'metadata'; } }
 
 
-      // --- Music Player Functions ---
-      function nextSong() {
-        currentTrack = (currentTrack + 1) % musicFiles.length;
-        updateSong();
+    // --- Timer Logic ---
+    function updateTimer() { const now = new Date(); const difference = targetDate - now; if (difference <= 0) { clearInterval(timerInterval); if (messageColorInterval) clearInterval(messageColorInterval); timerDisplay.textContent = '00:00:00:00'; timerLabelsDisplay.textContent = ' '; messageDisplay.style.opacity = 1; createConfetti(); messageColorInterval = setInterval(changeMessageColor, 500); return; } const days = Math.floor(difference / (1000 * 60 * 60 * 24)); const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((difference % (1000 * 60)) / 1000); let formattedTime = ''; let labels = ''; if (days > 0) { formattedTime = `${days}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Days Hours Minutes Seconds'; } else if (hours > 0) { formattedTime = `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Hours Minutes Seconds'; } else { formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Minutes Seconds'; } timerDisplay.textContent = formattedTime; timerLabelsDisplay.textContent = labels; }
+
+
+    // --- Effects Functions ---
+    function getRandomColor() { const letters = '0123456789ABCDEF'; let color = '#'; for (let i = 0; i < 6; i++) { color += letters[Math.floor(Math.random() * 16)]; } return color; }
+    function changeMessageColor() { messageDisplay.style.color = getRandomColor(); }
+    function createConfetti() { const messageRect = messageDisplay.getBoundingClientRect(); if (!messageRect || messageRect.width === 0 || messageRect.height === 0) { console.warn("Message display not ready for confetti."); return; } const messageCenterX = messageRect.left + messageRect.width / 2; const messageCenterY = messageRect.top + messageRect.height / 2; const confettiCount = 100; for (let i = 0; i < confettiCount; i++) { const confetti = document.createElement('div'); confetti.className = 'confetti'; confetti.style.backgroundColor = getRandomColor(); confetti.style.left = messageCenterX + (Math.random() - 0.5) * 50 + 'px'; confetti.style.top = messageCenterY + (Math.random() - 0.5) * 50 + 'px'; const angle = Math.random() * Math.PI * 2; const distance = Math.random() * 200 + 150; const xEnd = Math.cos(angle) * distance; const yEnd = Math.sin(angle) * distance; const rotation = Math.random() * 720 - 360; document.body.appendChild(confetti); const lifetime = Math.random() * 3000 + 2000; requestAnimationFrame(() => { confetti.style.transition = `transform ${lifetime / 1000}s cubic-bezier(0.1, 0.9, 0.2, 1), opacity ${lifetime / 1000}s linear`; confetti.style.transform = `translate(${xEnd}px, ${yEnd}px) rotate(${rotation}deg)`; confetti.style.opacity = 0; }); setTimeout(() => { confetti.remove(); }, lifetime); } }
+    bubbleButton.addEventListener('click', () => { createBubbles(10); });
+    function createBubbles(numBubbles = 1) { for (let i = 0; i < numBubbles; i++) { const bubble = document.createElement('div'); bubble.className = 'bubble'; const startX = Math.random() * window.innerWidth; const startY = window.innerHeight + 100; bubble.style.left = startX + 'px'; bubble.style.top = startY + 'px'; const size = Math.random() * 40 + 40; bubble.style.width = size + 'px'; bubble.style.height = size + 'px'; bubble.style.backgroundColor = `rgba(173, 216, 230, ${Math.random() * 0.3 + 0.4})`; const endY = -100; const endX = startX + (Math.random() - 0.5) * window.innerWidth * 0.5; const duration = Math.random() * 8000 + 5000; document.body.appendChild(bubble); requestAnimationFrame(() => { bubble.style.transition = `transform ${duration / 1000}s linear, opacity ${duration / 1000}s ease-out`; bubble.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`; bubble.style.opacity = 0; }); setTimeout(() => { bubble.remove(); }, duration); bubble.addEventListener('click', () => { bubble.style.transition = 'transform 0.15s ease-out, opacity 0.15s ease-out'; bubble.style.transform += ' scale(1.2)'; bubble.style.opacity = 0; setTimeout(() => bubble.remove(), 150); }, { once: true }); } }
+    function updateBubbleButtonVisibility() { bubbleButton.style.display = (currentTrack < 2) ? 'block' : 'none'; }
+    function formatTime(time) { if (isNaN(time) || time === null) return '00:00'; const minutes = Math.floor(time / 60); const seconds = Math.floor(time % 60); return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; }
+
+
+    // --- Background Scroll Animation Loop ---
+    function scrollLoop() {
+      if (!isDragging) {
+          currentBgX += scrollSpeed; // Increment position
+          row1.style.backgroundPositionX = currentBgX + 'px';
       }
+      animationFrameId = requestAnimationFrame(scrollLoop); // Continue the loop
+    }
 
-      function updateSong() {
-        const track = musicFiles[currentTrack];
-        currentSongDisplay.textContent = track.name;
-        audio.loop = isLooping;
-        musicSlider.value = 0;
-        musicTimeDisplay.textContent = '00:00 / 00:00';
-
-        if (track.name === 'Silence') {
-          audio.pause();
-          audio.src = '';
-          // isPlaying = false; // Handled by 'pause' event listener
-          // playPauseButton.textContent = '▷'; // Handled by 'pause' event listener
-          musicSlider.disabled = true;
-        } else {
-          audio.src = track.url;
-          audio.load();
-          musicSlider.disabled = false;
-          audio.play().then(() => {
-             // isPlaying = true; // Handled by 'play' event listener
-             // playPauseButton.textContent = '❚❚'; // Handled by 'play' event listener
-          }).catch(error => {
-            console.log("Autoplay prevented for new track:", error);
-            // isPlaying = false; // Handled by 'pause' event listener
-            // playPauseButton.textContent = '▷'; // Handled by 'pause' event listener
-          });
-        }
-        updateBubbleButtonVisibility();
-      }
-
-      function initializePlayer() {
-          audio.volume = volumeSlider.value;
-          audio.muted = isMuted;
-          loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off';
-          muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
-          playPauseButton.textContent = isPlaying ? '❚❚' : '▷';
-          currentSongDisplay.textContent = musicFiles[currentTrack].name;
-          updateBubbleButtonVisibility();
-          musicSlider.disabled = (musicFiles[currentTrack].name === 'Silence');
-           // Preload metadata for the first track if it's not silence
-           if (musicFiles[currentTrack].name !== 'Silence') {
-               audio.src = musicFiles[currentTrack].url;
-               audio.preload = 'metadata'; // Ask browser to load metadata (duration etc)
-           }
-      }
+    function startScrollAnimation() {
+        if (animationFrameId) { cancelAnimationFrame(animationFrameId); } // Prevent multiple loops
+        animationFrameId = requestAnimationFrame(scrollLoop);
+    }
 
 
-      // --- Timer Functions ---
-      function updateTimer() {
-        const now = new Date();
-        const difference = targetDate - now;
-
-        if (difference <= 0) {
-          clearInterval(timerInterval);
-          if (messageColorInterval) clearInterval(messageColorInterval);
-          timerDisplay.textContent = '00:00:00:00';
-          timerLabelsDisplay.textContent = ' ';
-          messageDisplay.style.opacity = 1;
-          createConfetti();
-          messageColorInterval = setInterval(changeMessageColor, 500);
-          return;
-        }
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        let formattedTime = '';
-        let labels = '';
-        if (days > 0) {
-          formattedTime = `${days}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-          labels = 'Days Hours Minutes Seconds';
-        } else if (hours > 0) {
-          formattedTime = `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-          labels = 'Hours Minutes Seconds';
-        } else {
-          formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-          labels = 'Minutes Seconds';
-        }
-        timerDisplay.textContent = formattedTime;
-        timerLabelsDisplay.textContent = labels;
-      }
-
-      // --- Effects Functions ---
-      function getRandomColor() { /* ... */ } function changeMessageColor() { /* ... */ } function createConfetti() { /* ... */ } function createBubbles(numBubbles = 1) { /* ... */ } function updateBubbleButtonVisibility() { /* ... */ } function formatTime(time) { /* ... */ }
-      // (Keeping effects functions collapsed for brevity - they are unchanged from previous version)
-        function getRandomColor() { const letters = '0123456789ABCDEF'; let color = '#'; for (let i = 0; i < 6; i++) { color += letters[Math.floor(Math.random() * 16)]; } return color; }
-        function changeMessageColor() { messageDisplay.style.color = getRandomColor(); }
-        function createConfetti() { const messageRect = messageDisplay.getBoundingClientRect(); if (!messageRect || messageRect.width === 0 || messageRect.height === 0) { return; } const messageCenterX = messageRect.left + messageRect.width / 2; const messageCenterY = messageRect.top + messageRect.height / 2; const confettiCount = 100; for (let i = 0; i < confettiCount; i++) { const confetti = document.createElement('div'); confetti.className = 'confetti'; confetti.style.backgroundColor = getRandomColor(); confetti.style.left = messageCenterX + (Math.random() - 0.5) * 50 + 'px'; confetti.style.top = messageCenterY + (Math.random() - 0.5) * 50 + 'px'; const angle = Math.random() * Math.PI * 2; const distance = Math.random() * 200 + 150; const xEnd = Math.cos(angle) * distance; const yEnd = Math.sin(angle) * distance; const rotation = Math.random() * 720 - 360; document.body.appendChild(confetti); const lifetime = Math.random() * 3000 + 2000; requestAnimationFrame(() => { confetti.style.transition = `transform ${lifetime / 1000}s cubic-bezier(0.1, 0.9, 0.2, 1), opacity ${lifetime / 1000}s linear`; confetti.style.transform = `translate(${xEnd}px, ${yEnd}px) rotate(${rotation}deg)`; confetti.style.opacity = 0; }); setTimeout(() => { confetti.remove(); }, lifetime); } }
-        bubbleButton.addEventListener('click', () => { createBubbles(10); });
-        function createBubbles(numBubbles = 1) { for (let i = 0; i < numBubbles; i++) { const bubble = document.createElement('div'); bubble.className = 'bubble'; const startX = Math.random() * window.innerWidth; const startY = window.innerHeight + 100; bubble.style.left = startX + 'px'; bubble.style.top = startY + 'px'; const size = Math.random() * 40 + 40; bubble.style.width = size + 'px'; bubble.style.height = size + 'px'; bubble.style.backgroundColor = `rgba(173, 216, 230, ${Math.random() * 0.3 + 0.4})`; const endY = -100; const endX = startX + (Math.random() - 0.5) * window.innerWidth * 0.5; const duration = Math.random() * 8000 + 5000; document.body.appendChild(bubble); requestAnimationFrame(() => { bubble.style.transition = `transform ${duration / 1000}s linear, opacity ${duration / 1000}s ease-out`; bubble.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`; bubble.style.opacity = 0; }); setTimeout(() => { bubble.remove(); }, duration); bubble.addEventListener('click', () => { bubble.style.transition = 'transform 0.15s ease-out, opacity 0.15s ease-out'; bubble.style.transform += ' scale(1.2)'; bubble.style.opacity = 0; setTimeout(() => bubble.remove(), 150); }, { once: true }); } }
-        function updateBubbleButtonVisibility() { bubbleButton.style.display = (currentTrack < 2) ? 'block' : 'none'; }
-        function formatTime(time) { if (isNaN(time) || time === null) return '00:00'; const minutes = Math.floor(time / 60); const seconds = Math.floor(time % 60); return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; }
-
-
-      // --- Easter Egg ---
-      erinGroganLink.addEventListener('click', () => {
-        currentTrack = 4;
-        const newVolume = 0.77;
-        updateSong();
-        setTimeout(() => {
-            audio.volume = newVolume;
-            volumeSlider.value = newVolume;
-            if (newVolume > 0 && isMuted) {
-                isMuted = false;
-                audio.muted = false;
-                muteButton.textContent = 'Mute';
-            } else if (newVolume <= 0 && !isMuted) {
-                 isMuted = true;
-                 audio.muted = true;
-                 muteButton.textContent = 'Unmute';
-                 lastVolume = 0.01;
-            }
-        }, 100);
-      });
-
-      // --- Initial Setup ---
-      document.addEventListener('DOMContentLoaded', () => {
-        updateTimer();
-        timerInterval = setInterval(updateTimer, 1000);
-        initializePlayer();
-        console.log("Page loaded. Background structure added.");
-      });
+    // --- Initial Setup ---
+    document.addEventListener('DOMContentLoaded', () => {
+        updateTimer(); // Initial timer display
+        timerInterval = setInterval(updateTimer, 1000); // Start timer interval
+        initializePlayer(); // Setup the music player UI elements
+        row1.style.backgroundPositionX = '0px'; // Set initial CSS position via JS
+        startScrollAnimation(); // Start the background scroll
+        console.log("Page loaded. All features initialized.");
+    });
 
   </script>
 
