@@ -2,399 +2,396 @@
 <html>
 
 <head>
-    <title>KSFA Timer</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="https://file.garden/aABDpAgY3QmuIiLd/images%20(1).ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <style>
-        /* --- CSS Styles (Mostly Unchanged) --- */
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: sans-serif;
-            color: white;
-            overflow: hidden;
-            position: relative;
-        }
+  <title>KSFA Timer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://file.garden/aABDpAgY3QmuIiLd/images%20(1).ico" type="image/vnd.microsoft.icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      color: white;
+      overflow: hidden; /* Prevent scrollbars */
+      position: relative; /* Needed for positioning context */
+    }
 
-        #background-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            display: flex;
-            flex-direction: column;
-        }
+    /* --- Background Container and Rows --- */
+    #background-container {
+        position: fixed; /* Keep it fixed behind everything */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* Place it behind all other content */
+        display: flex;
+        flex-direction: column; /* Arrange rows vertically */
+    }
 
-        .background-row {
-            flex: 1;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-        }
+    .background-row {
+        flex: 1; /* Each row takes up 1/3 of the height */
+        overflow: hidden; /* Hide overflow */
+        background-size: cover; /* Default size */
+        background-position: center; /* Default position */
+    }
 
-        #row1 {
-            /* Make sure to click/drag on THIS row where it's visible */
-            background-image: url('row1.png'); /* Needs valid image source */
-            background-repeat: repeat-x;
-            background-size: auto 100%;
-            cursor: grab;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
+    #row1 {
+        /* --- IMPORTANT: Image Source --- */
+        /* Place 'row1.jpg' in the SAME FOLDER as this HTML file, */
+        /* OR replace 'row1.jpg' with a permanent URL. */
+        background-image: url('row1.png');
+        background-repeat: repeat-x; /* Repeat horizontally */
+        background-size: auto 100%; /* Fit height, width adjusts, allows repeat */
+        /* CSS Animation removed - now handled by JS */
+        /* Add cursor style for dragging indication */
+        cursor: grab;
+        /* Prevent text selection during drag */
+        user-select: none;
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE */
+    }
 
-        #row2 { background-color: #222; }
-        #row3 { background-color: #111; }
+     /* Placeholder styles for other rows - replace with your images/styles */
+    #row2 {
+        background-color: #222; /* Dark gray placeholder */
+    }
 
-        #credits-button, #submit-button, #music-toggle-button { /* ... styles ... */ position: absolute; top: 20px; background-color: rgba(255, 255, 255, 0.2); border: none; padding: 10px 15px; color: white; cursor: pointer; border-radius: 5px; font-size: 16px; z-index: 1001; }
-        #credits-button { left: 20px; }
-        #submit-button { left: 50%; transform: translateX(-50%); }
-        #music-toggle-button { right: 20px; }
+    #row3 {
+        background-color: #111; /* Darker gray placeholder */
+    }
+    /* --- END Background --- */
 
-        #credits-box { /* ... styles ... */ position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px; transition: bottom 0.5s ease-in-out, transform 0.5s ease-in-out; text-align: center; max-width: 80%; box-sizing: border-box; z-index: 1002; }
-        #credits-box.show { bottom: 50%; transform: translate(-50%, 50%); }
-        #credits-box p { margin: 5px 0; }
-        #credits-box a { color: #aadeff; text-decoration: none; }
-        #credits-box a:hover { text-decoration: underline; }
 
-        #timer { /* ... styles ... */ font-size: 100px; text-align: center; font-family: 'Winky Rough', sans-serif; font-weight: bold; letter-spacing: 0.2em; white-space: nowrap; overflow: hidden; max-width: 100%; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); }
-        #timer-labels { /* ... styles ... */ font-size: 20px; text-align: center; font-family: sans-serif; margin-top: 5px; letter-spacing: 0.2em; white-space: nowrap; overflow: hidden; max-width: 100%; cursor: default; user-select: none; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); }
-        #message { /* ... styles ... */ font-size: 80px; text-align: center; opacity: 0; transition: opacity 1s ease-in-out, color 0.5s linear; font-family: 'Pacifico', cursive; position: relative; z-index: 1; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); }
-        .confetti { /* ... styles ... */ position: absolute; width: 15px; height: 8px; pointer-events: none; transform-origin: center; z-index: 0; }
+    /* --- Foreground Styles --- */
+    #credits-button,
+    #submit-button,
+    #music-toggle-button {
+      position: absolute;
+      top: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+      z-index: 1001;
+    }
 
-        #music-controls { /* ... styles ... */ position: fixed; top: 60px; right: -200px; display: flex; flex-direction: column; align-items: flex-start; transition: right 0.5s ease-in-out; background-color: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 10px; z-index: 1000; }
-        #music-controls.show { right: 20px; }
-        #music-controls button, #music-controls input { margin-top: 5px; background-color: rgba(255, 255, 255, 0.2); border: none; padding: 8px 12px; color: white; cursor: pointer; border-radius: 5px; width: 150px; text-align: left; box-sizing: border-box; }
-        #music-controls input[type="range"] { width: 140px; padding: 0; height: 20px; }
-        #play-pause-button { font-size: 1.2em; padding: 8px 15px; text-align: center; }
-        #current-song { font-size: 16px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; color: #eee; text-align: center;}
-        #music-slider { width: 150px; margin-top: 5px; }
-        #music-time { font-size: 12px; margin-bottom: 2px; text-align: center; }
-        #volume-label { font-size: 12px; margin-bottom: 2px; text-align: center; }
-        .music-button-row { display: flex; justify-content: space-between; width: 100%; }
-        .music-button-row button { width: 48%; text-align: center; }
+    #credits-button { left: 20px; }
+    #submit-button { left: 50%; transform: translateX(-50%); }
+    #music-toggle-button { right: 20px; }
 
-        .bubble { /* ... styles ... */ position: absolute; width: 80px; height: 80px; border-radius: 50%; background-color: rgba(173, 216, 230, 0.7); pointer-events: auto; cursor: pointer; transition: transform 0.3s ease-out, opacity 0.3s ease-out; z-index: 500; }
-        #bubble-button { /* ... styles ... */ display: none; position: absolute; bottom: 20px; right: 20px; background-color: rgba(135, 206, 250, 0.5); border: none; padding: 10px; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; z-index: 1001; font-size: 24px; line-height: 30px; text-align: center;}
+    #credits-box {
+      position: fixed;
+      bottom: -100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      transition: bottom 0.5s ease-in-out, transform 0.5s ease-in-out;
+      text-align: center;
+      max-width: 80%;
+      box-sizing: border-box;
+      z-index: 1002;
+    }
+    #credits-box.show { bottom: 50%; transform: translate(-50%, 50%); }
 
-        @media (max-width: 600px) {
-             /* ... media query styles (unchanged) ... */
-             #timer { font-size: 60px; letter-spacing: 0.1em; } #timer-labels { font-size: 15px; letter-spacing: 0.1em; } #message { font-size: 40px; }
-             #music-controls { width: 170px; right: -180px; }
-             #music-controls.show { right: 10px; }
-             #music-controls button, #music-controls input { width: 100%; }
-             #music-controls input[type="range"] { width: calc(100% - 10px); }
-             #play-pause-button, #prev-button, #next-button, #loop-button, #mute-button { text-align: center; }
-             .music-button-row button { width: 48%; }
-             .bubble { width: 40px; height: 40px; }
-             #bubble-button { width: 40px; height: 40px; font-size: 20px; line-height: 20px; bottom: 15px; right: 15px; }
-        }
-    </style>
+    #timer {
+      font-size: 100px;
+      text-align: center;
+      font-family: 'Winky Rough', sans-serif;
+      font-weight: bold;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    #timer-labels {
+      font-size: 20px;
+      text-align: center;
+      font-family: sans-serif;
+      margin-top: 5px;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
+      cursor: pointer;
+      user-select: none;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    }
+
+    #message {
+      font-size: 80px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out, color 0.5s linear;
+      font-family: 'Pacifico', cursive;
+      position: relative;
+      z-index: 1;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .confetti {
+      position: absolute;
+      width: 15px;
+      height: 8px;
+      pointer-events: none;
+      transform-origin: center;
+      z-index: 0;
+    }
+
+    @media (max-width: 600px) {
+      #timer { font-size: 60px; letter-spacing: 0.1em; }
+      #timer-labels { font-size: 15px; letter-spacing: 0.1em; }
+      #message { font-size: 40px; }
+    }
+
+    .green-text { color: green; cursor: pointer; }
+    .orange-text { color: orange; }
+    .red-text { color: red; }
+    .hot-pink-text { color: hotpink; }
+
+    #music-controls {
+      position: fixed;
+      top: 60px;
+      right: -200px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: right 0.5s ease-in-out;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 10px;
+      z-index: 1000;
+    }
+    #music-controls.show { right: 20px; }
+
+    #music-controls button, #music-controls input { margin-top: 5px; background-color: rgba(255, 255, 255, 0.2); border: none; padding: 8px 12px; color: white; cursor: pointer; border-radius: 5px; width: 150px; text-align: left; box-sizing: border-box; }
+    #music-controls input[type="range"] { width: 140px; padding: 0; height: 20px; }
+    #play-pause-button { font-size: 1.2em; padding: 8px 15px; text-align: center; }
+    #current-song { font-size: 16px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+    #music-slider { width: 150px; margin-top: 5px; }
+    #music-time { font-size: 12px; margin-bottom: 2px; }
+    #volume-label { font-size: 12px; margin-bottom: 2px; }
+
+    .bubble {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: rgba(173, 216, 230, 0.7);
+      pointer-events: auto;
+      cursor: pointer;
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+      z-index: 500;
+    }
+    #bubble-button { display: none; }
+
+    @media (max-width: 600px) {
+      .bubble { width: 40px; height: 40px; }
+      #music-controls { width: 170px; right: -180px; }
+      #music-controls.show { right: 10px; }
+      #music-controls button, #music-controls input { width: 100%; }
+      #music-controls input[type="range"] { width: calc(100% - 10px); }
+    }
+    /* --- END Foreground Styles --- */
+  </style>
 </head>
 
 <body>
 
-    <div id="background-container">
-        <div id="row1" class="background-row"></div>
-        <div id="row2" class="background-row"></div>
-        <div id="row3" class="background-row"></div>
-    </div>
+  <div id="background-container">
+    <div id="row1" class="background-row"></div>
+    <div id="row2" class="background-row"></div>
+    <div id="row3" class="background-row"></div>
+  </div>
+  <button id="credits-button">Credits</button>
+  <button id="submit-button">Submit</button>
+  <button id="music-toggle-button">♫</button>
 
-    <button id="credits-button">Credits</button>
-    <button id="submit-button">Submit</button>
-    <button id="music-toggle-button">♫</button>
+  <div id="credits-box">
+    <p>Created by Samad Slaten</p>
+    <p>Picture Senders: <span class="orange-text">Aden Smith</span>, Eryn Alfred, <span class="green-text" id="erin-grogan-link">Erin Grogan</span>,
+      Abram Dolby, <span class="hot-pink-text">Suset Solano</span></p>
+    <p>People Who Also Helped: <span class="red-text">Roberto Ochoa</span>, <span class="green-text">Kortni Smith</span>,
+      Anthony Royal</p>
+  </div>
 
-    <div id="credits-box">
-        <p>Timer Concept & Design: [Your Name/Group]</p>
-        <p>Background Image: [Source/Artist Name]</p>
-        <p>Music: [List Sources]</p>
-        <p>Special Thanks:</p>
-        <p><a href="#" id="erin-grogan-link" style="color: hotpink;">Erin Grogan</a></p>
-    </div>
+  <div id="music-controls">
+    <div id="current-song"></div>
+    <button id="play-pause-button">❚❚</button>
+    <button id="loop-button">Loop Off</button>
+    <div id="volume-label">Volume</div>
+    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+    <button id="mute-button">Mute</button>
+    <button id="prev-button">Previous</button>
+    <button id="next-button">Next</button>
+    <button id="bubble-button">🫧</button>
+    <div id="music-time">00:00 / 00:00</div>
+    <input type="range" id="music-slider" min="0" max="100" value="0">
+  </div>
 
-    <div id="music-controls">
-        <div id="current-song">Loading...</div>
-        <div id="music-time">00:00 / 00:00</div>
-        <input type="range" id="music-slider" value="0" max="100" disabled>
-        <button id="play-pause-button">▷</button>
-        <div class="music-button-row"> <button id="prev-button">⏮</button> <button id="next-button">⏭</button> </div>
-        <div class="music-button-row"> <button id="loop-button">Loop Off</button> <button id="mute-button">Mute</button> </div>
-        <label id="volume-label" for="volume-slider">Volume</label>
-        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
-    </div>
+  <div id="timer"></div>
+  <div id="timer-labels">Days Hours Minutes Seconds</div>
+  <div id="message">Good Luck Kippsters!</div>
+  <script>
+    // --- DOM Element References ---
+    const creditsButton = document.getElementById('credits-button');
+    const submitButton = document.getElementById('submit-button');
+    const creditsBox = document.getElementById('credits-box');
+    const loopButton = document.getElementById('loop-button');
+    const volumeSlider = document.getElementById('volume-slider');
+    const muteButton = document.getElementById('mute-button');
+    const playPauseButton = document.getElementById('play-pause-button');
+    const musicToggleButton = document.getElementById('music-toggle-button');
+    const musicControls = document.getElementById('music-controls');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+    const currentSongDisplay = document.getElementById('current-song');
+    const musicSlider = document.getElementById('music-slider');
+    const musicTimeDisplay = document.getElementById('music-time');
+    const timerLabelsDisplay = document.getElementById('timer-labels');
+    const bubbleButton = document.getElementById('bubble-button');
+    const erinGroganLink = document.getElementById('erin-grogan-link');
+    const timerDisplay = document.getElementById('timer');
+    const messageDisplay = document.getElementById('message');
+    const row1 = document.getElementById('row1'); // Reference for row1
 
-    <div id="timer"></div>
-    <div id="timer-labels">Days Hours Minutes Seconds</div>
-    <div id="message">Good Luck Kippsters!</div>
-    <button id="bubble-button">💧</button>
+    // --- State Variables ---
+    let musicControlsVisible = false;
+    const targetDate = new Date('May 20, 2025 08:30:00 EDT'); // Updated Target Date
+    let timerInterval;
+    let messageColorInterval;
+    const musicFiles = [{ url: 'https://file.garden/aABDpAgY3QmuIiLd/yume%202kki%20-%20lotus%20waters%20nightcore_sped%20up_%20techno%20condominium%20flying%20event.mp3', name: 'Lotus Waters' }, { url: 'https://file.garden/aABDpAgY3QmuIiLd/1-13%20LEASE.mp3', name: 'LEASE' }, { url: 'https://file.garden/aABDpAgY3QmuIiLd/1-16%20KYO.mp3', name: 'KYO' }, { url: 'https://file.garden/aABDpAgY3QmuIiLd/1-21%20Yuu.mp3', name: 'Yuu' }, { url: 'https://file.garden/aABDpAgY3QmuIiLd/DEATHCAMP.mp3', name: 'DEATHCAMP' }, { url: '', name: 'Silence' } ];
+    let currentTrack = 0;
+    let audio = new Audio();
+    let isLooping = false;
+    let isMuted = false;
+    let isPlaying = false;
+    let lastVolume = 1;
 
-    <script>
-        // --- Configurations ---
-        const musicFiles = [ /* ... Your music files ... */
-             { url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', name: 'Example Song 1' },
-             { url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3', name: 'Example Song 8' },
-             { url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3', name: 'Example Song 15 (Bubble Track)' },
-             { url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3', name: 'Example Song 16' },
-             { url: 'URL_FOR_ERIN_GROGAN_EASTER_EGG.mp3', name: 'Secret Track' },
-             { url: '', name: 'Silence' }
-        ];
-        const targetDate = new Date('May 20, 2025 08:30:00 EDT');
-        const showBubbleTrackIndex = 2; // Track index that enables bubbles
-        const easterEggTrackIndex = 4; // Track index for easter egg
-        const easterEggVolume = 0.77;
+    // --- Background Scroll/Drag State ---
+    let isDragging = false;
+    let startX;
+    let startBgX;
+    let currentBgX = 0;
+    let scrollSpeed = 0.8; // Pixels scroll per frame (adjust for speed)
+    let animationFrameId = null;
 
-        // --- DOM Element References ---
-        const creditsButton = document.getElementById('credits-button');
-        const submitButton = document.getElementById('submit-button');
-        const musicToggleButton = document.getElementById('music-toggle-button');
-        const creditsBox = document.getElementById('credits-box');
-        const musicControls = document.getElementById('music-controls');
-        const timerDisplay = document.getElementById('timer');
-        const timerLabelsDisplay = document.getElementById('timer-labels');
-        const messageDisplay = document.getElementById('message');
-        const row1 = document.getElementById('row1');
-        const loopButton = document.getElementById('loop-button');
-        const volumeSlider = document.getElementById('volume-slider');
-        const muteButton = document.getElementById('mute-button');
-        const playPauseButton = document.getElementById('play-pause-button');
-        const prevButton = document.getElementById('prev-button');
-        const nextButton = document.getElementById('next-button');
-        const currentSongDisplay = document.getElementById('current-song');
-        const musicSlider = document.getElementById('music-slider');
-        const musicTimeDisplay = document.getElementById('music-time');
-        const bubbleButton = document.getElementById('bubble-button');
-        const erinGroganLink = document.getElementById('erin-grogan-link');
-
-        // --- State Variables ---
-        let musicControlsVisible = false;
-        let timerInterval;
-        let messageColorInterval;
-        let currentTrack = 0;
-        let audio = new Audio();
-        let isLooping = false;
-        let isMuted = false;
-        let isPlaying = false;
-        let lastVolume = 1;
-
-        // --- Background Scroll/Drag State ---
-        let isDragging = false;
-        let startX;
-        let startBgX;
-        let currentBgX = 0;
-        let scrollSpeed = 0.8;
-        let animationFrameId = null;
-        // const backgroundImageWidth = 2000; // Optional: For normalization
-
-        // --- Timer Logic (Unchanged) ---
-        function updateTimer() { /* ... */ }
-
-        // --- Music Player Logic (Unchanged) ---
-        function formatTime(time) { /* ... */ }
-        function updateSong() { /* ... */ }
-        function nextSong() { /* ... */ }
-        function prevSong() { /* ... */ }
-        function initializePlayer() { /* ... */ }
-
-        // --- Effects Functions (Unchanged) ---
-        function getRandomColor() { /* ... */ }
-        function changeMessageColor() { /* ... */ }
-        function createConfetti() { /* ... confetti logic ... */ }
-        function createBubbles(numBubbles = 1) { /* ... bubble creation logic ... */ }
-        function updateBubbleButtonVisibility() {
-             bubbleButton.style.display = (currentTrack === showBubbleTrackIndex) ? 'block' : 'none';
-        }
-
-        // --- Background Scroll & Drag Logic ---
-        function handleDragStart(clientX) {
-             // Uncomment the log below to debug if drag starts
-             // console.log("Drag Start:", clientX);
-            isDragging = true;
-            startX = clientX;
-            startBgX = currentBgX;
-            row1.style.cursor = 'grabbing';
-            if (animationFrameId) { // Cancel auto-scroll only if it's running
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null; // Clear the ID
-            }
-            row1.ondragstart = () => false; // Prevent default image drag behavior
-        }
-
-        function handleDragMove(clientX) {
-            if (!isDragging) return;
-            // Uncomment the log below to debug dragging movement
-            // console.log("Dragging:", clientX);
-            const diffX = clientX - startX;
-            currentBgX = startBgX + diffX;
-            // Optional normalization:
-            // if (backgroundImageWidth) { /* ... normalization logic ... */ }
-            row1.style.backgroundPositionX = currentBgX + 'px';
-        }
-
-        function handleDragEnd() {
-            if (!isDragging) return;
-            // Uncomment the log below to debug if drag ends
-            // console.log("Drag End");
-            isDragging = false;
-            row1.style.cursor = 'grab';
-            row1.ondragstart = null; // Re-allow default (though likely not needed)
-            startScrollAnimation(); // Restart auto-scroll
-        }
-
-        function scrollLoop() {
-            if (!isDragging) {
-                currentBgX += scrollSpeed;
-                // Optional normalization:
-                // if (backgroundImageWidth) { /* ... normalization logic ... */ }
-                row1.style.backgroundPositionX = currentBgX + 'px';
-            }
-            animationFrameId = requestAnimationFrame(scrollLoop);
-        }
-
-        function startScrollAnimation() {
-            // Prevent multiple loops from starting
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
-            animationFrameId = requestAnimationFrame(scrollLoop);
-        }
-
-        // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize Timer
-            updateTimer();
-            timerInterval = setInterval(updateTimer, 1000);
-
-            // Initialize Music Player
-            initializePlayer();
-
-            // Initialize Background
-            row1.style.backgroundPositionX = '0px';
-            startScrollAnimation();
-
-             // Add Submit button listener (Define Action)
-             submitButton.addEventListener('click', () => {
-                 alert('Submit button clicked! Define its action.');
-             });
-
-            console.log("Page loaded. Initialized.");
-        });
-
-        // UI Button Listeners
-        creditsButton.addEventListener('click', () => { creditsBox.classList.toggle('show'); });
-        musicToggleButton.addEventListener('click', () => {
-            musicControlsVisible = !musicControlsVisible;
-            musicControls.classList.toggle('show', musicControlsVisible);
-        });
-
-        // Background Drag Listeners
-        // Mouse Events
-        row1.addEventListener('mousedown', (e) => {
-             // Only start drag if directly clicking row1, not something else on top
-             if (e.target === row1) {
-                handleDragStart(e.clientX);
-             }
-        });
-        document.addEventListener('mousemove', (e) => {
-             // No need to check target here, just move if dragging flag is set
-             handleDragMove(e.clientX);
-        });
-        document.addEventListener('mouseup', () => {
-             // Always handle mouse up to stop dragging state
-             handleDragEnd();
-        });
-
-        // Touch Events
-        row1.addEventListener('touchstart', (e) => {
-             // Only start drag if touching row1 directly
-             if (e.target === row1 && e.touches.length === 1) {
-                 handleDragStart(e.touches[0].clientX);
-             }
-        }, { passive: true }); // Can be passive: true if not calling preventDefault in handler
-
-        document.addEventListener('touchmove', (e) => {
-            if (isDragging && e.touches.length === 1) {
-                // Prevent vertical scroll WHILE dragging horizontally
-                e.preventDefault();
-                handleDragMove(e.touches[0].clientX);
-            }
-        }, { passive: false }); // MUST be passive: false to allow preventDefault
-
-        document.addEventListener('touchend', () => {
-            // Always handle touch end
-            handleDragEnd();
-        });
-        document.addEventListener('touchcancel', () => {
-            // Handle interruption (e.g., system dialog)
-             handleDragEnd();
-        });
+    // --- Event Listeners ---
+    creditsButton.addEventListener('click', () => { creditsBox.classList.toggle('show'); });
+    submitButton.addEventListener('click', () => { window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion'; });
+    document.addEventListener('click', (event) => { if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) { creditsBox.classList.remove('show'); } if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) { musicControls.classList.remove('show'); musicControlsVisible = false; } });
+    musicToggleButton.addEventListener('click', () => { musicControls.classList.toggle('show'); musicControlsVisible = !musicControlsVisible; });
+    erinGroganLink.addEventListener('click', () => { currentTrack = 4; const newVolume = 0.77; updateSong(); setTimeout(() => { audio.volume = newVolume; volumeSlider.value = newVolume; if (newVolume > 0 && isMuted) { isMuted = false; audio.muted = false; muteButton.textContent = 'Mute'; } else if (newVolume <= 0 && !isMuted) { isMuted = true; audio.muted = true; muteButton.textContent = 'Unmute'; lastVolume = 0.01; } }, 100); });
 
 
-        // Music Player Control Listeners
-        loopButton.addEventListener('click', () => { /* ... loop logic ... */ });
-        volumeSlider.addEventListener('input', () => { /* ... volume logic ... */ });
-        muteButton.addEventListener('click', () => { /* ... mute logic ... */ });
-        playPauseButton.addEventListener('click', () => { /* ... play/pause logic ... */ });
-        prevButton.addEventListener('click', prevSong);
-        nextButton.addEventListener('click', nextSong);
-        musicSlider.addEventListener('input', () => { /* ... seek logic ... */ });
+    // --- Background Drag Event Listeners ---
+    function handleDragStart(clientX) {
+        isDragging = true;
+        startX = clientX;
+        startBgX = currentBgX;
+        row1.style.cursor = 'grabbing';
+        cancelAnimationFrame(animationFrameId);
+        row1.ondragstart = () => false;
+    }
 
-        // Audio Element Event Listeners
-        audio.addEventListener('ended', () => { /* ... ended logic ... */ });
-        audio.addEventListener('timeupdate', () => { /* ... timeupdate logic ... */ });
-        audio.addEventListener('loadedmetadata', () => { /* ... loadedmetadata logic ... */ });
-        audio.addEventListener('error', (e) => { /* ... error logic ... */ });
-        audio.addEventListener('play', () => { /* ... play state logic ... */ });
-        audio.addEventListener('pause', () => { /* ... pause state logic ... */ });
+    function handleDragMove(clientX) {
+        if (!isDragging) return;
+        const diffX = clientX - startX;
+        currentBgX = startBgX + diffX;
+        row1.style.backgroundPositionX = currentBgX + 'px';
+    }
 
-        // Bubble Button Listener
-        bubbleButton.addEventListener('click', () => { createBubbles(10); });
+    function handleDragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        row1.style.cursor = 'grab';
+        row1.ondragstart = null;
+        startScrollAnimation();
+    }
 
-        // Easter Egg Listener
-        if (erinGroganLink) {
-             erinGroganLink.addEventListener('click', (e) => { /* ... easter egg logic ... */ });
-        } else { console.warn("Element 'erin-grogan-link' not found."); }
+    row1.addEventListener('mousedown', (e) => { handleDragStart(e.clientX); });
+    document.addEventListener('mousemove', (e) => { handleDragMove(e.clientX); });
+    document.addEventListener('mouseup', () => { handleDragEnd(); });
+    row1.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { handleDragStart(e.touches[0].clientX); } }, { passive: true }); // Use passive true if not preventing default
+    document.addEventListener('touchmove', (e) => { if (!isDragging) return; /* No preventDefault needed if page scroll isn't an issue */ if (e.touches.length === 1) { handleDragMove(e.touches[0].clientX); } }, { passive: true }); // Use passive true if not preventing default
+    document.addEventListener('touchend', () => { handleDragEnd(); });
+    document.addEventListener('touchcancel', () => { handleDragEnd(); });
 
-        // --- Make sure all collapsed/unchanged functions are defined ---
-        // (Include the full definitions for updateTimer, formatTime, updateSong, etc. as in the previous version)
-        // ... (functions omitted for brevity - assume they are present) ...
-         function updateTimer() { const now = new Date(); const difference = targetDate - now; if (difference <= 0) { clearInterval(timerInterval); if (messageColorInterval) clearInterval(messageColorInterval); timerDisplay.textContent = '00:00:00:00'; timerLabelsDisplay.textContent = ' '; messageDisplay.style.opacity = 1; messageDisplay.style.color = 'hotpink'; createConfetti(); messageColorInterval = setInterval(changeMessageColor, 500); return; } const days = Math.floor(difference / (1000 * 60 * 60 * 24)); const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((difference % (1000 * 60)) / 1000); let formattedTime = ''; let labels = ''; if (days > 0) { formattedTime = `${days}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Days Hours Minutes Seconds'; } else if (hours > 0) { formattedTime = `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Hours Minutes Seconds'; } else { formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Minutes Seconds'; } timerDisplay.textContent = formattedTime; timerLabelsDisplay.textContent = labels; }
-         function formatTime(time) { if (isNaN(time) || time === null || !isFinite(time)) return '00:00'; const minutes = Math.floor(time / 60); const seconds = Math.floor(time % 60); return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; }
-         function updateSong() { const track = musicFiles[currentTrack]; currentSongDisplay.textContent = track.name; audio.loop = isLooping; musicSlider.value = 0; musicTimeDisplay.textContent = '00:00 / 00:00'; if (track.name === 'Silence' || !track.url) { audio.pause(); audio.src = ''; musicSlider.disabled = true; isPlaying = false; playPauseButton.textContent = '▷'; } else { audio.src = track.url; audio.load(); musicSlider.disabled = false; audio.play().then(() => { isPlaying = true; playPauseButton.textContent = '❚❚'; }).catch(error => { console.log("Autoplay prevented or error playing track:", error); isPlaying = false; playPauseButton.textContent = '▷'; }); } updateBubbleButtonVisibility(); }
-         function nextSong() { currentTrack = (currentTrack + 1) % musicFiles.length; updateSong(); }
-         function prevSong() { currentTrack = (currentTrack - 1 + musicFiles.length) % musicFiles.length; updateSong(); }
-         function initializePlayer() { audio.volume = parseFloat(volumeSlider.value); audio.muted = isMuted; loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off'; muteButton.textContent = isMuted ? 'Unmute' : 'Mute'; playPauseButton.textContent = isPlaying ? '❚❚' : '▷'; const initialTrack = musicFiles[currentTrack]; currentSongDisplay.textContent = initialTrack.name; musicSlider.disabled = (initialTrack.name === 'Silence' || !initialTrack.url); if (initialTrack.name !== 'Silence' && initialTrack.url) { audio.src = initialTrack.url; audio.preload = 'metadata'; } updateBubbleButtonVisibility(); }
-         function getRandomColor() { const letters = '0123456789ABCDEF'; let color = '#'; for (let i = 0; i < 6; i++) { color += letters[Math.floor(Math.random() * 16)]; } return color; }
-         function changeMessageColor() { messageDisplay.style.color = getRandomColor(); }
-         function createConfetti() { const messageRect = messageDisplay.getBoundingClientRect(); if (!messageRect || messageRect.width === 0 || messageRect.height === 0) { return; } const messageCenterX = messageRect.left + messageRect.width / 2; const messageCenterY = messageRect.top + messageRect.height / 2; const confettiCount = 100; for (let i = 0; i < confettiCount; i++) { const confetti = document.createElement('div'); confetti.className = 'confetti'; confetti.style.backgroundColor = getRandomColor(); confetti.style.left = messageCenterX + (Math.random() - 0.5) * 50 + 'px'; confetti.style.top = messageCenterY + (Math.random() - 0.5) * 50 + 'px'; const angle = Math.random() * Math.PI * 2; const distance = Math.random() * 200 + 150; const xEnd = Math.cos(angle) * distance; const yEnd = Math.sin(angle) * distance; const rotation = Math.random() * 720 - 360; document.body.appendChild(confetti); const lifetime = Math.random() * 3000 + 2000; requestAnimationFrame(() => { confetti.style.transition = `transform ${lifetime / 1000}s cubic-bezier(0.1, 0.9, 0.2, 1), opacity ${lifetime / 1000}s linear`; confetti.style.transform = `translate(${xEnd}px, ${yEnd}px) rotate(${rotation}deg)`; confetti.style.opacity = 0; }); setTimeout(() => { confetti.remove(); }, lifetime); } }
-         function createBubbles(numBubbles = 1) { for (let i = 0; i < numBubbles; i++) { const bubble = document.createElement('div'); bubble.className = 'bubble'; const startX = Math.random() * window.innerWidth; const startY = window.innerHeight + 100; bubble.style.left = startX + 'px'; bubble.style.top = startY + 'px'; const size = Math.random() * 40 + 40; bubble.style.width = size + 'px'; bubble.style.height = size + 'px'; bubble.style.backgroundColor = `rgba(173, 216, 230, ${Math.random() * 0.3 + 0.4})`; const endY = -100; const endX = startX + (Math.random() - 0.5) * window.innerWidth * 0.5; const duration = Math.random() * 8000 + 5000; document.body.appendChild(bubble); requestAnimationFrame(() => { bubble.style.transition = `transform ${duration / 1000}s linear, opacity ${duration / 1000}s ease-out`; bubble.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`; bubble.style.opacity = 0; }); setTimeout(() => { bubble.remove(); }, duration); bubble.addEventListener('click', () => { bubble.style.transition = 'transform 0.15s ease-out, opacity 0.15s ease-out'; bubble.style.transform += ' scale(1.2)'; bubble.style.opacity = 0; setTimeout(() => bubble.remove(), 150); }, { once: true }); } }
-         // -- Music Player Control Listeners (Definitions assumed to be here) --
-         loopButton.addEventListener('click', () => { isLooping = !isLooping; audio.loop = isLooping; loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off'; });
-         volumeSlider.addEventListener('input', () => { const newVolume = parseFloat(volumeSlider.value); audio.volume = newVolume; if (newVolume > 0 && isMuted) { isMuted = false; audio.muted = false; muteButton.textContent = 'Mute'; } else if (newVolume === 0 && !isMuted) { isMuted = true; audio.muted = true; muteButton.textContent = 'Unmute'; lastVolume = 0.01; } if (!isMuted && newVolume > 0) { lastVolume = newVolume; } });
-         muteButton.addEventListener('click', () => { isMuted = !isMuted; audio.muted = isMuted; if (isMuted) { if (audio.volume > 0) lastVolume = audio.volume; volumeSlider.value = 0; muteButton.textContent = 'Unmute'; } else { volumeSlider.value = lastVolume; audio.volume = lastVolume; muteButton.textContent = 'Mute'; } });
-         playPauseButton.addEventListener('click', () => { if (musicFiles[currentTrack].name === 'Silence' || !audio.src) return; if (audio.paused) { audio.play().then(() => { isPlaying = true; playPauseButton.textContent = '❚❚'; }).catch(error => { console.error("Error playing audio:", error); isPlaying = false; playPauseButton.textContent = '▷'; }); } else { audio.pause(); } });
-         musicSlider.addEventListener('input', () => { if (musicFiles[currentTrack].name !== 'Silence' && audio.duration && isFinite(audio.duration)) { audio.currentTime = (audio.duration * parseFloat(musicSlider.value)) / 100; } });
-         audio.addEventListener('ended', () => { if (!isLooping && musicFiles[currentTrack].name !== 'Silence') { nextSong(); } else if (isLooping && musicFiles[currentTrack].name !== 'Silence') { audio.currentTime = 0; audio.play().catch(e => console.log("Loop replay prevented:", e)); } else { isPlaying = false; playPauseButton.textContent = '▷'; } });
-         audio.addEventListener('timeupdate', () => { if (musicFiles[currentTrack].name !== 'Silence' && audio.duration && isFinite(audio.duration)) { const progress = (audio.currentTime / audio.duration) * 100; musicSlider.value = progress || 0; musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration); musicSlider.disabled = false; } else if (musicFiles[currentTrack].name === 'Silence'){ musicSlider.value = 0; musicTimeDisplay.textContent = '00:00 / 00:00'; musicSlider.disabled = true; } });
-         audio.addEventListener('loadedmetadata', () => { if (musicFiles[currentTrack].name !== 'Silence' && audio.duration && isFinite(audio.duration)) { musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration); musicSlider.disabled = false; } else { musicTimeDisplay.textContent = '00:00 / 00:00'; musicSlider.disabled = true; } });
-         audio.addEventListener('error', (e) => { console.error("Audio Error:", audio.error); currentSongDisplay.textContent = `Error: ${musicFiles[currentTrack].name}`; isPlaying = false; playPauseButton.textContent = '▷'; musicSlider.value = 0; musicTimeDisplay.textContent = 'Error / Error'; musicSlider.disabled = true; });
-         audio.addEventListener('play', () => { if (musicFiles[currentTrack].name !== 'Silence') { isPlaying = true; playPauseButton.textContent = '❚❚'; } });
-         audio.addEventListener('pause', () => { isPlaying = false; playPauseButton.textContent = '▷'; });
-         if (erinGroganLink) { erinGroganLink.addEventListener('click', (e) => { e.preventDefault(); if (easterEggTrackIndex < musicFiles.length) { currentTrack = easterEggTrackIndex; updateSong(); setTimeout(() => { audio.volume = easterEggVolume; volumeSlider.value = easterEggVolume; if (isMuted) { isMuted = false; audio.muted = false; muteButton.textContent = 'Mute'; } lastVolume = easterEggVolume; }, 150); } else { console.warn("Easter egg track index out of bounds."); } }); }
 
-    </script>
+    // --- Music Player Logic ---
+    loopButton.addEventListener('click', () => { isLooping = !isLooping; audio.loop = isLooping; loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off'; });
+    volumeSlider.addEventListener('input', () => { const newVolume = parseFloat(volumeSlider.value); audio.volume = newVolume; if (newVolume > 0) { if (isMuted) { isMuted = false; audio.muted = false; muteButton.textContent = 'Mute'; if (lastVolume <= 0.01) lastVolume = newVolume; } } else { if (!isMuted) { isMuted = true; audio.muted = true; muteButton.textContent = 'Unmute'; lastVolume = 0.01; } } });
+    muteButton.addEventListener('click', () => { isMuted = !isMuted; audio.muted = isMuted; if (isMuted) { lastVolume = audio.volume > 0 ? audio.volume : lastVolume; volumeSlider.value = 0; muteButton.textContent = 'Unmute'; } else { volumeSlider.value = lastVolume; volumeSlider.dispatchEvent(new Event('input')); muteButton.textContent = 'Mute'; } });
+    playPauseButton.addEventListener('click', () => { if (musicFiles[currentTrack].name === 'Silence') return; if (isPlaying) { audio.pause(); } else { if (audio.readyState === 0) { audio.load(); } audio.play().then(() => {}).catch(error => { console.error("Play failed:", error); }); } if (audio.paused) { isPlaying = false; playPauseButton.textContent = '▷'; } });
+    prevButton.addEventListener('click', () => { currentTrack = (currentTrack - 1 + musicFiles.length) % musicFiles.length; updateSong(); });
+    nextButton.addEventListener('click', () => { nextSong(); });
+    musicSlider.addEventListener('input', () => { if (musicFiles[currentTrack].name !== 'Silence' && audio.duration) { audio.currentTime = (audio.duration * musicSlider.value) / 100; } });
+    audio.addEventListener('ended', () => { if (!isLooping && musicFiles[currentTrack].name !== 'Silence') { nextSong(); } });
+    audio.addEventListener('timeupdate', () => { if (musicFiles[currentTrack].name !== 'Silence' && audio.duration && isFinite(audio.duration)) { const progress = (audio.currentTime / audio.duration) * 100; musicSlider.value = progress || 0; musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration); musicSlider.disabled = false; } else if (musicFiles[currentTrack].name === 'Silence'){ musicSlider.value = 0; musicTimeDisplay.textContent = '00:00 / 00:00'; musicSlider.disabled = true; } });
+    audio.addEventListener('error', (e) => { console.error("Audio Error:", audio.error); currentSongDisplay.textContent = `Error loading: ${musicFiles[currentTrack].name}`; isPlaying = false; playPauseButton.textContent = '▷'; musicSlider.value = 0; musicTimeDisplay.textContent = 'Error / Error'; musicSlider.disabled = true; });
+    audio.addEventListener('canplay', () => { if (isPlaying && audio.paused && musicFiles[currentTrack].name !== 'Silence') { playPauseButton.textContent = '❚❚'; } if (audio.duration && isFinite(audio.duration)) { musicTimeDisplay.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration); } });
+    audio.addEventListener('play', () => { if (musicFiles[currentTrack].name !== 'Silence') { isPlaying = true; playPauseButton.textContent = '❚❚'; } });
+    audio.addEventListener('pause', () => { isPlaying = false; playPauseButton.textContent = '▷'; });
+    function nextSong() { currentTrack = (currentTrack + 1) % musicFiles.length; updateSong(); }
+    function updateSong() { const track = musicFiles[currentTrack]; currentSongDisplay.textContent = track.name; audio.loop = isLooping; musicSlider.value = 0; musicTimeDisplay.textContent = '00:00 / 00:00'; if (track.name === 'Silence') { audio.pause(); audio.src = ''; musicSlider.disabled = true; } else { audio.src = track.url; audio.load(); musicSlider.disabled = false; audio.play().then(() => {}).catch(error => { console.log("Autoplay prevented for new track:", error); }); } updateBubbleButtonVisibility(); }
+    function initializePlayer() { audio.volume = volumeSlider.value; audio.muted = isMuted; loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off'; muteButton.textContent = isMuted ? 'Unmute' : 'Mute'; playPauseButton.textContent = isPlaying ? '❚❚' : '▷'; currentSongDisplay.textContent = musicFiles[currentTrack].name; updateBubbleButtonVisibility(); musicSlider.disabled = (musicFiles[currentTrack].name === 'Silence'); if (musicFiles[currentTrack].name !== 'Silence') { audio.src = musicFiles[currentTrack].url; audio.preload = 'metadata'; } }
+
+
+    // --- Timer Logic ---
+    function updateTimer() { const now = new Date(); const difference = targetDate - now; if (difference <= 0) { clearInterval(timerInterval); if (messageColorInterval) clearInterval(messageColorInterval); timerDisplay.textContent = '00:00:00:00'; timerLabelsDisplay.textContent = ' '; messageDisplay.style.opacity = 1; createConfetti(); messageColorInterval = setInterval(changeMessageColor, 500); return; } const days = Math.floor(difference / (1000 * 60 * 60 * 24)); const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((difference % (1000 * 60)) / 1000); let formattedTime = ''; let labels = ''; if (days > 0) { formattedTime = `${days}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Days Hours Minutes Seconds'; } else if (hours > 0) { formattedTime = `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Hours Minutes Seconds'; } else { formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Minutes Seconds'; } timerDisplay.textContent = formattedTime; timerLabelsDisplay.textContent = labels; }
+
+
+    // --- Effects Functions ---
+    function getRandomColor() { const letters = '0123456789ABCDEF'; let color = '#'; for (let i = 0; i < 6; i++) { color += letters[Math.floor(Math.random() * 16)]; } return color; }
+    function changeMessageColor() { messageDisplay.style.color = getRandomColor(); }
+    function createConfetti() { const messageRect = messageDisplay.getBoundingClientRect(); if (!messageRect || messageRect.width === 0 || messageRect.height === 0) { console.warn("Message display not ready for confetti."); return; } const messageCenterX = messageRect.left + messageRect.width / 2; const messageCenterY = messageRect.top + messageRect.height / 2; const confettiCount = 100; for (let i = 0; i < confettiCount; i++) { const confetti = document.createElement('div'); confetti.className = 'confetti'; confetti.style.backgroundColor = getRandomColor(); confetti.style.left = messageCenterX + (Math.random() - 0.5) * 50 + 'px'; confetti.style.top = messageCenterY + (Math.random() - 0.5) * 50 + 'px'; const angle = Math.random() * Math.PI * 2; const distance = Math.random() * 200 + 150; const xEnd = Math.cos(angle) * distance; const yEnd = Math.sin(angle) * distance; const rotation = Math.random() * 720 - 360; document.body.appendChild(confetti); const lifetime = Math.random() * 3000 + 2000; requestAnimationFrame(() => { confetti.style.transition = `transform ${lifetime / 1000}s cubic-bezier(0.1, 0.9, 0.2, 1), opacity ${lifetime / 1000}s linear`; confetti.style.transform = `translate(${xEnd}px, ${yEnd}px) rotate(${rotation}deg)`; confetti.style.opacity = 0; }); setTimeout(() => { confetti.remove(); }, lifetime); } }
+    bubbleButton.addEventListener('click', () => { createBubbles(10); });
+    function createBubbles(numBubbles = 1) { for (let i = 0; i < numBubbles; i++) { const bubble = document.createElement('div'); bubble.className = 'bubble'; const startX = Math.random() * window.innerWidth; const startY = window.innerHeight + 100; bubble.style.left = startX + 'px'; bubble.style.top = startY + 'px'; const size = Math.random() * 40 + 40; bubble.style.width = size + 'px'; bubble.style.height = size + 'px'; bubble.style.backgroundColor = `rgba(173, 216, 230, ${Math.random() * 0.3 + 0.4})`; const endY = -100; const endX = startX + (Math.random() - 0.5) * window.innerWidth * 0.5; const duration = Math.random() * 8000 + 5000; document.body.appendChild(bubble); requestAnimationFrame(() => { bubble.style.transition = `transform ${duration / 1000}s linear, opacity ${duration / 1000}s ease-out`; bubble.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`; bubble.style.opacity = 0; }); setTimeout(() => { bubble.remove(); }, duration); bubble.addEventListener('click', () => { bubble.style.transition = 'transform 0.15s ease-out, opacity 0.15s ease-out'; bubble.style.transform += ' scale(1.2)'; bubble.style.opacity = 0; setTimeout(() => bubble.remove(), 150); }, { once: true }); } }
+    function updateBubbleButtonVisibility() { bubbleButton.style.display = (currentTrack < 2) ? 'block' : 'none'; }
+    function formatTime(time) { if (isNaN(time) || time === null) return '00:00'; const minutes = Math.floor(time / 60); const seconds = Math.floor(time % 60); return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; }
+
+
+    // --- Background Scroll Animation Loop ---
+    function scrollLoop() {
+      if (!isDragging) {
+          currentBgX += scrollSpeed; // Increment position
+          row1.style.backgroundPositionX = currentBgX + 'px';
+      }
+      animationFrameId = requestAnimationFrame(scrollLoop); // Continue the loop
+    }
+
+    function startScrollAnimation() {
+        if (animationFrameId) { cancelAnimationFrame(animationFrameId); } // Prevent multiple loops
+        animationFrameId = requestAnimationFrame(scrollLoop);
+    }
+
+
+    // --- Initial Setup ---
+    document.addEventListener('DOMContentLoaded', () => {
+        updateTimer(); // Initial timer display
+        timerInterval = setInterval(updateTimer, 1000); // Start timer interval
+        initializePlayer(); // Setup the music player UI elements
+        row1.style.backgroundPositionX = '0px'; // Set initial CSS position via JS
+        startScrollAnimation(); // Start the background scroll
+        console.log("Page loaded. All features initialized.");
+    });
+
+  </script>
 
 </body>
 </html>
