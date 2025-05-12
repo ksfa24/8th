@@ -41,21 +41,20 @@
         overflow: hidden; /* Hide overflow */
         background-size: auto 100%; /* Fit height, width adjusts, allows repeat */
         background-repeat: repeat-x; /* Repeat horizontally for all scrolling rows */
-        /* background-position: center; Default position if not scrolling */
+        user-select: none; /* Prevent text selection during drag for all rows */
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE */
     }
 
     #row1 {
         background-image: url('row1.png'); /* Make sure this file exists */
-        cursor: grab;
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
+        cursor: grab; /* Specific cursor for draggable rows */
     }
 
     #row2 {
-        background-image: url('row2.jpg'); /* NEW: Image for row 2 */
-        /* No cursor: grab for row2 unless dragging is added */
+        background-image: url('row2.png'); /* Image for row 2 */
+        cursor: grab; /* NEW: Make row2 draggable */
     }
 
     #row3 {
@@ -263,7 +262,7 @@
     const timerDisplay = document.getElementById('timer');
     const messageDisplay = document.getElementById('message');
     const row1 = document.getElementById('row1');
-    const row2 = document.getElementById('row2'); // NEW: Reference for row2
+    const row2 = document.getElementById('row2');
 
     // --- State Variables ---
     let musicControlsVisible = false;
@@ -280,14 +279,17 @@
 
     // --- Row 1: Background Scroll/Drag State ---
     let isRow1Dragging = false;
-    let startRow1X;
-    let startRow1BgX;
-    let currentRow1BgX = 0;
+    let startRow1X; // Mouse/Touch start X position for Row 1
+    let startRow1BgX; // Background start X position during drag for Row 1
+    let currentRow1BgX = 0; // Current background X position for Row 1
     let scrollSpeedRow1 = 0.8; // Pixels scroll per frame for row1 (right scroll)
     let animationFrameIdRow1 = null;
 
-    // --- NEW: Row 2: Background Scroll State ---
-    let currentRow2BgX = 0;
+    // --- Row 2: Background Scroll/Drag State ---
+    let isRow2Dragging = false; // NEW: Dragging state for Row 2
+    let startRow2X; // NEW: Mouse/Touch start X position for Row 2
+    let startRow2BgX; // NEW: Background start X position during drag for Row 2
+    let currentRow2BgX = 0; // Current background X position for Row 2
     let scrollSpeedRow2 = -0.6; // Negative for left scroll, adjust speed as needed
     let animationFrameIdRow2 = null;
 
@@ -300,7 +302,7 @@
     erinGroganLink.addEventListener('click', () => { currentTrack = 4; const newVolume = 0.77; updateSong(); setTimeout(() => { audio.volume = newVolume; volumeSlider.value = newVolume; if (newVolume > 0 && isMuted) { isMuted = false; audio.muted = false; muteButton.textContent = 'Mute'; } else if (newVolume <= 0 && !isMuted) { isMuted = true; audio.muted = true; muteButton.textContent = 'Unmute'; lastVolume = 0.01; } }, 100); });
 
 
-    // --- Row 1: Background Drag Event Listeners ---
+    // --- Row 1: Background Drag Event Handlers ---
     function handleRow1DragStart(clientX) {
         isRow1Dragging = true;
         startRow1X = clientX;
@@ -325,13 +327,67 @@
         startScrollAnimationRow1();
     }
 
+    // --- NEW: Row 2: Background Drag Event Handlers ---
+    function handleRow2DragStart(clientX) {
+        isRow2Dragging = true;
+        startRow2X = clientX;
+        startRow2BgX = currentRow2BgX;
+        row2.style.cursor = 'grabbing';
+        cancelAnimationFrame(animationFrameIdRow2);
+        row2.ondragstart = () => false;
+    }
+
+    function handleRow2DragMove(clientX) {
+        if (!isRow2Dragging) return;
+        const diffX = clientX - startRow2X;
+        currentRow2BgX = startRow2BgX + diffX;
+        row2.style.backgroundPositionX = currentRow2BgX + 'px';
+    }
+
+    function handleRow2DragEnd() {
+        if (!isRow2Dragging) return;
+        isRow2Dragging = false;
+        row2.style.cursor = 'grab';
+        row2.ondragstart = null;
+        startScrollAnimationRow2();
+    }
+
+    // Attach Row 1 Drag Listeners
     row1.addEventListener('mousedown', (e) => { handleRow1DragStart(e.clientX); });
-    document.addEventListener('mousemove', (e) => { if(isRow1Dragging) handleRow1DragMove(e.clientX); }); // Only call if dragging row1
-    document.addEventListener('mouseup', () => { if(isRow1Dragging) handleRow1DragEnd(); }); // Only call if dragging row1
     row1.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { handleRow1DragStart(e.touches[0].clientX); } }, { passive: true });
-    document.addEventListener('touchmove', (e) => { if (!isRow1Dragging) return; if (e.touches.length === 1) { handleRow1DragMove(e.touches[0].clientX); } }, { passive: true });
-    document.addEventListener('touchend', () => { if(isRow1Dragging) handleRow1DragEnd(); });
-    document.addEventListener('touchcancel', () => { if(isRow1Dragging) handleRow1DragEnd(); });
+
+    // NEW: Attach Row 2 Drag Listeners
+    row2.addEventListener('mousedown', (e) => { handleRow2DragStart(e.clientX); });
+    row2.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { handleRow2DragStart(e.touches[0].clientX); } }, { passive: true });
+
+    // Document-level move and end listeners (handle both rows)
+    document.addEventListener('mousemove', (e) => {
+        if (isRow1Dragging) {
+            handleRow1DragMove(e.clientX);
+        } else if (isRow2Dragging) {
+            handleRow2DragMove(e.clientX);
+        }
+    });
+    document.addEventListener('touchmove', (e) => {
+        if (isRow1Dragging) {
+            if (e.touches.length === 1) { handleRow1DragMove(e.touches[0].clientX); }
+        } else if (isRow2Dragging) {
+            if (e.touches.length === 1) { handleRow2DragMove(e.touches[0].clientX); }
+        }
+    }, { passive: true });
+
+    document.addEventListener('mouseup', () => {
+        if (isRow1Dragging) handleRow1DragEnd();
+        if (isRow2Dragging) handleRow2DragEnd();
+    });
+    document.addEventListener('touchend', () => {
+        if (isRow1Dragging) handleRow1DragEnd();
+        if (isRow2Dragging) handleRow2DragEnd();
+    });
+    document.addEventListener('touchcancel', () => {
+        if (isRow1Dragging) handleRow1DragEnd();
+        if (isRow2Dragging) handleRow2DragEnd();
+    });
 
 
     // --- Music Player Logic (Copied from previous, unchanged) ---
@@ -369,7 +425,7 @@
 
     // --- Background Scroll Animation Loops ---
     function scrollLoopRow1() {
-      if (!isRow1Dragging) { // Only scroll if not being dragged
+      if (!isRow1Dragging) {
           currentRow1BgX += scrollSpeedRow1;
           row1.style.backgroundPositionX = currentRow1BgX + 'px';
       }
@@ -381,10 +437,11 @@
         animationFrameIdRow1 = requestAnimationFrame(scrollLoopRow1);
     }
 
-    // NEW: Scroll loop for Row 2
     function scrollLoopRow2() {
-        currentRow2BgX += scrollSpeedRow2; // scrollSpeedRow2 is negative for left scroll
-        row2.style.backgroundPositionX = currentRow2BgX + 'px';
+        if (!isRow2Dragging) { // UPDATED: Only scroll if not dragging row2
+            currentRow2BgX += scrollSpeedRow2;
+            row2.style.backgroundPositionX = currentRow2BgX + 'px';
+        }
         animationFrameIdRow2 = requestAnimationFrame(scrollLoopRow2);
     }
 
@@ -400,11 +457,9 @@
         timerInterval = setInterval(updateTimer, 1000);
         initializePlayer();
         
-        // Initialize Row 1 scroll
         row1.style.backgroundPositionX = '0px';
         startScrollAnimationRow1();
         
-        // NEW: Initialize Row 2 scroll
         row2.style.backgroundPositionX = '0px';
         startScrollAnimationRow2();
 
