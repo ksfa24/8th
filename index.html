@@ -39,39 +39,33 @@
     .background-row {
         flex: 1; /* Each row takes up 1/3 of the height */
         overflow: hidden; /* Hide overflow */
-        background-size: cover; /* Default size */
-        background-position: center; /* Default position */
+        background-size: auto 100%; /* Fit height, width adjusts, allows repeat */
+        background-repeat: repeat-x; /* Repeat horizontally for all scrolling rows */
+        /* background-position: center; Default position if not scrolling */
     }
 
     #row1 {
-        /* --- IMPORTANT: Image Source --- */
-        /* Place 'row1.jpg' in the SAME FOLDER as this HTML file, */
-        /* OR replace 'row1.jpg' with a permanent URL. */
-        background-image: url('row1.png');
-        background-repeat: repeat-x; /* Repeat horizontally */
-        background-size: auto 100%; /* Fit height, width adjusts, allows repeat */
-        /* CSS Animation removed - now handled by JS */
-        /* Add cursor style for dragging indication */
+        background-image: url('row1.png'); /* Make sure this file exists */
         cursor: grab;
-        /* Prevent text selection during drag */
         user-select: none;
-        -webkit-user-select: none; /* Safari */
-        -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* IE */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
     }
 
-     /* Placeholder styles for other rows - replace with your images/styles */
     #row2 {
-        background-color: #222; /* Dark gray placeholder */
+        background-image: url('row2.jpg'); /* NEW: Image for row 2 */
+        /* No cursor: grab for row2 unless dragging is added */
     }
 
     #row3 {
-        background-color: #111; /* Darker gray placeholder */
+        background-color: #111; /* Darker gray placeholder, or add an image */
+         /* If row3 also gets an image and scrolls, set background-image here */
     }
     /* --- END Background --- */
 
 
-    /* --- Foreground Styles --- */
+    /* --- Foreground Styles (Copied from previous, unchanged) --- */
     #credits-button,
     #submit-button,
     #music-toggle-button {
@@ -268,11 +262,12 @@
     const erinGroganLink = document.getElementById('erin-grogan-link');
     const timerDisplay = document.getElementById('timer');
     const messageDisplay = document.getElementById('message');
-    const row1 = document.getElementById('row1'); // Reference for row1
+    const row1 = document.getElementById('row1');
+    const row2 = document.getElementById('row2'); // NEW: Reference for row2
 
     // --- State Variables ---
     let musicControlsVisible = false;
-    const targetDate = new Date('May 22, 2025 08:30:00 EDT'); // Updated Target Date
+    const targetDate = new Date('May 22, 2025 08:30:00 EDT');
     let timerInterval;
     let messageColorInterval;
     const musicFiles = [{ url: 'yume 2kki - lotus waters nightcore_sped up_ techno condominium flying event.mp3', name: 'Lotus Waters' }, { url: '1-13 LEASE.mp3', name: 'LEASE' }, { url: '1-16 KYO.mp3', name: 'KYO' }, { url: '1-21 Yuu.mp3', name: 'Yuu' }, { url: 'DEATHCAMP.mp3', name: 'DEATHCAMP' }, { url: 'null', name: 'Silence' } ];
@@ -283,15 +278,21 @@
     let isPlaying = false;
     let lastVolume = 1;
 
-    // --- Background Scroll/Drag State ---
-    let isDragging = false;
-    let startX;
-    let startBgX;
-    let currentBgX = 0;
-    let scrollSpeed = 0.8; // Pixels scroll per frame (adjust for speed)
-    let animationFrameId = null;
+    // --- Row 1: Background Scroll/Drag State ---
+    let isRow1Dragging = false;
+    let startRow1X;
+    let startRow1BgX;
+    let currentRow1BgX = 0;
+    let scrollSpeedRow1 = 0.8; // Pixels scroll per frame for row1 (right scroll)
+    let animationFrameIdRow1 = null;
 
-    // --- Event Listeners ---
+    // --- NEW: Row 2: Background Scroll State ---
+    let currentRow2BgX = 0;
+    let scrollSpeedRow2 = -0.6; // Negative for left scroll, adjust speed as needed
+    let animationFrameIdRow2 = null;
+
+
+    // --- Event Listeners (General) ---
     creditsButton.addEventListener('click', () => { creditsBox.classList.toggle('show'); });
     submitButton.addEventListener('click', () => { window.location.href = 'mailto:junpey9@gmail.com?subject=Picture%20Suggestion'; });
     document.addEventListener('click', (event) => { if (creditsBox.classList.contains('show') && !creditsBox.contains(event.target) && event.target !== creditsButton) { creditsBox.classList.remove('show'); } if (musicControls.classList.contains('show') && !musicControls.contains(event.target) && event.target !== musicToggleButton) { musicControls.classList.remove('show'); musicControlsVisible = false; } });
@@ -299,41 +300,41 @@
     erinGroganLink.addEventListener('click', () => { currentTrack = 4; const newVolume = 0.77; updateSong(); setTimeout(() => { audio.volume = newVolume; volumeSlider.value = newVolume; if (newVolume > 0 && isMuted) { isMuted = false; audio.muted = false; muteButton.textContent = 'Mute'; } else if (newVolume <= 0 && !isMuted) { isMuted = true; audio.muted = true; muteButton.textContent = 'Unmute'; lastVolume = 0.01; } }, 100); });
 
 
-    // --- Background Drag Event Listeners ---
-    function handleDragStart(clientX) {
-        isDragging = true;
-        startX = clientX;
-        startBgX = currentBgX;
+    // --- Row 1: Background Drag Event Listeners ---
+    function handleRow1DragStart(clientX) {
+        isRow1Dragging = true;
+        startRow1X = clientX;
+        startRow1BgX = currentRow1BgX;
         row1.style.cursor = 'grabbing';
-        cancelAnimationFrame(animationFrameId);
+        cancelAnimationFrame(animationFrameIdRow1);
         row1.ondragstart = () => false;
     }
 
-    function handleDragMove(clientX) {
-        if (!isDragging) return;
-        const diffX = clientX - startX;
-        currentBgX = startBgX + diffX;
-        row1.style.backgroundPositionX = currentBgX + 'px';
+    function handleRow1DragMove(clientX) {
+        if (!isRow1Dragging) return;
+        const diffX = clientX - startRow1X;
+        currentRow1BgX = startRow1BgX + diffX;
+        row1.style.backgroundPositionX = currentRow1BgX + 'px';
     }
 
-    function handleDragEnd() {
-        if (!isDragging) return;
-        isDragging = false;
+    function handleRow1DragEnd() {
+        if (!isRow1Dragging) return;
+        isRow1Dragging = false;
         row1.style.cursor = 'grab';
         row1.ondragstart = null;
-        startScrollAnimation();
+        startScrollAnimationRow1();
     }
 
-    row1.addEventListener('mousedown', (e) => { handleDragStart(e.clientX); });
-    document.addEventListener('mousemove', (e) => { handleDragMove(e.clientX); });
-    document.addEventListener('mouseup', () => { handleDragEnd(); });
-    row1.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { handleDragStart(e.touches[0].clientX); } }, { passive: true }); // Use passive true if not preventing default
-    document.addEventListener('touchmove', (e) => { if (!isDragging) return; /* No preventDefault needed if page scroll isn't an issue */ if (e.touches.length === 1) { handleDragMove(e.touches[0].clientX); } }, { passive: true }); // Use passive true if not preventing default
-    document.addEventListener('touchend', () => { handleDragEnd(); });
-    document.addEventListener('touchcancel', () => { handleDragEnd(); });
+    row1.addEventListener('mousedown', (e) => { handleRow1DragStart(e.clientX); });
+    document.addEventListener('mousemove', (e) => { if(isRow1Dragging) handleRow1DragMove(e.clientX); }); // Only call if dragging row1
+    document.addEventListener('mouseup', () => { if(isRow1Dragging) handleRow1DragEnd(); }); // Only call if dragging row1
+    row1.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { handleRow1DragStart(e.touches[0].clientX); } }, { passive: true });
+    document.addEventListener('touchmove', (e) => { if (!isRow1Dragging) return; if (e.touches.length === 1) { handleRow1DragMove(e.touches[0].clientX); } }, { passive: true });
+    document.addEventListener('touchend', () => { if(isRow1Dragging) handleRow1DragEnd(); });
+    document.addEventListener('touchcancel', () => { if(isRow1Dragging) handleRow1DragEnd(); });
 
 
-    // --- Music Player Logic ---
+    // --- Music Player Logic (Copied from previous, unchanged) ---
     loopButton.addEventListener('click', () => { isLooping = !isLooping; audio.loop = isLooping; loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off'; });
     volumeSlider.addEventListener('input', () => { const newVolume = parseFloat(volumeSlider.value); audio.volume = newVolume; if (newVolume > 0) { if (isMuted) { isMuted = false; audio.muted = false; muteButton.textContent = 'Mute'; if (lastVolume <= 0.01) lastVolume = newVolume; } } else { if (!isMuted) { isMuted = true; audio.muted = true; muteButton.textContent = 'Unmute'; lastVolume = 0.01; } } });
     muteButton.addEventListener('click', () => { isMuted = !isMuted; audio.muted = isMuted; if (isMuted) { lastVolume = audio.volume > 0 ? audio.volume : lastVolume; volumeSlider.value = 0; muteButton.textContent = 'Unmute'; } else { volumeSlider.value = lastVolume; volumeSlider.dispatchEvent(new Event('input')); muteButton.textContent = 'Mute'; } });
@@ -352,11 +353,11 @@
     function initializePlayer() { audio.volume = volumeSlider.value; audio.muted = isMuted; loopButton.textContent = isLooping ? 'Loop On' : 'Loop Off'; muteButton.textContent = isMuted ? 'Unmute' : 'Mute'; playPauseButton.textContent = isPlaying ? '❚❚' : '▷'; currentSongDisplay.textContent = musicFiles[currentTrack].name; updateBubbleButtonVisibility(); musicSlider.disabled = (musicFiles[currentTrack].name === 'Silence'); if (musicFiles[currentTrack].name !== 'Silence') { audio.src = musicFiles[currentTrack].url; audio.preload = 'metadata'; } }
 
 
-    // --- Timer Logic ---
+    // --- Timer Logic (Copied from previous, unchanged) ---
     function updateTimer() { const now = new Date(); const difference = targetDate - now; if (difference <= 0) { clearInterval(timerInterval); if (messageColorInterval) clearInterval(messageColorInterval); timerDisplay.textContent = '00:00:00:00'; timerLabelsDisplay.textContent = ' '; messageDisplay.style.opacity = 1; createConfetti(); messageColorInterval = setInterval(changeMessageColor, 500); return; } const days = Math.floor(difference / (1000 * 60 * 60 * 24)); const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((difference % (1000 * 60)) / 1000); let formattedTime = ''; let labels = ''; if (days > 0) { formattedTime = `${days}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Days Hours Minutes Seconds'; } else if (hours > 0) { formattedTime = `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Hours Minutes Seconds'; } else { formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; labels = 'Minutes Seconds'; } timerDisplay.textContent = formattedTime; timerLabelsDisplay.textContent = labels; }
 
 
-    // --- Effects Functions ---
+    // --- Effects Functions (Copied from previous, unchanged) ---
     function getRandomColor() { const letters = '0123456789ABCDEF'; let color = '#'; for (let i = 0; i < 6; i++) { color += letters[Math.floor(Math.random() * 16)]; } return color; }
     function changeMessageColor() { messageDisplay.style.color = getRandomColor(); }
     function createConfetti() { const messageRect = messageDisplay.getBoundingClientRect(); if (!messageRect || messageRect.width === 0 || messageRect.height === 0) { console.warn("Message display not ready for confetti."); return; } const messageCenterX = messageRect.left + messageRect.width / 2; const messageCenterY = messageRect.top + messageRect.height / 2; const confettiCount = 100; for (let i = 0; i < confettiCount; i++) { const confetti = document.createElement('div'); confetti.className = 'confetti'; confetti.style.backgroundColor = getRandomColor(); confetti.style.left = messageCenterX + (Math.random() - 0.5) * 50 + 'px'; confetti.style.top = messageCenterY + (Math.random() - 0.5) * 50 + 'px'; const angle = Math.random() * Math.PI * 2; const distance = Math.random() * 200 + 150; const xEnd = Math.cos(angle) * distance; const yEnd = Math.sin(angle) * distance; const rotation = Math.random() * 720 - 360; document.body.appendChild(confetti); const lifetime = Math.random() * 3000 + 2000; requestAnimationFrame(() => { confetti.style.transition = `transform ${lifetime / 1000}s cubic-bezier(0.1, 0.9, 0.2, 1), opacity ${lifetime / 1000}s linear`; confetti.style.transform = `translate(${xEnd}px, ${yEnd}px) rotate(${rotation}deg)`; confetti.style.opacity = 0; }); setTimeout(() => { confetti.remove(); }, lifetime); } }
@@ -366,28 +367,47 @@
     function formatTime(time) { if (isNaN(time) || time === null) return '00:00'; const minutes = Math.floor(time / 60); const seconds = Math.floor(time % 60); return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; }
 
 
-    // --- Background Scroll Animation Loop ---
-    function scrollLoop() {
-      if (!isDragging) {
-          currentBgX += scrollSpeed; // Increment position
-          row1.style.backgroundPositionX = currentBgX + 'px';
+    // --- Background Scroll Animation Loops ---
+    function scrollLoopRow1() {
+      if (!isRow1Dragging) { // Only scroll if not being dragged
+          currentRow1BgX += scrollSpeedRow1;
+          row1.style.backgroundPositionX = currentRow1BgX + 'px';
       }
-      animationFrameId = requestAnimationFrame(scrollLoop); // Continue the loop
+      animationFrameIdRow1 = requestAnimationFrame(scrollLoopRow1);
     }
 
-    function startScrollAnimation() {
-        if (animationFrameId) { cancelAnimationFrame(animationFrameId); } // Prevent multiple loops
-        animationFrameId = requestAnimationFrame(scrollLoop);
+    function startScrollAnimationRow1() {
+        if (animationFrameIdRow1) { cancelAnimationFrame(animationFrameIdRow1); }
+        animationFrameIdRow1 = requestAnimationFrame(scrollLoopRow1);
+    }
+
+    // NEW: Scroll loop for Row 2
+    function scrollLoopRow2() {
+        currentRow2BgX += scrollSpeedRow2; // scrollSpeedRow2 is negative for left scroll
+        row2.style.backgroundPositionX = currentRow2BgX + 'px';
+        animationFrameIdRow2 = requestAnimationFrame(scrollLoopRow2);
+    }
+
+    function startScrollAnimationRow2() {
+        if (animationFrameIdRow2) { cancelAnimationFrame(animationFrameIdRow2); }
+        animationFrameIdRow2 = requestAnimationFrame(scrollLoopRow2);
     }
 
 
     // --- Initial Setup ---
     document.addEventListener('DOMContentLoaded', () => {
-        updateTimer(); // Initial timer display
-        timerInterval = setInterval(updateTimer, 1000); // Start timer interval
-        initializePlayer(); // Setup the music player UI elements
-        row1.style.backgroundPositionX = '0px'; // Set initial CSS position via JS
-        startScrollAnimation(); // Start the background scroll
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
+        initializePlayer();
+        
+        // Initialize Row 1 scroll
+        row1.style.backgroundPositionX = '0px';
+        startScrollAnimationRow1();
+        
+        // NEW: Initialize Row 2 scroll
+        row2.style.backgroundPositionX = '0px';
+        startScrollAnimationRow2();
+
         console.log("Page loaded. All features initialized.");
     });
 
