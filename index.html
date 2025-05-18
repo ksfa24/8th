@@ -48,17 +48,20 @@
     }
 
     #row1 {
-        background-image: url('row1.png'); /* Make sure this file exists */
+        background-image: url('row1.png'); /* Ensure 'row1.png' exists */
         cursor: grab; /* Specific cursor for draggable rows */
     }
 
     #row2 {
-        background-image: url('row2.png'); /* Image for row 2 */
-        cursor: grab; /* NEW: Make row2 draggable */
+        background-image: url('row2.png'); /* Ensure 'row2.png' exists */
+        cursor: grab; /* Make row2 draggable */
     }
 
     #row3 {
-        background-color: #111; /* Darker gray placeholder, or add an image */
+        /* background-color: #111; */ /* Placeholder color */
+        /* IMPORTANT: To see row 3 scroll with an image, replace the above line with: */
+         background-image: url('row3.png'); /* And place your image in the folder */
+         background-color: #111; /* If no image, scrolling solid color is not visible */
     }
     /* --- END Background --- */
 
@@ -189,7 +192,6 @@
       background-color: rgba(173, 216, 230, 0.7);
       pointer-events: auto; /* Allows clicks */
       cursor: pointer;
-      /* Initial transition is set by JS in createBubbles */
       z-index: 500; /* Above background, below most UI */
     }
     #bubble-button { display: none; }
@@ -264,6 +266,7 @@
     const messageDisplay = document.getElementById('message');
     const row1 = document.getElementById('row1');
     const row2 = document.getElementById('row2');
+    const row3 = document.getElementById('row3');
 
     // --- State Variables ---
     let musicControlsVisible = false;
@@ -293,6 +296,11 @@
     let currentRow2BgX = 0;
     let scrollSpeedRow2 = -0.6;
     let animationFrameIdRow2 = null;
+
+    // --- Row 3: Background Scroll State ---
+    let currentRow3BgX = 0;
+    let scrollSpeedRow3 = -0.7; // Different speed, scrolls left
+    let animationFrameIdRow3 = null;
 
 
     // --- Event Listeners (General) ---
@@ -383,12 +391,12 @@
             bubble.style.opacity = 0;
         });
 
-        const naturalLifespanTimeout = setTimeout(() => { // Store the timeout ID
+        const naturalLifespanTimeout = setTimeout(() => {
           bubble.remove();
         }, duration);
 
         bubble.addEventListener('click', () => {
-            clearTimeout(naturalLifespanTimeout); // Clear the natural lifespan removal
+            clearTimeout(naturalLifespanTimeout); 
             
             bubble.style.transition = 'transform 0.15s ease-out, opacity 0.15s ease-out';
             bubble.style.transform = bubble.style.transform + ' scale(1.2)';
@@ -407,8 +415,12 @@
     // --- Background Scroll Animation Loops ---
     function scrollLoopRow1() { if (!isRow1Dragging) { currentRow1BgX += scrollSpeedRow1; row1.style.backgroundPositionX = currentRow1BgX + 'px'; } animationFrameIdRow1 = requestAnimationFrame(scrollLoopRow1); }
     function startScrollAnimationRow1() { if (animationFrameIdRow1) { cancelAnimationFrame(animationFrameIdRow1); } animationFrameIdRow1 = requestAnimationFrame(scrollLoopRow1); }
+    
     function scrollLoopRow2() { if (!isRow2Dragging) { currentRow2BgX += scrollSpeedRow2; row2.style.backgroundPositionX = currentRow2BgX + 'px'; } animationFrameIdRow2 = requestAnimationFrame(scrollLoopRow2); }
     function startScrollAnimationRow2() { if (animationFrameIdRow2) { cancelAnimationFrame(animationFrameIdRow2); } animationFrameIdRow2 = requestAnimationFrame(scrollLoopRow2); }
+
+    function scrollLoopRow3() { currentRow3BgX += scrollSpeedRow3; row3.style.backgroundPositionX = currentRow3BgX + 'px'; animationFrameIdRow3 = requestAnimationFrame(scrollLoopRow3); }
+    function startScrollAnimationRow3() { if (animationFrameIdRow3) { cancelAnimationFrame(animationFrameIdRow3); } animationFrameIdRow3 = requestAnimationFrame(scrollLoopRow3); }
 
 
     // --- Initial Setup ---
@@ -422,6 +434,9 @@
         
         row2.style.backgroundPositionX = '0px';
         startScrollAnimationRow2();
+
+        row3.style.backgroundPositionX = '0px';
+        startScrollAnimationRow3();
 
         console.log("Page loaded. All features initialized.");
     });
